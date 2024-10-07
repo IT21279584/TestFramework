@@ -11,8 +11,8 @@ public class ApiTestMain {
 
         List<String> testCaseFiles= FileConfigLoader.loadTestCasesFiles();
         JsonNode jsonNode = FileConfigLoader.readFile(testCaseFiles);
-        System.out.println(jsonNode.toPrettyString());
-//        System.out.println(FileInterpreter.interpret(jsonNode).get(0));
+//        System.out.println(jsonNode.toPrettyString());
+        System.out.println(FileInterpreter.interpret(jsonNode));
 
     }
 }
