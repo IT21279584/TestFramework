@@ -9,7 +9,7 @@ given:
     Content-Type: "{{include content_type}}"
   pathParam:
     userId: 1
-  log: true
+log: true
 
 when:
   method: GET
@@ -22,10 +22,10 @@ then:
   cookie: {}
   body: {}
 
-datacapture:
+dataCapture:
   var_dept_id: ""
 
-log: "all"
+logLevel: "all"
 delay: 2000
 priority: 1
 next: ""

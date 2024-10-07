@@ -2,7 +2,7 @@ package com.mdscem.apitestframework.fileprocessor.fileinterpreter;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mdscem.apitestframework.fileprocessor.filereader.*;
+import com.mdscem.apitestframework.fileprocessor.filereader.model.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,12 +26,10 @@ public class FileInterpreter {
                     testCase.setTestCaseId(testNode.path("testCaseId").asText());
                     testCase.setBaseUri(testNode.path("baseUri").asText());
 
-                    // Set auth details
-                    AuthInfo authInfo = mapper.treeToValue(testNode.path("auth"), AuthInfo.class);
-                    testCase.setAuth(authInfo);
+
 
                     // Set 'given' section
-                    TestCaseGiven given = new TestCaseGiven();
+                    Given given = new Given();
 
                     // Set headers in 'given'
                     Map<String, String> headers = new HashMap<>();
@@ -60,13 +58,13 @@ public class FileInterpreter {
                     testCase.setGiven(given);
 
                     // Set 'when' section
-                    TestCaseWhen when = new TestCaseWhen();
+                    When when = new When();
                     when.setMethod(testNode.path("when").path("method").asText());
                     when.setUri(testNode.path("when").path("path").asText());
                     testCase.setWhen(when);
 
                     // Set 'then' section
-                    TestCaseThen then = new TestCaseThen();
+                    Then then = new Then();
                     then.setStatusCode(testNode.path("then").path("statusCode").asInt());
 
                     // Set headers in 'then'
@@ -93,11 +91,6 @@ public class FileInterpreter {
                     }
                     then.setCookie(cookies);
 
-
-                    // Set data capture
-                    DataCapture dataCapture = new DataCapture();
-                    dataCapture.setVarDeptId(testNode.path("datacapture").path("var_dept_id").asText());
-                    testCase.setDatacapture(dataCapture);
 
                     // Set delay and next action
                     testCase.setDelay(testNode.path("delay").asInt());
