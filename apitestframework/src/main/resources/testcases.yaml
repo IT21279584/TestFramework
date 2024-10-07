@@ -1,0 +1,22 @@
+- id: "1"
+  url: "http://example.com/api"
+  method: "GET"
+  payload: "null"
+  expectedResponseCode: 200
+  testName: "Test Case 1"
+  expectedResponseBody: {}
+  requiresAuthentication: "false"
+  authToken: ""
+  priority: "high"
+  saveResponse: {}
+- id: "2"
+  url: "http://example.com/api"
+  method: "GET"
+  payload: "null"
+  expectedResponseCode: 200
+  testName: "Test Case 2"
+  expectedResponseBody: {}
+  requiresAuthentication: "false"
+  authToken: ""
+  priority: "high"
+  saveResponse: {}

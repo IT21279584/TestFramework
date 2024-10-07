@@ -1,0 +1,33 @@
+testCaseId: "user_1_retrieve"
+baseUri: "https://reqres.in"
+auth:
+  requiresAuthentication: true
+  type: basic
+  username: "{{username}}"
+  password: "{{password}}"
+
+given:
+  headers:
+    Content-Type: "application/json"
+  pathParam:
+    userId: 1
+  log: true
+
+when:
+  method: GET
+  path: "/api/users/:userId"
+
+then:
+  statusCode: 200
+  headers:
+    Content-Type: "application/json"
+  cookie: {}
+  body: {}
+
+datacapture:
+  var_dept_id: ""
+
+log: "all"
+delay: 2000
+priority: 1
+next: ""

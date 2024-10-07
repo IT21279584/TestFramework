@@ -1,7 +1,9 @@
-package com.mdscem.apitestframework;
+package com.mdscem.apitestframework.fileprocessor.filereader;
 
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.Map;
 
 @Getter
 @Setter
@@ -12,7 +14,7 @@ public class TestCase {
     private TestCaseGiven given;
     private TestCaseWhen when;
     private TestCaseThen then;
-    private Body body;
+    private Map<String, String> body;
     private DataCapture datacapture;
     private boolean log;
     private String logLevel;

@@ -1,4 +1,4 @@
-package com.mdscem.apitestframework;
+package com.mdscem.apitestframework.fileprocessor.filereader;
 
 import lombok.Getter;
 import lombok.Setter;
