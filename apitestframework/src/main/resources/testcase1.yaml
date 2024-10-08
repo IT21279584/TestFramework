@@ -1,9 +1,6 @@
 testCaseId: "user_1_retrieve"
 baseUri: "{{include baseUri}}"
-auth:
-    type: "{{include auth_info_1.type}}"
-    username: "{{include auth_info_1.username}}"
-    password: "{{include auth_info_1.password}}"
+auth: "{{include auth_info_1}}"
 given:
   headers:
     Content-Type: "{{include content_type}}"
