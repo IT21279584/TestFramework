@@ -16,7 +16,8 @@ public class ApiTestMain {
         replacer.replaceYamlPlaceholders(yamlValues,propertyValues);
         List<String> testCaseFiles= FileConfigLoader.loadTestCasesFiles();
         JsonNode jsonNode = FileConfigLoader.readFile(testCaseFiles);
-//        System.out.println(jsonNode.toPrettyString());
+        System.out.println(jsonNode.toPrettyString());
+//        System.out.println(FileInterpreter.interpret(jsonNode).get(0));
 
     }
 }

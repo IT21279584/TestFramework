@@ -19,7 +19,7 @@ then:
   cookie: {}
   body: {}
 
-dataCapture:
+datacapture:
   var_dept_id: ""
 
 logLevel: "all"
