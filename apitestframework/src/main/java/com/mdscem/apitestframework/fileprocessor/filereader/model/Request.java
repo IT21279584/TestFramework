@@ -7,9 +7,11 @@ import java.util.Map;
 
 @Getter
 @Setter
-public class Given {
+public class Request {
+    private String method;
+    private String path;
     private Map<String, String> headers;
     private Map<String, String> pathParam;
-    private boolean log;
-
+    private Map<String, String> body;
+    private String log;
 }

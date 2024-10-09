@@ -11,13 +11,9 @@ public class TestCase {
     private String testCaseId;
     private String baseUri;
     private Map<String, String> auth;
-    private Given given;
-    private When when;
-    private Then then;
-    private Map<String, String> body;
+    private Request request;
+    private Response response;
     private Map<String, String> dataCapture;
-
-    private String logLevel;
     private int delay;
     private String next;
 

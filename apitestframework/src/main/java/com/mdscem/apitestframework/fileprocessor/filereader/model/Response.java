@@ -7,8 +7,11 @@ import java.util.Map;
 
 @Getter
 @Setter
-public class Then {
+public class Response {
     private int statusCode;
     private Map<String, String> headers;
     private Map<String, String> cookie;
+    private Map<String, String> body;
+    private String log;
+
 }

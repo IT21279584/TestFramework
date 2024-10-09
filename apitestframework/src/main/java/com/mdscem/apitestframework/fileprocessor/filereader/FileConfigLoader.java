@@ -2,6 +2,7 @@ package com.mdscem.apitestframework.fileprocessor.filereader;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.log4j.Logger;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -13,6 +14,9 @@ import java.util.List;
 import static com.mdscem.apitestframework.constants.Constant.MULTIPLE_FILE_PATH;
 
 public class FileConfigLoader {
+
+    private static final Logger logger = Logger.getLogger(FileConfigLoader.class);
+
     private JsonNode config;
 
     public FileConfigLoader(String configFilePath) {
@@ -22,6 +26,7 @@ public class FileConfigLoader {
             config = objectMapper.readTree(jsonData);
         } catch (IOException e) {
             e.printStackTrace();
+            logger.error("Failed to load configuration file: " + configFilePath);
             throw new RuntimeException("Failed to load configuration file: " + configFilePath);
         }
     }
@@ -30,6 +35,7 @@ public class FileConfigLoader {
         if (config.isArray()) {
             return config;
         } else {
+            logger.error("Configuration root is not an array. Please provide an array of test case file paths.");
             throw new RuntimeException("Configuration root is not an array. Please provide an array of test case file paths.");
         }
     }
@@ -60,7 +66,7 @@ public class FileConfigLoader {
                if (testCases != null) {
                    return testCases;
                } else {
-                   System.err.println("Failed to load test cases from file: " + testCaseFile);
+                   logger.error("Failed to load test cases from file: " + testCaseFile);
                }
            }
        }catch(Exception e){
