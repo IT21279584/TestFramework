@@ -9,8 +9,7 @@ import java.util.List;
 public class ApiTestMain {
 
     public static void main(String[] args) throws Exception {
-        List<String> testCaseFiles= FileConfigLoader.loadTestCasesFiles();
-        String content = FileConfigLoader.readFile(testCaseFiles);
+        String content = FileConfigLoader.readFile(FileConfigLoader.loadTestCasesFiles());
         System.out.println(content);
     }
 }
