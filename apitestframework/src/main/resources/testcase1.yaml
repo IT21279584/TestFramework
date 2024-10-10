@@ -1,14 +1,11 @@
 testCaseId: "user_1_retrieve"
-baseUri: "https://reqres.in"
+baseUri: "{{include baseUri}}"
 auth:
-  requiresAuthentication: true
-  type: basic
-  username: "{{username}}"
-  password: "{{password}}"
+  "{{include auth_info_1}}"
 
 request:
   headers:
-    Content-Type: "application/json"
+    Content-Type: "{{include content_type}}"
   pathParam:
     userId: 1
   log: "all"
@@ -19,7 +16,7 @@ request:
 response:
   statusCode: 200
   headers:
-    Content-Type: "application/json"
+    Content-Type: "{{include content_type}}"
   cookie: {}
   body: {}
 
