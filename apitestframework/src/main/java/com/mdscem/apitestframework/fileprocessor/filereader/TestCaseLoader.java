@@ -20,6 +20,7 @@ public class TestCaseLoader {
     public TestCaseLoader(String fileName) {
         this.fileName = fileName;
         this.fileReaderContext = selectFileReader(fileName);
+        this.checkFileType(fileName);
     }
 
     private FileReaderContext selectFileReader(String fileName) {
@@ -35,6 +36,17 @@ public class TestCaseLoader {
         }
         logger.info("FileReader successfully selected for: " + fileName);
         return new FileReaderContext(iFileReader);
+    }
+
+    public String checkFileType(String fileName){
+        if (fileName.endsWith(".json")) {
+            return "json";
+        } else if (fileName.endsWith(".yaml") || fileName.endsWith(".yml")) {
+            return "yaml";
+        } else {
+            logger.error("Unsupported file type: " + fileName);
+            throw new IllegalArgumentException("Unsupported file type " + fileName);
+        }
     }
 
     public String loadTestCases() {
