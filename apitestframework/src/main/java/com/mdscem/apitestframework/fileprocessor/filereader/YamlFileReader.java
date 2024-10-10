@@ -3,24 +3,21 @@ package com.mdscem.apitestframework.fileprocessor.filereader;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
-
-import java.io.IOException;
-import java.io.StringReader;
+import org.apache.log4j.Logger;
 
 public class YamlFileReader implements IFileReader {
+    private static final Logger logger = Logger.getLogger(YamlFileReader.class);
 
     @Override
-    public JsonNode readTestCases(String content) {
+    public String readTestCases(String content) {
         try {
-            // Initialize ObjectMapper with YAMLFactory
             ObjectMapper yamlMapper = new ObjectMapper(new YAMLFactory());
-
-            // Convert the YAML content to JsonNode
-            String yamlContent = content.toString();
-            JsonNode jsonNode = yamlMapper.readTree(new StringReader(yamlContent));
-
-            return jsonNode;
-        } catch (IOException e) {
+            JsonNode yamlTree = yamlMapper.readTree(content);
+            String formattedYaml = yamlMapper.writerWithDefaultPrettyPrinter().writeValueAsString(yamlTree);
+            logger.info("Successfully parsed YAML content.");
+            return formattedYaml;
+        } catch (Exception e) {
+            logger.error("Error parsing YAML content", e);
             e.printStackTrace();
             return null;
         }

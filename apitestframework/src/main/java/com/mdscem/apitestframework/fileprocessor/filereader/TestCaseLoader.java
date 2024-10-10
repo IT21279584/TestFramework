@@ -37,22 +37,18 @@ public class TestCaseLoader {
         return new FileReaderContext(iFileReader);
     }
 
-    public JsonNode loadTestCases() {
+    public String loadTestCases() {
 
-        JsonNode loadedTestCases = null;
+        String loadedTestCases = null;
         try {
             Path filePath = Paths.get(fileName);
             if (!Files.exists(filePath)) {
                 logger.error("Could not find the file: " + fileName);
-                //return loadedTestCases;
             }
 
             String fileContent = new String(Files.readAllBytes(filePath));
 
             loadedTestCases = fileReaderContext.loadTestCases(fileContent);
-
-            // Convert the processed JsonNode back to a list of TestCase
-            //testCases = objectMapper.convertValue(loadedTestCases, new TypeReference<List<TestCase>>() {});
 
         } catch (IOException e) {
             e.printStackTrace();

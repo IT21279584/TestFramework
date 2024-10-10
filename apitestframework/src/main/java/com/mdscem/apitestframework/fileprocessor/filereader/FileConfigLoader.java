@@ -21,9 +21,9 @@ public class FileConfigLoader {
 
     public FileConfigLoader(String configFilePath) {
         try {
-            String jsonData = new String(Files.readAllBytes(Paths.get(configFilePath)));
+            String data = new String(Files.readAllBytes(Paths.get(configFilePath)));
             ObjectMapper objectMapper = new ObjectMapper();
-            config = objectMapper.readTree(jsonData);
+            config = objectMapper.readTree(data);
         } catch (IOException e) {
             e.printStackTrace();
             logger.error("Failed to load configuration file: " + configFilePath);
@@ -31,38 +31,33 @@ public class FileConfigLoader {
         }
     }
 
-    public JsonNode getTestCaseFiles() {
-        if (config.isArray()) {
-            return config;
-        } else {
-            logger.error("Configuration root is not an array. Please provide an array of test case file paths.");
-            throw new RuntimeException("Configuration root is not an array. Please provide an array of test case file paths.");
-        }
-    }
-
-    public static List<String> loadTestCasesFiles(){
+    public static List<String> loadTestCasesFiles() throws Exception {
 
         FileConfigLoader configLoader = new FileConfigLoader(MULTIPLE_FILE_PATH);
 
-
-        JsonNode testCaseFilesNode = configLoader.getTestCaseFiles();
+        JsonNode testCaseFilesNode = configLoader.config;
         List<String> testCaseFiles = new ArrayList<>();
+
         if (testCaseFilesNode != null && testCaseFilesNode.isArray()) {
             Iterator<JsonNode> elements = testCaseFilesNode.elements();
             while (elements.hasNext()) {
                 testCaseFiles.add(elements.next().asText());
             }
+        } else {
+            logger.error("Configuration root is not an array. Please provide an array of test case file paths.");
+            throw new RuntimeException("Configuration root is not an array. Please provide an array of test case file paths.");
         }
+
         return testCaseFiles;
     }
 
 
-    public static JsonNode readFile(List<String> testCaseFiles) {
+    public static String readFile(List<String> testCaseFiles) {
 
        try{
            for (String testCaseFile : testCaseFiles) {
                TestCaseLoader testCaseLoader = new TestCaseLoader(testCaseFile);
-               JsonNode testCases = testCaseLoader.loadTestCases();
+               String testCases = testCaseLoader.loadTestCases();
                if (testCases != null) {
                    return testCases;
                } else {

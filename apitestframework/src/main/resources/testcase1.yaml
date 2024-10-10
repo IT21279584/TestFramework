@@ -5,7 +5,7 @@ auth:
 
 request:
   headers:
-    Content-Type: "{{include content_type}}"
+    Content-Type: "application/json"
   pathParam:
     userId: 1
   log: "all"
@@ -16,7 +16,7 @@ request:
 response:
   statusCode: 200
   headers:
-    Content-Type: "{{include content_type}}"
+    Content-Type: "application/json"
   cookie: {}
   body: {}
 

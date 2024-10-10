@@ -3,4 +3,4 @@ auth_info_1:
     username: "Kavinda"
     password: "kbm"
 content_type: "application/json"
-baseUri: "https://test.com"
+baseUri: "https://reqres.in"

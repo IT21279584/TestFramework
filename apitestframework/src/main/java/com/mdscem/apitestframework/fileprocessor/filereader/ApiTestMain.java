@@ -9,13 +9,8 @@ import java.util.List;
 public class ApiTestMain {
 
     public static void main(String[] args) throws Exception {
-        BasicConfigurator.configure();
-        YamlPlaceholderReplacer replacer = new YamlPlaceholderReplacer();
-        String propertyValues = "/home/kmedagoda/Documents/Kavinda Final/final TestFramework/TestFramework/apitestframework/src/main/resources/values.yaml";
-        String yamlValues = "/home/kmedagoda/Documents/Kavinda Final/final TestFramework/TestFramework/apitestframework/src/main/resources/testcase1.yaml";
-        replacer.replaceYamlPlaceholders(yamlValues,propertyValues);
         List<String> testCaseFiles= FileConfigLoader.loadTestCasesFiles();
-        JsonNode jsonNode = FileConfigLoader.readFile(testCaseFiles);
-
+        String content = FileConfigLoader.readFile(testCaseFiles);
+        System.out.println(content);
     }
 }

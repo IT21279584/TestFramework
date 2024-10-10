@@ -10,11 +10,7 @@
             this.iFileReader = iFileReader;
         }
 
-        public JsonNode loadTestCases(String content){
+        public String loadTestCases(String content){
             return iFileReader.readTestCases(content);
-        }
-
-        public void setIFileReader(IFileReader iFileReader) {
-            this.iFileReader = iFileReader;
         }
     }
