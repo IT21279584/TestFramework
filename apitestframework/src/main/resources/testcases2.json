@@ -1,0 +1,172 @@
+[
+  {
+    "id": "1",
+    "url": "http://localhost:8080/api/projects/project/save",
+    "method": "POST",
+    "payload": {
+      "project": {
+        "projectName": "nnnn",
+        "projectCode": "bbbnnnn"
+      },
+      "userID": 3
+    },
+    "expectedResponseCode": 200,
+    "testName": "project_save",
+    "expectedResponseBody": {
+      "projectName": "nnnn",
+      "projectCode": "bbbnnnn",
+      "users": {
+        "id": 3,
+        "firstName": "Kavinda",
+        "lastName": "Medagoda"
+      }
+    },
+    "requiresAuthentication": true,
+    "authToken": "tokennnn",
+    "saveResponse": {
+      "projectID": "projectID"
+    },
+    "priority": 1
+  },
+  {
+    "id": "2",
+    "url": "http://localhost:8080/api/projects/{{projectID}}",
+    "method": "GET",
+    "payload": {},
+    "expectedResponseCode": 200,
+    "testName": "getProject",
+    "expectedResponseBody": {
+      "projectName": "nnnn",
+      "projectCode": "bbbnnnn",
+      "users": {
+        "id": 3,
+        "firstName": "Kavinda",
+        "lastName": "Medagoda"
+      }
+    },
+    "requiresAuthentication": true,
+    "authToken": "tokennnn",
+    "priority": 2
+  },
+  {
+    "id": "3",
+    "url": "http://localhost:8080/api/vacancies/{{projectID}}/add",
+    "method": "POST",
+    "payload": {
+      "jobRefCode": "REF123",
+      "jobRole": "Software Engineer",
+      "openings": 3,
+      "reason": "New Project",
+      "status": "OPEN"
+    },
+    "expectedResponseCode": 200,
+    "testName": "vacancy_save",
+    "expectedResponseBody": {
+      "reason": "New Project",
+      "jobRefCode": "REF123",
+      "jobRole": "Software Engineer",
+      "openings": 3,
+      "status": "OPEN",
+      "candidateList": null
+    },
+    "requiresAuthentication": true,
+    "authToken": "tokennnn",
+    "saveResponse": {
+      "vacancyID": "vacancyID"
+    },
+    "priority": 3
+  },
+  {
+    "id": "4",
+    "url": "http://localhost:8080/api/vacancies/projects/{{projectID}}",
+    "method": "GET",
+    "payload": {},
+    "expectedResponseCode": 200,
+    "testName": "getVacancy",
+    "expectedResponseBody": [{
+      "reason": "New Project",
+      "jobRefCode": "REF123",
+      "jobRole": "Software Engineer",
+      "openings": 3,
+      "status": "OPEN",
+      "candidateList": []
+    }],
+    "requiresAuthentication": true,
+    "authToken": "tokennnn",
+    "priority": 4
+  },
+  {
+    "id": "5",
+    "url": "http://localhost:8080/api/vacancies/update/{{vacancyID}}",
+    "method": "PUT",
+    "payload": {
+      "jobRefCode": "REF123",
+      "jobRole": "Senior Software Engineer",
+      "openings": 3,
+      "reason": "New Project",
+      "status": "OPEN"
+    },
+    "expectedResponseCode": 200,
+    "testName": "updateVacancy",
+    "expectedResponseBody": {
+      "reason": "New Project",
+      "jobRefCode": "REF123",
+      "jobRole": "Senior Software Engineer",
+      "openings": 3,
+      "status": "OPEN",
+      "candidateList": []
+    },
+    "requiresAuthentication": true,
+    "authToken": "tokennnn",
+    "priority": 5
+  },
+  {
+    "id": "6",
+    "url": "http://localhost:8080/api/projects/update/{{projectID}}",
+    "method": "PUT",
+    "payload": {
+      "project": {
+        "projectName": "Project KPMM",
+        "projectCode": "S12345"
+      },
+      "userID": 3
+    },
+    "expectedResponseCode": 200,
+    "testName": "updateProject",
+    "expectedResponseBody": {
+      "projectName": "Project KPMM",
+      "projectCode": "S12345",
+      "users": {
+        "id": 3,
+        "firstName": "Kavinda",
+        "lastName": "Medagoda"
+      }
+    },
+    "requiresAuthentication": true,
+    "authToken": "tokennnn",
+    "priority": 6
+  },
+  {
+    "id": "7",
+    "url": "http://localhost:8080/api/vacancies/delete/{{vacancyID}}",
+    "method": "DELETE",
+    "payload": " ",
+    "expectedResponseCode": 200,
+    "testName": "deleteVacancy",
+    "expectedResponseBody": null,
+    "requiresAuthentication": true,
+    "priority": 7
+  },
+  {
+    "id": "8",
+    "url": "http://localhost:8080/api/projects/delete/{{projectID}}",
+    "method": "DELETE",
+    "payload": " ",
+    "expectedResponseCode": 200,
+    "testName": "deleteProject",
+    "expectedResponseBody": null,
+    "requiresAuthentication": true,
+    "priority": 8
+  }
+]
+
