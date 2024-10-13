@@ -1,47 +1,92 @@
 package com.mdscem.apitestframework.fileprocessor.validator;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.commons.text.StrSubstitutor;
+import com.fasterxml.jackson.databind.JsonNode;
 import org.yaml.snakeyaml.Yaml;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class PlaceholderReplacer {
 
-    // Method to replace placeholders in a YAML string
-    public String replacePlaceholdersInYamlString(String yamlContent, String valuesYamlContent) throws Exception {
-        Map<String, Object> valueMap = loadYamlValuesFromString(valuesYamlContent);
-        return replacePlaceholdersInString(yamlContent, valueMap, "yaml");
+    public String replacePlaceholders(String content, String valuesFilePath) throws Exception {
+
+        // Detect whether the content to replace is JSON or YAML
+        String fileType = detectFileType(content);
+
+        Map<String, Object> valueMap;
+
+        if (fileType.equals("json")) {
+            valueMap = loadJsonValuesFromFile(valuesFilePath);
+        } else if (fileType.equals("yaml")) {
+            valueMap = loadYamlValuesFromFile(valuesFilePath);
+        } else {
+            throw new IllegalArgumentException("Unsupported file type.");
+        }
+
+        return replacePlaceholdersInString(content, valueMap, fileType);
     }
 
-    // Method to replace placeholders in a JSON string
-    public String replacePlaceholdersInJsonString(String jsonContent, String valuesJsonContent) throws Exception {
-        Map<String, Object> valueMap = loadJsonValuesFromString(valuesJsonContent);
-        return replacePlaceholdersInString(jsonContent, valueMap, "json");
+    // Method to detect content is in JSON or YAML format
+    private String detectFileType(String content) {
+        content = content.trim();
+        if (content.startsWith("{") && content.endsWith("}")) {
+            return "json";
+        } else {
+            return "yaml";
+        }
     }
 
-    // Helper method to load values from a YAML string
-    private Map<String, Object> loadYamlValuesFromString(String valuesYamlContent) {
+    // Method to load values from a YAML file
+    private Map<String, Object> loadYamlValuesFromFile(String yamlFilePath) throws IOException {
         Yaml yaml = new Yaml();
-        return yaml.load(valuesYamlContent);
+
+        try (InputStream inputStream = new FileInputStream(yamlFilePath)) {
+            return yaml.load(inputStream);  // Load YAML content from the file into a map
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new IOException("Error reading YAML file: " + yamlFilePath, e);
+        }
     }
 
-    // Helper method to load values from a JSON string
-    private Map<String, Object> loadJsonValuesFromString(String valuesJsonContent) throws Exception {
+    // Method to load values from a JSON file
+    private Map<String, Object> loadJsonValuesFromFile(String jsonFilePath) throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
-        return objectMapper.readValue(valuesJsonContent, Map.class);
+
+        try (InputStream inputStream = new FileInputStream(jsonFilePath)) {
+            return objectMapper.readValue(inputStream, Map.class);  // Load JSON content from the file into a map
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new IOException("Error reading JSON file: " + jsonFilePath, e);
+        }
     }
 
     // Main placeholder replacement method (works for both YAML and JSON strings)
     private String replacePlaceholdersInString(String content, Map<String, Object> valueMap, String fileType) throws Exception {
-        String modifiedContent;
+        String modifiedContent = content;
 
         try {
-            // Replace placeholders using StrSubstitutor
-            StrSubstitutor strSubstitutor = new StrSubstitutor(valueMap, "{{include ", "}}");
-            modifiedContent = strSubstitutor.replace(content);
+            // Iterate over the map and replace placeholders
+            for (Map.Entry<String, Object> entry : valueMap.entrySet()) {
+                String placeholder = "{{include " + entry.getKey() + "}}";
+                String replacement;
+
+                if (entry.getValue() instanceof Map) {
+                    // If the value is a nested map (e.g., auth_info_1), convert it to a string representation
+                    ObjectMapper mapper = new ObjectMapper();
+                    replacement = mapper.writeValueAsString(entry.getValue());  // Convert nested object to JSON string
+                } else {
+                    // Otherwise, treat it as a simple value
+                    replacement = entry.getValue().toString();
+                }
+
+                // Replace the placeholder with its corresponding value
+                modifiedContent = modifiedContent.replace(placeholder, replacement);
+            }
 
             // Check for any unresolved placeholders
             Pattern placeholderPattern = Pattern.compile("\\{\\{([^}]+)}}");
@@ -61,7 +106,7 @@ public class PlaceholderReplacer {
             throw new Exception("Error processing the " + fileType + " content", e);
         }
 
-        System.out.println(modifiedContent);
+        System.out.println("Modified content ========> " + modifiedContent);
         return modifiedContent;
     }
 }
