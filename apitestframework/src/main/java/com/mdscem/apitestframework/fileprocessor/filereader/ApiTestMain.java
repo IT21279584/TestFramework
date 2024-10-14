@@ -9,7 +9,9 @@ import java.util.List;
 public class ApiTestMain {
 
     public static void main(String[] args) throws Exception {
+
         String content = FileConfigLoader.readFile(FileConfigLoader.loadTestCasesFiles());
         System.out.println(content);
+
     }
 }
