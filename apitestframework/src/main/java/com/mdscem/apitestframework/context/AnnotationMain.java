@@ -1,20 +1,24 @@
 package com.mdscem.apitestframework.context;
 
-import com.mdscem.apitestframework.config.TestCaseConfig;
 import com.mdscem.apitestframework.fileprocessor.filereader.model.TestCase;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 
-public class AnnotationMain {
+@SpringBootApplication(exclude = {DataSourceAutoConfiguration.class })
+public class AnnotationMain implements CommandLineRunner {
+
+    @Autowired
+    private TestCaseRepository repository;
 
     public static void main(String[] args) {
-        // initialize the TestCaseContext and inject it into the repository
-        ApplicationContext context = new AnnotationConfigApplicationContext(TestCaseConfig.class);
+        SpringApplication.run(AnnotationMain.class, args);
+    }
 
-        // Retrieve the TestCaseRepositoryImpl bean
-        TestCaseRepositoryImpl repository = context.getBean(TestCaseRepositoryImpl.class);
-
-
+    @Override
+    public void run(String... args) throws Exception {
         // Create a new test case entity
         TestCase newTestCase = new TestCase();
         newTestCase.setTestCaseId("1");
