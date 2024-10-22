@@ -60,14 +60,15 @@ public class TestCaseLoader {
                 logger.error("Could not find the file: " + fileName);
             }
 
-             fileContent = new String(Files.readAllBytes(filePath));
+            fileContent = new String(Files.readAllBytes(filePath));
 
 //            loadedTestCases = fileReaderContext.loadTestCases(fileContent);
 
         } catch (IOException e) {
             e.printStackTrace();
         }
-         System.out.println("New Test Cases " + fileContent);
+        System.out.println("New Test Cases " + fileContent);
+        System.out.println("+++++++++++++++++ " + fileContent.toString());
         return fileContent.toString();
     }
 
