@@ -69,7 +69,7 @@ public class FileConfigLoader {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return allTestCases.toString();  // Return all concatenated test cases
+        return allTestCases.toString();
     }
 
 }
