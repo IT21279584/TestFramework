@@ -8,7 +8,7 @@ public class AnnotationMain {
 
     public static void main(String[] args) {
         // initialize the TestCaseContext and inject it into the repository
-        ApplicationContext context = new AnnotationConfigApplicationContext(TestConfig.class);
+        ApplicationContext context = new AnnotationConfigApplicationContext(TestCaseConfig.class);
 
         // Retrieve the TestCaseRepositoryImpl bean
         TestCaseRepositoryImpl repository = context.getBean(TestCaseRepositoryImpl.class);

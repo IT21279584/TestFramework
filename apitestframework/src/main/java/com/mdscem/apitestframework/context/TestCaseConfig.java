@@ -5,7 +5,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class TestConfig {
+public class TestCaseConfig {
 
     @Bean
     public TestCaseContext testCaseContext() {
@@ -16,5 +16,4 @@ public class TestConfig {
     public TestCaseRepositoryImpl testCaseRepositoryImpl() {
         return new TestCaseRepositoryImpl();
     }
-
 }

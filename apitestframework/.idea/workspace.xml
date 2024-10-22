@@ -5,66 +5,36 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f173b6e4-1c9a-4015-a437-489bb8ca6f0e" name="Changes" comment="Commit">
-      <change afterPath="$PROJECT_DIR$/.gradle/8.10.2/checksums/checksums.lock" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.gradle/8.10.2/dependencies-accessors/gc.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.gradle/8.10.2/executionHistory/executionHistory.bin" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.gradle/8.10.2/executionHistory/executionHistory.lock" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.gradle/8.10.2/fileChanges/last-build.bin" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.gradle/8.10.2/fileHashes/fileHashes.bin" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.gradle/8.10.2/fileHashes/fileHashes.lock" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.gradle/8.10.2/fileHashes/resourceHashesCache.bin" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.gradle/8.10.2/gc.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/cache.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.gradle/file-system.probe" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.gradle/vcs-1/gc.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_10_14_24,_4_47_AM_[Changes]/previous-compilation-data.bin" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_10_14_24,_4_47_AM_[Changes]/shelved.patch" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_10_14_24__4_47_AM__Changes_.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/com/mdscem/apitestframework/constants/Constant.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/com/mdscem/apitestframework/context/AnnotationMain.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/com/mdscem/apitestframework/context/Delete.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/com/mdscem/apitestframework/context/FindAll.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/com/mdscem/apitestframework/context/FindById.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/com/mdscem/apitestframework/context/Repository.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/com/mdscem/apitestframework/context/RepositoryInvocationHandler.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/com/mdscem/apitestframework/context/RepositoryProcessor.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/com/mdscem/apitestframework/context/Save.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/com/mdscem/apitestframework/context/TestCaseRepository.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/com/mdscem/apitestframework/fileprocessor/filereader/ApiTestMain.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/com/mdscem/apitestframework/fileprocessor/filereader/FileConfigLoader.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/com/mdscem/apitestframework/fileprocessor/filereader/FileReaderContext.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/com/mdscem/apitestframework/fileprocessor/filereader/IFileReader.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/com/mdscem/apitestframework/fileprocessor/filereader/JsonFileReader.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/com/mdscem/apitestframework/fileprocessor/filereader/TestCaseLoader.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/com/mdscem/apitestframework/fileprocessor/filereader/YamlFileReader.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/com/mdscem/apitestframework/fileprocessor/filereader/model/Request.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/com/mdscem/apitestframework/fileprocessor/filereader/model/Response.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/com/mdscem/apitestframework/fileprocessor/filereader/model/TestCase.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/com/mdscem/apitestframework/fileprocessor/yamlprocessor/YamlPlaceholderReplacer.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/resources/main/config.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/resources/main/fileconfig.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/resources/main/framework-config.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/resources/main/log4j.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/resources/main/testcase1.yaml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/resources/main/testcase2.yaml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/resources/main/testcases.yaml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/resources/main/testcases1.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/resources/main/testcases2.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/resources/main/testcases3.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/resources/main/values.yaml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/tmp/compileJava/compileTransaction/stash-dir/ApiTestMain.class.uniqueId1" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/tmp/compileJava/compileTransaction/stash-dir/FileConfigLoader.class.uniqueId0" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/mdscem/apitestframework/context/RepositoryInvocationHandler.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/testcase2.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/mdscem/apitestframework/context/TestCaseContext.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/mdscem/apitestframework/context/TestCaseRepositoryImpl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/mdscem/apitestframework/context/TestConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/8.10.2/checksums/checksums.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.10.2/checksums/checksums.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/8.10.2/executionHistory/executionHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.10.2/executionHistory/executionHistory.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/8.10.2/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.10.2/executionHistory/executionHistory.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/8.10.2/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.10.2/fileHashes/fileHashes.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/8.10.2/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.10.2/fileHashes/fileHashes.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/8.10.2/fileHashes/resourceHashesCache.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.10.2/fileHashes/resourceHashesCache.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/file-system.probe" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/file-system.probe" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/mdscem/apitestframework/context/AnnotationMain.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/mdscem/apitestframework/context/AnnotationMain.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/mdscem/apitestframework/context/RepositoryInvocationHandler.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/mdscem/apitestframework/context/RepositoryInvocationHandler.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/mdscem/apitestframework/context/RepositoryProcessor.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/mdscem/apitestframework/context/RepositoryProcessor.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/mdscem/apitestframework/context/TestCaseRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/mdscem/apitestframework/context/TestCaseRepository.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/mdscem/apitestframework/fileprocessor/filereader/ApiTestMain.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/mdscem/apitestframework/fileprocessor/filereader/ApiTestMain.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/mdscem/apitestframework/fileprocessor/filereader/TestCaseLoader.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/mdscem/apitestframework/fileprocessor/filereader/TestCaseLoader.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/mdscem/apitestframework/fileprocessor/filereader/YamlFileReader.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/mdscem/apitestframework/fileprocessor/filereader/YamlFileReader.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/tmp/compileJava/compileTransaction/stash-dir/ApiTestMain.class.uniqueId1" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/tmp/compileJava/compileTransaction/stash-dir/FileConfigLoader.class.uniqueId0" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/build/tmp/compileJava/previous-compilation-data.bin" beforeDir="false" afterPath="$PROJECT_DIR$/build/tmp/compileJava/previous-compilation-data.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/mdscem/apitestframework/context/AnnotationMain.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mdscem/apitestframework/context/AnnotationMain.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/mdscem/apitestframework/context/RepositoryInvocationHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mdscem/apitestframework/context/RepositoryInvocationHandler.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/mdscem/apitestframework/context/RepositoryProcessor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mdscem/apitestframework/context/RepositoryProcessor.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/mdscem/apitestframework/context/TestCaseRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mdscem/apitestframework/context/TestCaseRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/mdscem/apitestframework/fileprocessor/filereader/ApiTestMain.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mdscem/apitestframework/fileprocessor/filereader/ApiTestMain.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/mdscem/apitestframework/fileprocessor/filereader/FileConfigLoader.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mdscem/apitestframework/fileprocessor/filereader/FileConfigLoader.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/fileconfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/fileconfig.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/mdscem/apitestframework/fileprocessor/filereader/TestCaseLoader.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mdscem/apitestframework/fileprocessor/filereader/TestCaseLoader.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/mdscem/apitestframework/fileprocessor/filereader/YamlFileReader.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mdscem/apitestframework/fileprocessor/filereader/YamlFileReader.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -145,7 +115,7 @@
       <recent name="$PROJECT_DIR$/src/main/resources" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.ApiTestMain">
+  <component name="RunManager" selected="Application.AnnotationMain">
     <configuration name="AnnotationMain" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="com.mdscem.apitestframework.context.AnnotationMain" />
       <module name="apitestframework.main" />
@@ -317,7 +287,14 @@
       <option name="project" value="LOCAL" />
       <updated>1728906926795</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="Commit">
+      <created>1728925034668</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1728925034668</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
