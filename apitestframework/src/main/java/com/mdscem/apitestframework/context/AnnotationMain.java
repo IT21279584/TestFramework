@@ -1,5 +1,6 @@
 package com.mdscem.apitestframework.context;
 
+import com.mdscem.apitestframework.config.TestCaseConfig;
 import com.mdscem.apitestframework.fileprocessor.filereader.model.TestCase;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
