@@ -1,4 +1,4 @@
-testCaseId: "user_1_retrieve"
+testCaseId: "user_1_retrieve_yaml"
 baseUri: {{include baseUri}}
 auth: {{include auth_info_1}}
 

@@ -11,8 +11,8 @@ public class JsonFileReader implements IFileReader {
     public String readTestCases(String content) {
         try {
             ObjectMapper jsonMapper = new ObjectMapper();
-//            JsonNode jsonTree = jsonMapper.readTree(content);
-            String formattedJson = jsonMapper.writerWithDefaultPrettyPrinter().writeValueAsString(content);
+            JsonNode jsonTree = jsonMapper.readTree(content);
+            String formattedJson = jsonMapper.writerWithDefaultPrettyPrinter().writeValueAsString(jsonTree);
             logger.info("Successfully parsed JSON content.");
             return formattedJson;
         } catch (Exception e) {

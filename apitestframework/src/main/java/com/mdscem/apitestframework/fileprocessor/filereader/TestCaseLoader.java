@@ -2,6 +2,7 @@ package com.mdscem.apitestframework.fileprocessor.filereader;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.NoArgsConstructor;
 import org.apache.log4j.Logger;
 
 import java.io.IOException;
@@ -9,11 +10,12 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+@NoArgsConstructor
 public class TestCaseLoader {
 
     private static final Logger logger = Logger.getLogger(TestCaseLoader.class);
 
-    private static String fileName;
+    private String fileName;
     private FileReaderContext fileReaderContext;
     private ObjectMapper objectMapper;
 
@@ -49,7 +51,7 @@ public class TestCaseLoader {
         }
     }
 
-    public static String loadTestCases() {
+    public String loadTestCases() {
 
         String fileContent = null;
         try {
@@ -60,11 +62,14 @@ public class TestCaseLoader {
 
             fileContent = new String(Files.readAllBytes(filePath));
 
+//            loadedTestCases = fileReaderContext.loadTestCases(fileContent);
+
         } catch (IOException e) {
             e.printStackTrace();
         }
-        System.out.println("+++++++++++++++ file content " + fileContent );
-        return fileContent;
+        System.out.println("New Test Cases " + fileContent);
+        System.out.println("+++++++++++++++++ " + fileContent.toString());
+        return fileContent.toString();
     }
 
 }

@@ -54,19 +54,22 @@ public class FileConfigLoader {
 
     public static String readFile(List<String> testCaseFiles) {
 
-       try{
-           for (String testCaseFile : testCaseFiles) {
-               TestCaseLoader testCaseLoader = new TestCaseLoader(testCaseFile);
-               String testCases = testCaseLoader.loadTestCases();
-               if (testCases != null) {
-                   return testCases;
-               } else {
-                   logger.error("Failed to load test cases from file: " + testCaseFile);
-               }
-           }
-       }catch(Exception e){
+        StringBuilder allTestCases = new StringBuilder();
+
+        try {
+            for (String testCaseFile : testCaseFiles) {
+                TestCaseLoader testCaseLoader = new TestCaseLoader(testCaseFile);
+                String testCases = testCaseLoader.loadTestCases();
+                if (testCases != null) {
+                    allTestCases.append(testCases).append(System.lineSeparator());
+                } else {
+                    logger.error("Failed to load test cases from file: " + testCaseFile);
+                }
+            }
+        } catch (Exception e) {
             e.printStackTrace();
-       }
-       return null;
+        }
+        return allTestCases.toString();
     }
+
 }

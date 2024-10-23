@@ -12,8 +12,8 @@ public class YamlFileReader implements IFileReader {
     public String readTestCases(String content) {
         try {
             ObjectMapper yamlMapper = new ObjectMapper(new YAMLFactory());
-            JsonNode yamlTree = yamlMapper.readTree(content);
-            String formattedYaml = yamlMapper.writerWithDefaultPrettyPrinter().writeValueAsString(yamlTree);
+//            JsonNode yamlTree = yamlMapper.readTree(content);
+            String formattedYaml = yamlMapper.writerWithDefaultPrettyPrinter().writeValueAsString(content);
             logger.info("Successfully parsed YAML content.");
             return formattedYaml;
         } catch (Exception e) {
