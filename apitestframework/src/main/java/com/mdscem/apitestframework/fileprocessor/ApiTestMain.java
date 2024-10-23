@@ -3,10 +3,24 @@ package com.mdscem.apitestframework.fileprocessor;
 import com.mdscem.apitestframework.fileprocessor.filereader.FileConfigLoader;
 import com.mdscem.apitestframework.fileprocessor.validator.PlaceholderReplacer;
 import org.apache.log4j.BasicConfigurator;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 
-public class ApiTestMain {
+@SpringBootApplication(exclude = {DataSourceAutoConfiguration.class})
+public class ApiTestMain implements CommandLineRunner {
+
+    @Autowired
+    PlaceholderReplacer placeholderReplacer;
 
     public static void main(String[] args) throws Exception {
+        SpringApplication.run(ApiTestMain.class);
+    }
+
+    @Override
+    public void run(String... args) throws Exception {
         // Initialize basic log4j configuration
         BasicConfigurator.configure();
 
@@ -17,9 +31,6 @@ public class ApiTestMain {
 
         // Define the path to the values.yaml file
         String valuePath = "/home/kmedagoda/Documents/Kavinda Final/final TestFramework/TestFramework/apitestframework/src/main/resources/values.yaml";
-
-        // Initialize the PlaceholderReplacer
-        PlaceholderReplacer placeholderReplacer = new PlaceholderReplacer();
 
         // Perform placeholder replacement
         String modifiedContent = placeholderReplacer.replacePlaceholders(content, valuePath);

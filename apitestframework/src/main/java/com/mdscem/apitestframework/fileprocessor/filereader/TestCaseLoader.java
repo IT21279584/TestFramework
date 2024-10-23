@@ -13,7 +13,7 @@ public class TestCaseLoader {
 
     private static final Logger logger = Logger.getLogger(TestCaseLoader.class);
 
-    private String fileName;
+    private static String fileName;
     private FileReaderContext fileReaderContext;
     private ObjectMapper objectMapper;
 
@@ -49,23 +49,22 @@ public class TestCaseLoader {
         }
     }
 
-    public String loadTestCases() {
+    public static String loadTestCases() {
 
-        String loadedTestCases = null;
+        String fileContent = null;
         try {
             Path filePath = Paths.get(fileName);
             if (!Files.exists(filePath)) {
                 logger.error("Could not find the file: " + fileName);
             }
 
-            String fileContent = new String(Files.readAllBytes(filePath));
-
-            loadedTestCases = fileReaderContext.loadTestCases(fileContent);
+            fileContent = new String(Files.readAllBytes(filePath));
 
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return loadedTestCases;
+        System.out.println("+++++++++++++++ file content " + fileContent );
+        return fileContent;
     }
 
 }

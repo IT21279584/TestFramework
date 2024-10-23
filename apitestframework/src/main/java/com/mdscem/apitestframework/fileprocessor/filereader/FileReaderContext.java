@@ -3,6 +3,8 @@
     import com.fasterxml.jackson.databind.JsonNode;
 
     public class FileReaderContext {
+        public FileReaderContext() {
+        }
 
         private IFileReader iFileReader;
 
