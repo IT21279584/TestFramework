@@ -1,4 +1,4 @@
-package com.mdscem.apitestframework.fileprocessor.validator;
+package com.mdscem.apitestframework.fileprocessor.validator_old;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mdscem.apitestframework.fileprocessor.filereader.model.TestCase;

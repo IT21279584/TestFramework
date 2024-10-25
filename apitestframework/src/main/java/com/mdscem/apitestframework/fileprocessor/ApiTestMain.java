@@ -1,7 +1,11 @@
 package com.mdscem.apitestframework.fileprocessor;
 
-import com.mdscem.apitestframework.fileprocessor.filereader.FileConfigLoader;
-import com.mdscem.apitestframework.fileprocessor.validator.PlaceholderReplacer;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.mdscem.apitestframework.fileprocessor.filereader.TestCasesToJsonNodeReader;
+import com.mdscem.apitestframework.fileprocessor.validator.TestCaseReplacer;
+import com.mdscem.apitestframework.fileprocessor.validator_old.PlaceholderReplacer;
 import org.apache.log4j.BasicConfigurator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -9,11 +13,18 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 
+import java.io.IOException;
+
 @SpringBootApplication(exclude = {DataSourceAutoConfiguration.class})
 public class ApiTestMain implements CommandLineRunner {
 
     @Autowired
-    PlaceholderReplacer placeholderReplacer;
+    TestCaseReplacer testCaseReplacer;
+
+    @Autowired
+    TestCasesToJsonNodeReader testCasesToJsonNodeReader;
+
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     public static void main(String[] args) throws Exception {
         SpringApplication.run(ApiTestMain.class);
@@ -24,19 +35,22 @@ public class ApiTestMain implements CommandLineRunner {
         // Initialize basic log4j configuration
         BasicConfigurator.configure();
 
-        // Read the test cases file content
-        String content = FileConfigLoader.readFile(FileConfigLoader.loadTestCasesFiles());
-        System.out.println("Original content:");
-        System.out.println(content);
+        try {
+            // Load test case and values files
+            JsonNode testCaseNode = testCasesToJsonNodeReader.loadFileAsJsonNode("/home/kmedagoda/Documents/Kavinda Final/final TestFramework/JsonNode test/TestFramework/apitestframework/src/main/resources/testcases1.json");
+            JsonNode valuesNode = testCasesToJsonNodeReader.loadFileAsJsonNode("/home/kmedagoda/Documents/Kavinda Final/final TestFramework/JsonNode test/TestFramework/apitestframework/src/main/resources/values.yaml");
 
-        // Define the path to the values.yaml file
-        String valuePath = "/home/kmedagoda/Documents/Kavinda Final/final TestFramework/Hansaka-test/TestFramework/apitestframework/src/main/resources/values.yaml";
+            System.out.println("================ values  " + valuesNode);
+            System.out.println("================ test cases " + testCaseNode);
 
-        // Perform placeholder replacement
-        String modifiedContent = placeholderReplacer.replacePlaceholders(content, valuePath);
+            JsonNode finalResult = testCaseReplacer.replacePlaceholdersInNode(testCaseNode,valuesNode);
 
-        // Output the modified content
-        System.out.println("Modified content after placeholder replacement:");
-        System.out.println(modifiedContent);
+            System.out.println("Final Result JSON Node:");
+            System.out.println(finalResult.toPrettyString());
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 }

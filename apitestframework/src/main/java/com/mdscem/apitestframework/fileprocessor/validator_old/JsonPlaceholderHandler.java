@@ -1,7 +1,6 @@
-package com.mdscem.apitestframework.fileprocessor.validator;
+package com.mdscem.apitestframework.fileprocessor.validator_old;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.yaml.snakeyaml.Yaml;
 
 import java.io.FileInputStream;
 import java.io.InputStream;
