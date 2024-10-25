@@ -1,6 +1,7 @@
 package com.mdscem.apitestframework.fileprocessor.validator;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.yaml.snakeyaml.Yaml;
 
 import java.io.FileInputStream;
 import java.io.InputStream;
@@ -24,7 +25,7 @@ public class JsonPlaceholderHandler implements PlaceholderHandler {
             System.out.println("Replacing placeholder: " + placeholder + " with: " + replacement); // Debug line
             content = content.replace(placeholder, replacement);
         }
-        return content;
+       return content;
     }
 
     @Override

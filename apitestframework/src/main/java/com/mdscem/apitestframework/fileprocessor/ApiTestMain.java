@@ -30,7 +30,7 @@ public class ApiTestMain implements CommandLineRunner {
         System.out.println(content);
 
         // Define the path to the values.yaml file
-        String valuePath = "/home/hansakasudusinghe/Documents/Octomber/Update/TestFramework/apitestframework/src/main/resources/values.yaml";
+        String valuePath = "/home/kmedagoda/Documents/Kavinda Final/final TestFramework/Hansaka-test/TestFramework/apitestframework/src/main/resources/values.yaml";
 
         // Perform placeholder replacement
         String modifiedContent = placeholderReplacer.replacePlaceholders(content, valuePath);

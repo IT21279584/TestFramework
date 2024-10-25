@@ -1,6 +1,5 @@
 package com.mdscem.apitestframework.fileprocessor.validator;
 
-import org.springframework.stereotype.Component;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
@@ -23,7 +22,7 @@ public class YamlPlaceholderHandler implements PlaceholderHandler {
         for (Map.Entry<String, Object> entry : valueMap.entrySet()) {
             String placeholder = "{{include " + entry.getKey() + "}}";
             String replacement = mapToString(entry.getValue());
-            System.out.println("Replacing placeholder yaml: " + placeholder + " with: " + replacement); // Debug line
+            System.out.println("Replacing placeholder yaml: " + placeholder + " with: " + replacement);
             content = content.replace(placeholder, replacement);
         }
         return content;
@@ -32,7 +31,6 @@ public class YamlPlaceholderHandler implements PlaceholderHandler {
     @Override
     public String mapToString(Object mapObject) throws Exception {
         if (mapObject instanceof Map) {
-            Yaml yaml = new Yaml(getYamlDumperOptions());
             StringBuilder yamlOutput = new StringBuilder();
             Map<String, Object> map = (Map<String, Object>) mapObject;
 
@@ -41,10 +39,10 @@ public class YamlPlaceholderHandler implements PlaceholderHandler {
                 Object valueObj = entry.getValue();
                 String value;
 
-                if (valueObj instanceof String) {
+                if (valueObj instanceof Map) {
+                    value = "\n" + mapToString(valueObj).replace("\n", "\n");
+                } else if (valueObj instanceof String) {
                     value = "\"" + valueObj.toString() + "\"";
-                } else if (valueObj instanceof Map) {
-                    value = mapToString(valueObj);
                 } else {
                     value = valueObj.toString();
                 }
@@ -52,7 +50,7 @@ public class YamlPlaceholderHandler implements PlaceholderHandler {
                 yamlOutput.append(key).append(": ").append(value).append("\n");
             }
 
-            return yamlOutput.toString();
+            return "\n" + yamlOutput.toString();
         }
         return mapObject.toString();
     }
