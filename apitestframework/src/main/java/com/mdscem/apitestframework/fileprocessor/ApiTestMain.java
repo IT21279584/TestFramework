@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.mdscem.apitestframework.fileprocessor.filereader.TestCasesToJsonNodeReader;
 import com.mdscem.apitestframework.fileprocessor.validator.TestCaseReplacer;
-import com.mdscem.apitestframework.fileprocessor.validator_old.PlaceholderReplacer;
 import org.apache.log4j.BasicConfigurator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -14,6 +13,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 
 import java.io.IOException;
+
+import static com.mdscem.apitestframework.constants.Constant.TEST_CASE_FILE_PATH;
+import static com.mdscem.apitestframework.constants.Constant.VALUE_FILE_PATH;
 
 @SpringBootApplication(exclude = {DataSourceAutoConfiguration.class})
 public class ApiTestMain implements CommandLineRunner {
@@ -37,8 +39,8 @@ public class ApiTestMain implements CommandLineRunner {
 
         try {
             // Load test case and values files
-            JsonNode testCaseNode = testCasesToJsonNodeReader.loadFileAsJsonNode("/home/kmedagoda/Documents/Kavinda Final/final TestFramework/JsonNode test/TestFramework/apitestframework/src/main/resources/testcases1.json");
-            JsonNode valuesNode = testCasesToJsonNodeReader.loadFileAsJsonNode("/home/kmedagoda/Documents/Kavinda Final/final TestFramework/JsonNode test/TestFramework/apitestframework/src/main/resources/values.yaml");
+            JsonNode testCaseNode = testCasesToJsonNodeReader.loadFileAsJsonNode(TEST_CASE_FILE_PATH);
+            JsonNode valuesNode = testCasesToJsonNodeReader.loadFileAsJsonNode(VALUE_FILE_PATH);
 
             System.out.println("================ values  " + valuesNode);
             System.out.println("================ test cases " + testCaseNode);
