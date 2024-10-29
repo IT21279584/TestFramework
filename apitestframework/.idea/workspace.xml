@@ -5,35 +5,44 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f173b6e4-1c9a-4015-a437-489bb8ca6f0e" name="Changes" comment="commit Context Initialization">
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/mdscem/apitestframework/ApiTestMain.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/8.10.2/executionHistory/executionHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.10.2/executionHistory/executionHistory.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/8.10.2/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.10.2/executionHistory/executionHistory.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/8.10.2/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.10.2/fileHashes/fileHashes.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/8.10.2/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.10.2/fileHashes/fileHashes.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/8.10.2/fileHashes/resourceHashesCache.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.10.2/fileHashes/resourceHashesCache.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/file-system.probe" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/file-system.probe" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_10_14_24__4_47_AM__Changes_.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/mdscem/apitestframework/constants/Constant.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/mdscem/apitestframework/constants/Constant.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/mdscem/apitestframework/fileprocessor/filereader/FileConfigLoader.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/mdscem/apitestframework/fileprocessor/filereader/FileConfigLoader.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/mdscem/apitestframework/fileprocessor/filereader/TestCaseLoader.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/mdscem/apitestframework/fileprocessor/filereader/TestCaseLoader.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/resources/main/fileconfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/build/resources/main/fileconfig.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/resources/main/testcase1.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/build/resources/main/testcase1.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/mdscem/apitestframework/ApitestframeworkApplication.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/mdscem/apitestframework/ApitestframeworkApplication.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/mdscem/apitestframework/fileprocessor/filereader/FileConfigLoader.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/mdscem/apitestframework/fileprocessor/filereader/FileReaderContext.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/mdscem/apitestframework/fileprocessor/filereader/IFileReader.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/mdscem/apitestframework/fileprocessor/filereader/JsonFileReader.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/mdscem/apitestframework/fileprocessor/filereader/TestCaseLoader.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/mdscem/apitestframework/fileprocessor/filereader/YamlFileReader.class" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/build/resources/main/testcase2.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/build/resources/main/testcase2.yaml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/tmp/compileJava/previous-compilation-data.bin" beforeDir="false" afterPath="$PROJECT_DIR$/build/tmp/compileJava/previous-compilation-data.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/tmp/compileTestJava/previous-compilation-data.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/mdscem/apitestframework/ApitestframeworkApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mdscem/apitestframework/ApitestframeworkApplication.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/mdscem/apitestframework/config/TestCaseConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mdscem/apitestframework/config/TestCaseConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/mdscem/apitestframework/constants/Constant.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mdscem/apitestframework/constants/Constant.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/mdscem/apitestframework/context/AnnotationMain.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/mdscem/apitestframework/context/Delete.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/mdscem/apitestframework/context/FindAll.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/mdscem/apitestframework/context/FindById.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/mdscem/apitestframework/context/Repository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/mdscem/apitestframework/context/RepositoryInvocationHandler.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/mdscem/apitestframework/context/RepositoryProcessor.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/mdscem/apitestframework/context/Save.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/mdscem/apitestframework/context/TestCaseContext.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mdscem/apitestframework/context/TestCaseContext.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/mdscem/apitestframework/context/TestCaseRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mdscem/apitestframework/context/TestCaseRepository.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/mdscem/apitestframework/context/TestCaseRepositoryImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mdscem/apitestframework/context/TestCaseRepositoryImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/mdscem/apitestframework/fileprocessor/ApiTestMain.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mdscem/apitestframework/fileprocessor/ApiTestMain.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/mdscem/apitestframework/fileprocessor/filereader/FileConfigLoader.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mdscem/apitestframework/fileprocessor/filereader/FileConfigLoader.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/mdscem/apitestframework/fileprocessor/filereader/TestCaseLoader.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mdscem/apitestframework/fileprocessor/filereader/TestCaseLoader.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/mdscem/apitestframework/fileprocessor/ApiTestMain.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mdscem/apitestframework/fileprocessor/TestCaseProcessor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/mdscem/apitestframework/fileprocessor/filereader/FileConfigLoader.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/mdscem/apitestframework/fileprocessor/filereader/FileReaderContext.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/mdscem/apitestframework/fileprocessor/filereader/IFileReader.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/mdscem/apitestframework/fileprocessor/filereader/JsonFileReader.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/mdscem/apitestframework/fileprocessor/filereader/TestCaseLoader.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/mdscem/apitestframework/fileprocessor/filereader/TestCasesToJsonNodeReader.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mdscem/apitestframework/fileprocessor/filereader/TestCasesToJsonNodeReader.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/mdscem/apitestframework/fileprocessor/validator/TestCaseReplacer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mdscem/apitestframework/fileprocessor/validator/TestCaseReplacer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/fileconfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/fileconfig.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/testcase1.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/testcase1.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/mdscem/apitestframework/fileprocessor/filereader/YamlFileReader.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/testcase2.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/testcase2.yaml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -131,7 +140,7 @@
       <recent name="$PROJECT_DIR$/src/main/resources" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.com.mdscem.apitestframework.fileprocessor.ApiTestMain">
+  <component name="RunManager" selected="Application.ApitestframeworkApplication">
     <configuration name="ApiTestMain" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="com.mdscem.apitestframework.fileprocessor.filereader.ApiTestMain" />
       <module name="apitestframework.main" />
@@ -158,8 +167,8 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="com.mdscem.apitestframework.fileprocessor.ApiTestMain" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="com.mdscem.apitestframework.fileprocessor.ApiTestMain" />
+    <configuration name="TestCaseProcessor" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.mdscem.apitestframework.fileprocessor.TestCaseProcessor" />
       <module name="apitestframework.main" />
       <extension name="coverage">
         <pattern>
@@ -216,7 +225,7 @@
     <recent_temporary>
       <list>
         <item itemvalue="Gradle.apitestframework [clean]" />
-        <item itemvalue="Application.com.mdscem.apitestframework.fileprocessor.ApiTestMain" />
+        <item itemvalue="Application.TestCaseProcessor" />
         <item itemvalue="Gradle.apitestframework [classes]" />
         <item itemvalue="Application.ApiTestMain" />
         <item itemvalue="Application.ApitestframeworkApplication" />
@@ -323,7 +332,21 @@
       <option name="project" value="LOCAL" />
       <updated>1729593257088</updated>
     </task>
-    <option name="localTasksCounter" value="14" />
+    <task id="LOCAL-00014" summary="commit Context Initialization">
+      <created>1730207023803</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1730207023803</updated>
+    </task>
+    <task id="LOCAL-00015" summary="commit Context Initialization">
+      <created>1730207046667</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1730207046667</updated>
+    </task>
+    <option name="localTasksCounter" value="16" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -344,16 +367,5 @@
     <MESSAGE value="Commit" />
     <MESSAGE value="commit Context Initialization" />
     <option name="LAST_COMMIT_MESSAGE" value="commit Context Initialization" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/mdscem/apitestframework/fileprocessor/ApiTestMain.java</url>
-          <line>65</line>
-          <option name="timeStamp" value="5" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
 </project>

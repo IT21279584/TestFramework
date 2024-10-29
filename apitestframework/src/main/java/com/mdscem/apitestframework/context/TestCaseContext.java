@@ -8,7 +8,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-@Component
 public class TestCaseContext {
 
     private Map<String, TestCase> testCaseMap = new HashMap<>();

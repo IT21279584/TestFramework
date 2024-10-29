@@ -7,15 +7,9 @@ import org.springframework.stereotype.Repository;
 
 import java.util.*;
 
-@Repository
 public class TestCaseRepositoryImpl implements TestCaseRepository {
-    private final TestCaseContext context;
-
-
     @Autowired
-    public TestCaseRepositoryImpl(TestCaseContext context) {
-        this.context = context;
-    }
+    private TestCaseContext context;
 
     @Override
     public void save(TestCase testCase) {

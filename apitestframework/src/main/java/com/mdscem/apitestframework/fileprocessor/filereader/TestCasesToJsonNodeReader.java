@@ -16,24 +16,6 @@ public class TestCasesToJsonNodeReader {
     private final ObjectMapper yamlMapper = new ObjectMapper(new YAMLFactory());
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-
-    // Method to load multiple JSON/YAML files
-    public JsonNode loadMultipleFilesAsJsonNode(String[] filePaths) throws IOException {
-        List<JsonNode> jsonNodes = new ArrayList<>();
-
-        for (String filePath : filePaths) {
-            try {
-                JsonNode jsonNode = loadFileAsJsonNode(filePath);
-                jsonNodes.add(jsonNode);
-            } catch (IOException e) {
-                System.err.println("Failed to read file: " + filePath + " - " + e.getMessage());
-            }
-        }
-
-        // Combine all JsonNodes into a single array node
-        return jsonMapper.valueToTree(jsonNodes);
-    }
-
     // Existing method to load a single file as JsonNode
     public JsonNode loadFileAsJsonNode(String filePath) throws IOException {
         Path path = Paths.get(filePath);;
@@ -64,4 +46,5 @@ public class TestCasesToJsonNodeReader {
         // Convert the content into a List of Strings
         return objectMapper.readValue(content, List.class);
     }
+
 }

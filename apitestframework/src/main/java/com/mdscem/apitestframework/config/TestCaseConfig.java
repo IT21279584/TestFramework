@@ -10,16 +10,14 @@ import org.springframework.context.annotation.Primary;
 
 @Configuration
 public class TestCaseConfig {
-
-//    @Bean
-//    public TestCaseContext testCaseContext() {
-//        return new TestCaseContext();
-//    }
+    @Bean
+    public TestCaseContext testCaseContext() {
+        return new TestCaseContext();
+    }
 
     @Bean
-    @Primary
-    public TestCaseRepository testCaseRepository(TestCaseContext context) {
-        return new TestCaseRepositoryImpl(context);
+    public TestCaseRepository testCaseRepository() {
+        return new TestCaseRepositoryImpl(); // No need to pass context here
     }
 
 }
