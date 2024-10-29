@@ -9,9 +9,13 @@ import java.util.*;
 
 @Repository
 public class TestCaseRepositoryImpl implements TestCaseRepository {
+    private final TestCaseContext context;
+
 
     @Autowired
-    private TestCaseContext context;
+    public TestCaseRepositoryImpl(TestCaseContext context) {
+        this.context = context;
+    }
 
     @Override
     public void save(TestCase testCase) {

@@ -4,22 +4,64 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 
-import java.io.File;
 import java.io.IOException;
-
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 
 public class TestCasesToJsonNodeReader {
     private final ObjectMapper jsonMapper = new ObjectMapper();
     private final ObjectMapper yamlMapper = new ObjectMapper(new YAMLFactory());
-    public JsonNode loadFileAsJsonNode(String filePath) throws IOException {
-        File file = new File(filePath);
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
+
+    // Method to load multiple JSON/YAML files
+    public JsonNode loadMultipleFilesAsJsonNode(String[] filePaths) throws IOException {
+        List<JsonNode> jsonNodes = new ArrayList<>();
+
+        for (String filePath : filePaths) {
+            try {
+                JsonNode jsonNode = loadFileAsJsonNode(filePath);
+                jsonNodes.add(jsonNode);
+            } catch (IOException e) {
+                System.err.println("Failed to read file: " + filePath + " - " + e.getMessage());
+            }
+        }
+
+        // Combine all JsonNodes into a single array node
+        return jsonMapper.valueToTree(jsonNodes);
+    }
+
+    // Existing method to load a single file as JsonNode
+    public JsonNode loadFileAsJsonNode(String filePath) throws IOException {
+        Path path = Paths.get(filePath);;
+
+        if (!Files.exists(path)) {
+            throw new IOException("File not found: " + filePath);
+        }
+
+        String content = new String(Files.readAllBytes(path)); // For Java 8 compatibility
+        System.out.println("Reading Content from: " + filePath);
+
+        // Parse the content based on file extension
+        return parseContentByExtension(filePath, content);
+    }
+
+    private JsonNode parseContentByExtension(String filePath, String content) throws IOException {
         if (filePath.endsWith(".json")) {
-            return jsonMapper.readTree(file);
+            return jsonMapper.readTree(content);
         } else if (filePath.endsWith(".yaml") || filePath.endsWith(".yml")) {
-            return yamlMapper.readTree(file);
+            return yamlMapper.readTree(content);
         } else {
             throw new IllegalArgumentException("Unsupported file format: " + filePath);
         }
+    }
+    public List<String> loadTestCaseFilePaths(String configFilePath) throws IOException {
+        // Read the file content as a JSON array
+        String content = new String(Files.readAllBytes(Paths.get(configFilePath)));
+        // Convert the content into a List of Strings
+        return objectMapper.readValue(content, List.class);
     }
 }

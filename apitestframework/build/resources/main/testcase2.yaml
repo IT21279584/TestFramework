@@ -1,7 +1,6 @@
-testCaseId: "user_delete"
+testCaseId: "user_delete_new"
 baseUri: "{{include baseUri}}"
-auth:
-  "{{include auth_info_1}}"
+auth: "{{include auth_info_1}}"
 
 request:
   headers:

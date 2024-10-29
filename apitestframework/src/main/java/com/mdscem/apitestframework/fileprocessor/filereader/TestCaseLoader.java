@@ -21,8 +21,6 @@ public class TestCaseLoader {
 
     public TestCaseLoader(String fileName) {
         this.fileName = fileName;
-        this.fileReaderContext = selectFileReader(fileName);
-        this.checkFileType(fileName);
     }
 
     private FileReaderContext selectFileReader(String fileName) {

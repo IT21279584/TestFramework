@@ -1,7 +1,6 @@
 package com.mdscem.apitestframework.fileprocessor.validator;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
@@ -23,7 +22,6 @@ public class TestCaseReplacer {
         }
     }
 
-    // Replacement logic
     public JsonNode replacePlaceholders(JsonNode testCaseNode, JsonNode valuesNode) {
         Iterator<Map.Entry<String, JsonNode>> fields = testCaseNode.fields();
 
@@ -51,8 +49,6 @@ public class TestCaseReplacer {
                 }
             }
         }
-
-        // Return the modified testCaseNode
         return testCaseNode;
     }
 }
