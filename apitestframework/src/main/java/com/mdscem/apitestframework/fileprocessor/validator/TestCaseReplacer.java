@@ -1,27 +1,60 @@
 package com.mdscem.apitestframework.fileprocessor.validator;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.mdscem.apitestframework.fileprocessor.filereader.model.TestCase;
 
+import java.util.Arrays;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 public class TestCaseReplacer {
 
-    public JsonNode replacePlaceholdersInNode(JsonNode testCaseNode, JsonNode valuesNode) {
-        if (testCaseNode.isArray()) {
-            ArrayNode arrayNode = (ArrayNode) testCaseNode;
-            for (int i = 0; i < arrayNode.size(); i++) {
-                JsonNode modifiedElement = replacePlaceholders(arrayNode.get(i), valuesNode);
-                arrayNode.set(i, modifiedElement);
-            }
-            return arrayNode;
+    private final ObjectMapper objectMapper = new ObjectMapper();
+
+    public TestCase[] JsonNodeToJavaObjConverter(JsonNode jsonArrayNode){
+        // Check if JsonNode is an array
+        if (jsonArrayNode.isArray()) {
+            ArrayNode arrayNode = (ArrayNode) jsonArrayNode;
+
+            // Convert ArrayNode to TestCase array
+            List<TestCase> testCaseList = Arrays.asList(objectMapper.convertValue(arrayNode, TestCase[].class));
+
+            // Convert List to Array
+            return testCaseList.toArray(new TestCase[0]);
         } else {
-            return replacePlaceholders(testCaseNode, valuesNode);
+            throw new IllegalArgumentException("Expected a JSON array.");
         }
     }
 
+    //check the reader return and array of jsonNode or one jsonNode
+    public TestCase[] replacePlaceholdersInNode(JsonNode testCaseNode, JsonNode valuesNode) {
+        // Ensure testCaseNode is an array
+        ArrayNode arrayNode;
+
+        if (testCaseNode.isArray()) {
+            arrayNode = (ArrayNode) testCaseNode;
+        } else {
+            // Wrap testCaseNode in an array if it's not already an array
+            arrayNode = objectMapper.createArrayNode().add(testCaseNode);
+        }
+
+        // Replace placeholders in each element
+        for (int i = 0; i < arrayNode.size(); i++) {
+            JsonNode modifiedElement = replacePlaceholders(arrayNode.get(i), valuesNode);
+            arrayNode.set(i, modifiedElement);
+        }
+
+        // Convert modified ArrayNode to TestCase array
+        return JsonNodeToJavaObjConverter(arrayNode);
+    }
+
+
+
+    //replace place holders
     public JsonNode replacePlaceholders(JsonNode testCaseNode, JsonNode valuesNode) {
         Iterator<Map.Entry<String, JsonNode>> fields = testCaseNode.fields();
 
