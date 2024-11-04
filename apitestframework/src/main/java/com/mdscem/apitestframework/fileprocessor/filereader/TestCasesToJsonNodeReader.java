@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 
 import java.io.IOException;
+import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -14,7 +15,7 @@ import java.util.List;
 public class TestCasesToJsonNodeReader {
     private final ObjectMapper jsonMapper = new ObjectMapper();
     private final ObjectMapper yamlMapper = new ObjectMapper(new YAMLFactory());
-    private final ObjectMapper objectMapper = new ObjectMapper();
+
 
     // Existing method to load a single file as JsonNode
     public JsonNode loadFileAsJsonNode(String filePath) throws IOException {
@@ -40,11 +41,24 @@ public class TestCasesToJsonNodeReader {
             throw new IllegalArgumentException("Unsupported file format: " + filePath);
         }
     }
-    public List<String> loadTestCaseFilePaths(String configFilePath) throws IOException {
-        // Read the file content as a JSON array
-        String content = new String(Files.readAllBytes(Paths.get(configFilePath)));
-        // Convert the content into a List of Strings
-        return objectMapper.readValue(content, List.class);
+
+    public List<String> loadTestCaseFilePathsFromDirectory(String directoryPath) throws Exception {
+        List<String> filePaths = new ArrayList<>();
+        Path directory = Paths.get(directoryPath);
+
+        // Check if the directory exists
+        if (!Files.isDirectory(directory)) {
+            throw new IOException("Directory not found: " + directoryPath);
+        }
+
+        try (DirectoryStream<Path> stream = Files.newDirectoryStream(directory, "*.{json,yaml,yml}")) {
+            for (Path file : stream) {
+                filePaths.add(file.toAbsolutePath().toString());
+            }
+        }
+
+        System.out.println("My File Paths " + filePaths);
+        return filePaths;
     }
 
 }

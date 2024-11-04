@@ -3,6 +3,7 @@ package com.mdscem.apitestframework;
 import com.mdscem.apitestframework.fileprocessor.TestCaseProcessor;
 import com.mdscem.apitestframework.fileprocessor.filereader.TestCasesToJsonNodeReader;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
@@ -10,7 +11,7 @@ import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import java.io.IOException;
 import java.util.List;
 
-import static com.mdscem.apitestframework.constants.Constant.MULTIPLE_FILE_PATH;
+import static com.mdscem.apitestframework.constants.Constant.TEST_CASES_DIRECTORY;
 import static com.mdscem.apitestframework.constants.Constant.VALUE_FILE_PATH;
 
 @SpringBootApplication(exclude = {DataSourceAutoConfiguration.class})
@@ -22,15 +23,18 @@ public class ApiTestMain implements CommandLineRunner {
     @Autowired
     private TestCasesToJsonNodeReader testCasesToJsonNodeReader;
 
+    @Value("${value.directory.path}")
+    private String valueDirectory;
+
     @Override
     public void run(String... args) {
         try {
             // Load test case file paths from fileconfig.json
-            List<String> testCaseFilePaths = testCasesToJsonNodeReader.loadTestCaseFilePaths(MULTIPLE_FILE_PATH);
+            List<String> testCaseFilePaths = testCasesToJsonNodeReader.loadTestCaseFilePathsFromDirectory(TEST_CASES_DIRECTORY);
 
             // Process each test case file individually
             for (String filePath : testCaseFilePaths) {
-                testCaseProcessor.processTestCases(filePath, VALUE_FILE_PATH);
+                testCaseProcessor.processTestCases(filePath, valueDirectory);
             }
 
         } catch (IOException e) {

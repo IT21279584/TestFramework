@@ -1,4 +1,4 @@
-- testCaseId: "user_1_retrieve_yaml"
+- testCaseId: "get_me"
   baseUri: "{{include baseUri}}"
   auth: "{{include auth_info_1}}"
 
@@ -23,9 +23,8 @@
     var_dept_id: ""
 
   delay: 2000
-  next: ""
 
-- testCaseId: "user_2_retrieve_yaml"
+- testCaseId: "get_you"
   baseUri: "{{include baseUri}}"
   auth: "{{include auth_info_1}}"
 
@@ -50,4 +49,4 @@
     var_dept_id: ""
 
   delay: 2000
-  next: ""
+

@@ -31,7 +31,7 @@ public class TestCaseProcessor {
 
         // Replace placeholders in the current test case node using values node
         TestCase[] finalResult = testCaseReplacer.replacePlaceholdersInNode(testCaseNode, valuesNode);
-        System.out.println("Final Result as TestCase Array: " + Arrays.toString(finalResult));
+        System.out.println("Final Result as TestCase Array: " + finalResult[0].toString());
         // Handle saving of test cases
         saveTestCases(finalResult);
     }

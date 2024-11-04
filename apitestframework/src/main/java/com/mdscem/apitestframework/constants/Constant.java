@@ -1,11 +1,14 @@
 package com.mdscem.apitestframework.constants;
 
+import org.springframework.beans.factory.annotation.Value;
+
 public interface Constant {
 
-    public final String FILE_VALIDATOR_PATH = "/home/hansakasudusinghe/Documents/APITestFrameWork--Gradle/src/main/java/com/mdscem/apitestframework/fileprocessor/filevalidator/schema.json";
-    public final String MULTIPLE_FILE_PATH = "/home/hansakasudusinghe/Documents/Octomber/Update/TestFramework/apitestframework/src/main/resources/fileconfig.json";
 
-    public final String VALUE_FILE_PATH = "/home/hansakasudusinghe/Documents/Octomber/Update/TestFramework/apitestframework/src/main/resources/values.yaml";
+    public static final String BASE_PATH = "/home/hansakasudusinghe/Documents/Octomber/Update/TestFramework/apitestframework/src/main/resources/";
+    public static final String TEST_CASES_DIRECTORY = BASE_PATH + "testcases/";
+    public static final String INCLUDES_DIRECTORY = BASE_PATH + "includes/";
+    public static final String FLOWS_DIRECTORY = BASE_PATH + "flows/";
+    public final String VALUE_FILE_PATH = "/home/hansakasudusinghe/Documents/Octomber/Update/TestFramework/apitestframework/src/main/resources/includes/values.yaml";
 
-    public final String TEST_CASE_FILE_PATH = "/home/hansakasudusinghe/Documents/Octomber/Update/TestFramework/apitestframework/src/main/resources/testcase1.yaml";
 }

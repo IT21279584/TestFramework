@@ -1,6 +1,6 @@
 [
   {
-    "testCaseId": "user_1_retrieve",
+    "testCaseId": "get-student",
     "baseUri": "{{include baseUri}}",
     "auth": "{{include auth_info_1}}",
     "request": {
@@ -26,7 +26,6 @@
     "dataCapture": {
       "var_dept_id": ""
     },
-    "delay": 2000,
-    "next": ""
+    "delay": 2000
   }
 ]
