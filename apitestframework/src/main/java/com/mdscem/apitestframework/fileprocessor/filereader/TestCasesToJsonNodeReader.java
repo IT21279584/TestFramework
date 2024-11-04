@@ -29,7 +29,14 @@ public class TestCasesToJsonNodeReader {
         System.out.println("Reading Content from: " + filePath);
 
         // Parse the content based on file extension
-        return parseContentByExtension(filePath, content);
+        JsonNode rootNode = parseContentByExtension(filePath, content);
+
+        // Check if the root node contains multiple test cases
+        if (rootNode.isArray()) {
+            throw new IOException("Multiple test cases found in file: " + filePath);
+        }
+
+        return rootNode;
     }
 
     private JsonNode parseContentByExtension(String filePath, String content) throws IOException {
