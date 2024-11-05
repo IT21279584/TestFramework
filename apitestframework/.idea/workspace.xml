@@ -5,20 +5,28 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f173b6e4-1c9a-4015-a437-489bb8ca6f0e" name="Changes" comment="file reader refactor">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/mdscem/apitestframework/constants/DirectoryPaths.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/includes/values_new.yaml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/8.10.2/executionHistory/executionHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.10.2/executionHistory/executionHistory.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/8.10.2/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.10.2/executionHistory/executionHistory.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/8.10.2/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.10.2/fileHashes/fileHashes.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/8.10.2/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.10.2/fileHashes/fileHashes.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/8.10.2/fileHashes/resourceHashesCache.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.10.2/fileHashes/resourceHashesCache.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/file-system.probe" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/file-system.probe" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/mdscem/apitestframework/constants/Constant.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/mdscem/apitestframework/constants/Constant.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/resources/main/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/build/resources/main/application.properties" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/tmp/compileJava/previous-compilation-data.bin" beforeDir="false" afterPath="$PROJECT_DIR$/build/tmp/compileJava/previous-compilation-data.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/mdscem/apitestframework/ApiTestMain.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mdscem/apitestframework/ApiTestMain.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/mdscem/apitestframework/constants/Constant.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mdscem/apitestframework/constants/Constant.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/mdscem/apitestframework/constants/DirectoryPaths.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mdscem/apitestframework/constants/DirectoryPaths.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/mdscem/apitestframework/fileprocessor/TestCaseProcessor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mdscem/apitestframework/fileprocessor/TestCaseProcessor.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/mdscem/apitestframework/fileprocessor/filereader/TestCasesToJsonNodeReader.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mdscem/apitestframework/fileprocessor/filereader/TestCasesToJsonNodeReader.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/testcases/get-department.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/testcases/get-department.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/testcases/get-department.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/testcases/get-result.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/testcases/get-result.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/testcases/get-student.json" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -96,22 +104,23 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/home/hansakasudusinghe/Documents/Octomber/Update/TestFramework/apitestframework/src/main/resources&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;reference.settingsdialog.project.gradle&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "last_opened_file_path": "/home/hansakasudusinghe/Documents/Octomber/Update/TestFramework/apitestframework/src/main/resources/includes",
+    "project.structure.last.edited": "Project",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.2",
+    "settings.editor.selected.configurable": "reference.settingsdialog.project.gradle"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CreateClassDialog.RecentsKey">
       <recent name="com.mdscem.apitestframework.context" />
     </key>
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/main/resources/includes" />
       <recent name="$PROJECT_DIR$/src/main/resources" />
       <recent name="$PROJECT_DIR$/src/main/resources/testcases" />
     </key>
@@ -347,7 +356,14 @@
       <option name="project" value="LOCAL" />
       <updated>1730761825363</updated>
     </task>
-    <option name="localTasksCounter" value="19" />
+    <task id="LOCAL-00019" summary="file reader refactor">
+      <created>1730764455354</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1730764455354</updated>
+    </task>
+    <option name="localTasksCounter" value="20" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -371,5 +387,21 @@
     <MESSAGE value="refactor the codes" />
     <MESSAGE value="file reader refactor" />
     <option name="LAST_COMMIT_MESSAGE" value="file reader refactor" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/mdscem/apitestframework/fileprocessor/filereader/TestCasesToJsonNodeReader.java</url>
+          <line>93</line>
+          <option name="timeStamp" value="9" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/mdscem/apitestframework/ApiTestMain.java</url>
+          <line>30</line>
+          <option name="timeStamp" value="11" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

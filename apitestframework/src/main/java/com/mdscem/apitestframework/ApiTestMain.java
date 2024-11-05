@@ -1,7 +1,9 @@
 package com.mdscem.apitestframework;
 
+import com.mdscem.apitestframework.constants.Constant;
 import com.mdscem.apitestframework.fileprocessor.TestCaseProcessor;
 import com.mdscem.apitestframework.fileprocessor.filereader.TestCasesToJsonNodeReader;
+import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
@@ -12,7 +14,6 @@ import java.io.IOException;
 import java.util.List;
 
 import static com.mdscem.apitestframework.constants.Constant.TEST_CASES_DIRECTORY;
-import static com.mdscem.apitestframework.constants.Constant.VALUE_FILE_PATH;
 
 @SpringBootApplication(exclude = {DataSourceAutoConfiguration.class})
 public class ApiTestMain implements CommandLineRunner {
@@ -23,18 +24,18 @@ public class ApiTestMain implements CommandLineRunner {
     @Autowired
     private TestCasesToJsonNodeReader testCasesToJsonNodeReader;
 
-    @Value("${value.directory.path}")
-    private String valueDirectory;
-
     @Override
     public void run(String... args) {
         try {
-            // Load test case file paths from fileconfig.json
+            // Load include files only once
+            List<JsonNode> includeNodes = testCasesToJsonNodeReader.loadIncludeFilesAsJsonNodes(Constant.INCLUDES_DIRECTORY);
+
+            // Load test case file paths
             List<String> testCaseFilePaths = testCasesToJsonNodeReader.loadTestCaseFilePathsFromDirectory(TEST_CASES_DIRECTORY);
 
-            // Process each test case file individually
+            // Process each test case file individually, using the loaded include data
             for (String filePath : testCaseFilePaths) {
-                testCaseProcessor.processTestCases(filePath, valueDirectory);
+                testCaseProcessor.processTestCases(filePath, includeNodes);
             }
 
         } catch (IOException e) {

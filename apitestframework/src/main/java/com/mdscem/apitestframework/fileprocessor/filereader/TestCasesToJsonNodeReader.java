@@ -2,6 +2,7 @@ package com.mdscem.apitestframework.fileprocessor.filereader;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 
 import java.io.IOException;
@@ -25,7 +26,7 @@ public class TestCasesToJsonNodeReader {
             throw new IOException("File not found: " + filePath);
         }
 
-        String content = new String(Files.readAllBytes(path)); // For Java 8 compatibility
+        String content = new String(Files.readAllBytes(path));
         System.out.println("Reading Content from: " + filePath);
 
         // Parse the content based on file extension
@@ -38,6 +39,8 @@ public class TestCasesToJsonNodeReader {
 
         return rootNode;
     }
+
+
 
     private JsonNode parseContentByExtension(String filePath, String content) throws IOException {
         if (filePath.endsWith(".json")) {
@@ -66,6 +69,29 @@ public class TestCasesToJsonNodeReader {
 
         System.out.println("My File Paths " + filePaths);
         return filePaths;
+    }
+
+    //Load the Includes file directory files and read each file content and store into the JsonNode List
+    public List<JsonNode> loadIncludeFilesAsJsonNodes(String directoryPath) throws IOException {
+        List<JsonNode> jsonNodeList = new ArrayList<>();
+        Path directory = Paths.get(directoryPath);
+
+        // Check if the directory exists
+        if (!Files.isDirectory(directory)) {
+            throw new IOException("Directory not found: " + directoryPath);
+        }
+
+        try (DirectoryStream<Path> stream = Files.newDirectoryStream(directory, "*.{json,yaml,yml}")) {
+            for (Path file : stream) {
+
+                //read each file content and add into the jsoNodeList
+                JsonNode jsonNode = loadFileAsJsonNode(file.toAbsolutePath().toString());
+                jsonNodeList.add(jsonNode);
+            }
+        }
+
+        System.out.println("Loaded Include Files: " + jsonNodeList);
+        return jsonNodeList;
     }
 
 }

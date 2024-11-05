@@ -1,6 +1,6 @@
 testCaseId: "get-result"
-baseUri: "{{include baseUri}}"
-auth: "{{include auth_info_1}}"
+baseUri: "{{include baseUri_new}}"
+auth: "{{include auth_info_1_new}}"
 
 request:
   headers:

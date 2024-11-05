@@ -1,0 +1,6 @@
+auth_info_1_new:
+    type: "Basic"
+    username: "Hansaka"
+    password: "hjs"
+content_type: "application/json"
+baseUri_new: "https://reqres.in"
