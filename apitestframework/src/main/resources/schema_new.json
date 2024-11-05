@@ -1,0 +1,106 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "properties": {
+      "testCaseId": {
+        "type": "string"
+      },
+      "baseUri": {
+        "type": "string"
+      },
+      "auth": {
+        "type": "string"
+      },
+      "request": {
+        "type": "object",
+        "properties": {
+          "headers": {
+            "type": "object",
+            "properties": {
+              "Content-Type": {
+                "type": "string",
+                "enum": ["application/json"]
+              }
+            },
+            "additionalProperties": true
+          },
+          "pathParam": {
+            "type": "object",
+            "properties": {
+              "userId": {
+                "type": "integer"
+              }
+            },
+            "required": ["userId"]
+          },
+          "log": {
+            "type": "string",
+            "enum": ["all"]
+          },
+          "method": {
+            "type": "string",
+            "enum": ["GET", "POST", "PUT", "DELETE", "PATCH"]
+          },
+          "path": {
+            "type": "string",
+            "pattern": "^/api/users/(:userId|[0-9]+)$"
+          },
+          "body": {
+            "type": "object"
+          }
+        },
+        "required": ["headers", "pathParam", "log", "method", "path", "body"]
+      },
+      "response": {
+        "type": "object",
+        "properties": {
+          "statusCode": {
+            "type": "integer",
+            "minimum": 100,
+            "maximum": 599
+          },
+          "headers": {
+            "type": "object",
+            "properties": {
+              "Content-Type": {
+                "type": "string",
+                "enum": ["application/json"]
+              }
+            },
+            "additionalProperties": true
+          },
+          "cookie": {
+            "type": "object"
+          },
+          "body": {
+            "type": "object"
+          }
+        },
+        "required": ["statusCode", "headers", "cookie", "body"]
+      },
+      "dataCapture": {
+        "type": "object",
+        "properties": {
+          "var_dept_id": {
+            "type": "string"
+          }
+        }
+      },
+      "delay": {
+        "type": "integer",
+        "minimum": 0
+      }
+    },
+    "required": [
+      "testCaseId",
+      "baseUri",
+      "auth",
+      "request",
+      "response",
+      "dataCapture",
+      "delay"
+    ]
+  }
+}

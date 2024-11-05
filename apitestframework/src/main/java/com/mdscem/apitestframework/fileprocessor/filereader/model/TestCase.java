@@ -17,5 +17,6 @@ public class TestCase {
     private Response response;
     private Map<String, String> dataCapture;
     private int delay;
+    private String next;
 
 }

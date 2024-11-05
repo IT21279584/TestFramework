@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.mdscem.apitestframework.fileprocessor.filereader.model.TestCase;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
@@ -31,7 +32,7 @@ public class TestCaseReplacer {
     }
 
     //check the reader return and array of jsonNode or one jsonNode
-    public TestCase[] replacePlaceholdersInNode(JsonNode testCaseNode, JsonNode valuesNode) {
+    public TestCase[] replacePlaceholdersInNode(JsonNode testCaseNode, JsonNode valuesNode) throws IOException {
         // Ensure testCaseNode is an array
         ArrayNode arrayNode;
 
@@ -45,7 +46,10 @@ public class TestCaseReplacer {
         // Replace placeholders in each element
         for (int i = 0; i < arrayNode.size(); i++) {
             JsonNode modifiedElement = replacePlaceholders(arrayNode.get(i), valuesNode);
-            arrayNode.set(i, modifiedElement);
+
+            //Validate testcases against the schema
+            JsonNode validateNode = SchemaValidation.validateFile(modifiedElement);
+            arrayNode.set(i, validateNode);
         }
 
         // Convert modified ArrayNode to TestCase array

@@ -14,6 +14,8 @@ public class DirectoryPaths {
     public static String INCLUDES_DIRECTORY;
     public static String FLOWS_DIRECTORY;
 
+    public static String VALIDATION_FILE_PATH;
+
     // Inject base path from application.properties
     @Value("${base.directory.path}")
     public void setBasePath(String basePath) {
@@ -26,5 +28,6 @@ public class DirectoryPaths {
         TEST_CASES_DIRECTORY = basePath + "testcases/";
         INCLUDES_DIRECTORY = basePath + "includes/";
         FLOWS_DIRECTORY = basePath + "flows/";
+        VALIDATION_FILE_PATH = basePath + "schema.json";
     }
 }
