@@ -1,12 +1,10 @@
-testCaseId: "get-student"
-baseUri: "{{include baseUri}}"
-auth: "{{include auth_info_1}}"
+testCaseName: "GetCourse"
+baseUri: "{{include baseUri_new}}"
+auth: "{{include auth_info_1_new}}"
 
 request:
   headers:
     Content-Type: "application/json"
-  pathParam:
-    userId: 1
   log: "all"
   method: "GET"
   path: "/api/users/:userId"
@@ -18,8 +16,3 @@ response:
     Content-Type: "application/json"
   cookie: {}
   body: {}
-
-dataCapture:
-  var_dept_id: ""
-
-delay: 2000

@@ -14,8 +14,14 @@ public class TestCaseRepositoryImpl implements TestCaseRepository {
     @Override
     public void save(TestCase testCase) {
         // Directly access the testCaseStorage map from the context
-        context.getTestCaseMap().put(testCase.getTestCaseId(), testCase);
-        System.out.println("Saved Test Case: " + testCase.getTestCaseId());
+        context.getTestCaseMap().put(testCase.getTestCaseName(), testCase);
+        context.getTestCaseMap().put(testCase.getBaseUri(), testCase);
+        context.getTestCaseMap().put(testCase.getAuth().toString(), testCase);
+//        context.getTestCaseMap().put(testCase.getRequest().getPathParam().toString(), testCase);
+//        context.getTestCaseMap().put(testCase.getResponse().toString(), testCase);
+
+
+        System.out.println("Saved Test Case: " + testCase.toString() + "\n");
     }
 
     @Override

@@ -17,7 +17,7 @@ public class TestCaseConfig {
 
     @Bean
     public TestCaseRepository testCaseRepository() {
-        return new TestCaseRepositoryImpl(); // No need to pass context here
+        return new TestCaseRepositoryImpl();
     }
 
 }

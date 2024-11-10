@@ -14,9 +14,9 @@ import java.util.Map;
 
 public class TestCaseReplacer {
 
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    private static final ObjectMapper objectMapper = new ObjectMapper();
 
-    public TestCase[] JsonNodeToJavaObjConverter(JsonNode jsonArrayNode){
+    public static TestCase[] JsonNodeToJavaObjConverter(JsonNode jsonArrayNode){
         // Check if JsonNode is an array
         if (jsonArrayNode.isArray()) {
             ArrayNode arrayNode = (ArrayNode) jsonArrayNode;
@@ -48,8 +48,8 @@ public class TestCaseReplacer {
             JsonNode modifiedElement = replacePlaceholders(arrayNode.get(i), valuesNode);
 
             //Validate testcases against the schema
-            JsonNode validateNode = SchemaValidation.validateFile(modifiedElement);
-            arrayNode.set(i, validateNode);
+//            JsonNode validateNode = SchemaValidation.validateFile(modifiedElement);
+            arrayNode.set(i, modifiedElement);
         }
 
         // Convert modified ArrayNode to TestCase array
@@ -88,4 +88,6 @@ public class TestCaseReplacer {
         }
         return testCaseNode;
     }
+
+
 }

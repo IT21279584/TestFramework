@@ -27,7 +27,7 @@ public class DirectoryPaths {
     public void initPaths() {
         TEST_CASES_DIRECTORY = basePath + "testcases/";
         INCLUDES_DIRECTORY = basePath + "includes/";
-        FLOWS_DIRECTORY = basePath + "flows/";
+        FLOWS_DIRECTORY = basePath + "flows/flow1.yaml";
         VALIDATION_FILE_PATH = basePath + "schema.json";
     }
 }

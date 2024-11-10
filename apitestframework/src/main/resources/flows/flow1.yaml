@@ -1,0 +1,20 @@
+- testCaseName: GetDepartment
+  request:
+    pathParam:
+      userId: 1
+    queryParam:
+      dept.exact: 20
+    delay: 1000
+
+- testCaseName: GetStudent
+  request:
+    pathParam:
+      userId: 1
+    capture:
+      - nic
+      - hometown
+
+- testCaseName: GetCourse
+  request:
+    pathParam:
+      nic: "{{GetStudent.nic}}"

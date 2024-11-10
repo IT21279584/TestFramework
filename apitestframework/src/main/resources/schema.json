@@ -2,7 +2,7 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "type": "object",
   "properties": {
-    "testCaseId": {
+    "testCaseName": {
       "type": "string"
     },
     "baseUri": {
@@ -16,28 +16,14 @@
     },
     "response": {
       "type": "object"
-    },
-    "dataCapture": {
-      "type": "object",
-      "properties": {
-        "var_dept_id": {
-          "type": "string"
-        }
-      }
-    },
-    "delay": {
-      "type": "integer",
-      "minimum": 0
     }
   },
   "required": [
-    "testCaseId",
+    "testCaseName",
     "baseUri",
     "auth",
     "request",
-    "response",
-    "dataCapture",
-    "delay"
+    "response"
   ],
   "additionalProperties": false
 }
