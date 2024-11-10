@@ -1,6 +1,7 @@
 package com.mdscem.apitestframework.fileprocessor.filereader.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
@@ -17,6 +18,7 @@ public class TestCase {
     private Request request;
     private Response response;
     private Map<String, String> capture;
-    private int delay;
+    @JsonDeserialize(using = DelayDeserializer.class)
+    private Integer delay;
 
 }

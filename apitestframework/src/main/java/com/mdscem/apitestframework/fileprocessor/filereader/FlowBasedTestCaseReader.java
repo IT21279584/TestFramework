@@ -43,4 +43,10 @@ public class FlowBasedTestCaseReader {
 
         return orderedTestCases;
     }
+
+    public JsonNode getFlowData(String flowsFilePath) throws IOException {
+        Path flowPath = Paths.get(flowsFilePath);
+        JsonNode flowNode = yamlMapper.readTree(flowPath.toFile());
+        return flowNode;
+    }
 }
