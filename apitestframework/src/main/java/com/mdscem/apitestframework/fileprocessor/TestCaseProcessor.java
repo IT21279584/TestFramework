@@ -11,7 +11,6 @@ import com.mdscem.apitestframework.fileprocessor.filereader.model.TestCase;
 import com.mdscem.apitestframework.fileprocessor.validator.TestCaseReplacer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import java.util.Arrays;
 import java.io.IOException;
 import java.util.List;
 

@@ -89,12 +89,4 @@ public class TestCasesToJsonNodeReader {
 
         return includeJsonNodeList;
     }
-
-    // Method to load flow files
-    public JsonNode loadFlowFilesAsJsonNodes(String directoryPath) throws IOException {
-        flowJsonNodeList = loadFilesFromDirectoryAsJsonNodes(directoryPath);
-        System.out.println("Loaded Flow Files: " + flowJsonNodeList + "\n");
-
-        return flowJsonNodeList.get(0);
-    }
 }
