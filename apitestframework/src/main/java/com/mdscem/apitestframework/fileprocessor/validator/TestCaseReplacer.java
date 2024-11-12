@@ -16,23 +16,28 @@ public class TestCaseReplacer {
 
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
-    public static TestCase[] JsonNodeToJavaObjConverter(JsonNode jsonArrayNode){
+    public static TestCase JsonNodeToJavaObjConverter(JsonNode jsonArrayNode) {
         // Check if JsonNode is an array
         if (jsonArrayNode.isArray()) {
             ArrayNode arrayNode = (ArrayNode) jsonArrayNode;
 
             // Convert ArrayNode to TestCase array
-            List<TestCase> testCaseList = Arrays.asList(objectMapper.convertValue(arrayNode, TestCase[].class));
+            TestCase[] testCaseArray = objectMapper.convertValue(arrayNode, TestCase[].class);
 
-            // Convert List to Array
-            return testCaseList.toArray(new TestCase[0]);
+            // Return the first TestCase object in the array
+            if (testCaseArray.length > 0) {
+                return testCaseArray[0];
+            } else {
+                throw new IllegalArgumentException("JSON array is empty.");
+            }
         } else {
             throw new IllegalArgumentException("Expected a JSON array.");
         }
     }
 
+
     //check the reader return and array of jsonNode or one jsonNode
-    public TestCase[] replacePlaceholdersInNode(JsonNode testCaseNode, JsonNode valuesNode) throws IOException {
+    public static TestCase replacePlaceholdersInNode(JsonNode testCaseNode, JsonNode valuesNode) throws IOException {
         // Ensure testCaseNode is an array
         ArrayNode arrayNode;
 
@@ -59,7 +64,7 @@ public class TestCaseReplacer {
 
 
     //replace place holders
-    public JsonNode replacePlaceholders(JsonNode testCaseNode, JsonNode valuesNode) {
+    public static JsonNode replacePlaceholders(JsonNode testCaseNode, JsonNode valuesNode) {
         Iterator<Map.Entry<String, JsonNode>> fields = testCaseNode.fields();
 
         while (fields.hasNext()) {
@@ -89,5 +94,9 @@ public class TestCaseReplacer {
         return testCaseNode;
     }
 
+    //handle placeholder replacement
+    public static TestCase replacePlaceholdersInTestCase(JsonNode testCaseNode, JsonNode combinedValuesNode) throws IOException {
+        return replacePlaceholdersInNode(testCaseNode, combinedValuesNode);
+    }
 
 }

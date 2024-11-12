@@ -3,6 +3,11 @@ package com.mdscem.apitestframework.fileprocessor.filereader;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+import com.mdscem.apitestframework.fileprocessor.TestCaseProcessor;
+import com.mdscem.apitestframework.fileprocessor.filereader.model.TestCase;
+import com.mdscem.apitestframework.fileprocessor.validator.TestCaseReplacer;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -10,71 +15,83 @@ import java.nio.file.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.mdscem.apitestframework.fileprocessor.TestCaseProcessor.processTestCaseWithFlowData;
+
 @Component
 public class FlowBasedTestCaseReader {
 
+    private final TestCaseReplacer testCaseReplacer;
+    private final TestCasesToJsonNodeReader testCasesToJsonNodeReader;
+    private final TestCaseProcessor testCaseProcessor;
     private final ObjectMapper yamlMapper = new ObjectMapper(new YAMLFactory());
-    private final TestCasesToJsonNodeReader testCaseReader;
 
-    public FlowBasedTestCaseReader(TestCasesToJsonNodeReader testCaseReader) {
-        this.testCaseReader = testCaseReader;
+    @Autowired
+    @Lazy
+    public FlowBasedTestCaseReader(TestCaseReplacer testCaseReplacer,
+                                   TestCasesToJsonNodeReader testCasesToJsonNodeReader,
+                                   TestCaseProcessor testCaseProcessor) {
+        this.testCaseReplacer = testCaseReplacer;
+        this.testCasesToJsonNodeReader = testCasesToJsonNodeReader;
+        this.testCaseProcessor = testCaseProcessor;
     }
 
-    // Load flows and retrieve ordered test cases as JsonNode list
-    public List<JsonNode> loadTestCasesByFlow(String flowsDirectory , String testCaseDirectory) throws IOException {
+    // Main method to load test cases based on flows
+    public List<JsonNode> loadTestCasesByFlow(String flowsDirectory, String testCaseDirectory, JsonNode combinedValuesNode) throws IOException {
         List<JsonNode> orderedTestCases = new ArrayList<>();
-        Path flowPath = Paths.get(flowsDirectory);
+        List<Path> flowFiles = getFlowFilesFromDirectory(flowsDirectory);
 
-        // Check if the path is a directory
+        for (Path flowFile : flowFiles) {
+            List<JsonNode> flowTestCases = processFlowFileAndRead(flowFile, testCaseDirectory, combinedValuesNode);
+            orderedTestCases.addAll(flowTestCases);
+        }
+
+        return orderedTestCases;
+    }
+
+    // Get all flow YAML files from the directory
+    private List<Path> getFlowFilesFromDirectory(String flowsDirectory) throws IOException {
+        Path flowPath = Paths.get(flowsDirectory);
+        List<Path> flowFiles = new ArrayList<>();
+
         if (Files.isDirectory(flowPath)) {
             try (DirectoryStream<Path> stream = Files.newDirectoryStream(flowPath, "*.yaml")) {
-                // Iterate through each YAML file in the directory
                 for (Path file : stream) {
-                    JsonNode flowsNode = yamlMapper.readTree(file.toFile());
-                    System.out.println("My flows data: " + flowsNode);
-
-                    // Process each flow in the YAML file
-                    for (JsonNode flowItem : flowsNode) {
-                        String testCaseName = flowItem.get("testCase").get("name").asText();
-                        String testCaseFilePath = testCaseDirectory + "/" + testCaseName + ".yaml";
-                        JsonNode testCaseNode = testCaseReader.loadFileAsJsonNode(testCaseFilePath);
-
-                        orderedTestCases.add(testCaseNode);
-                    }
+                    flowFiles.add(file);
                 }
             } catch (IOException e) {
                 System.err.println("Error processing directory " + flowPath + ": " + e.getMessage());
                 throw e;
             }
         } else {
-            // If the given path is neither a directory nor a regular file, handle appropriately
             throw new IOException("Invalid path: " + flowsDirectory + " is not a directory.");
         }
 
-        return orderedTestCases;
+        return flowFiles;
     }
 
-    // Loads flow data from a single file (not directory)
-    public List<JsonNode> getFlowData(String flowsDirectoryPath) throws IOException {
-        List<JsonNode> flowDataList = new ArrayList<>();
-        Path flowPath = Paths.get(flowsDirectoryPath);
+    // Process individual flow file and return the list of test cases
+    private List<JsonNode> processFlowFileAndRead(Path flowFile, String testCaseDirectory, JsonNode combinedValuesNode) throws IOException {
+        List<JsonNode> processedTestCases = new ArrayList<>();
+        JsonNode flowsNode = yamlMapper.readTree(flowFile.toFile());
 
-        if (Files.isDirectory(flowPath)) {
-            try (DirectoryStream<Path> stream = Files.newDirectoryStream(flowPath, "*.yaml")) {
-                // Iterate through each YAML file in the directory
-                for (Path file : stream) {
-                    JsonNode flowNode = yamlMapper.readTree(file.toFile());
-                    flowDataList.add(flowNode); // Add each flow data to the list
-                }
-            } catch (IOException e) {
-                System.err.println("Error processing directory " + flowPath + ": " + e.getMessage());
-                throw e; // Propagate the exception
-            }
-        } else {
-            // If the given path is not a directory, throw an exception
-            throw new IOException("Invalid path: " + flowsDirectoryPath + " is not a directory.");
+        // Process each flow item in the YAML file
+        for (JsonNode flowItem : flowsNode) {
+            String testCaseName = flowItem.get("testCase").get("name").asText();
+            String testCaseFilePath = testCaseDirectory + "/" + testCaseName + ".yaml";
+
+            //Read the testcases
+            JsonNode testCaseNode = testCasesToJsonNodeReader.loadFileAsJsonNode(testCaseFilePath);
+
+            // Call to method that replaces placeholders
+            TestCase finalResults = TestCaseReplacer.replacePlaceholdersInTestCase(testCaseNode, combinedValuesNode);
+
+            // Process the final test case with flow data
+            JsonNode processedTestCase = processTestCaseWithFlowData(finalResults, testCaseNode, combinedValuesNode, flowItem);
+
+            processedTestCases.add(processedTestCase);
+            testCaseProcessor.saveTestCases(processedTestCase);
         }
 
-        return flowDataList;
+        return processedTestCases;
     }
 }

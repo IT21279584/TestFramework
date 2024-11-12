@@ -10,7 +10,7 @@
 - testCase:
     name: UpdateCourse
     pathParam:
-      userId: 12
+      userId: 45
     capture: [nic, hometown]
 
 - testCase:

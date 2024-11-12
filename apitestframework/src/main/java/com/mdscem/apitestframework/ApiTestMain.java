@@ -3,9 +3,9 @@ package com.mdscem.apitestframework;
 import com.mdscem.apitestframework.constants.Constant;
 import com.mdscem.apitestframework.fileprocessor.TestCaseProcessor;
 import com.mdscem.apitestframework.fileprocessor.filereader.TestCasesToJsonNodeReader;
+import com.mdscem.apitestframework.fileprocessor.filereader.FlowBasedTestCaseReader;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
@@ -13,14 +13,11 @@ import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import java.io.IOException;
 import java.util.List;
 
-import static com.mdscem.apitestframework.constants.Constant.FLOWS_DIRECTORY;
-import static com.mdscem.apitestframework.constants.Constant.TEST_CASES_DIRECTORY;
-
 @SpringBootApplication(exclude = {DataSourceAutoConfiguration.class})
 public class ApiTestMain implements CommandLineRunner {
 
     @Autowired
-    private TestCaseProcessor testCaseProcessor;
+    private FlowBasedTestCaseReader flowBasedTestCaseReader;
 
     @Autowired
     private TestCasesToJsonNodeReader testCasesToJsonNodeReader;
@@ -28,9 +25,12 @@ public class ApiTestMain implements CommandLineRunner {
     @Override
     public void run(String... args) {
         try {
-            // Load include files only once
+            // Load include files and combine them into one node
             List<JsonNode> includeNodes = testCasesToJsonNodeReader.loadIncludeFilesAsJsonNodes(Constant.INCLUDES_DIRECTORY);
-            testCaseProcessor.processTestCasesFromFlows(FLOWS_DIRECTORY, TEST_CASES_DIRECTORY, includeNodes);
+            JsonNode combinedValuesNode = TestCaseProcessor.combineNodes(includeNodes);
+
+            // Load test cases by flow, passing the combinedValuesNode
+            List<JsonNode> orderedTestCases = flowBasedTestCaseReader.loadTestCasesByFlow(Constant.FLOWS_DIRECTORY, Constant.TEST_CASES_DIRECTORY, combinedValuesNode);
 
         } catch (IOException e) {
             System.err.println("Error occurred while loading files: " + e.getMessage());
