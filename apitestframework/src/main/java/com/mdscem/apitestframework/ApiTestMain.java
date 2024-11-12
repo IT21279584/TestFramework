@@ -25,7 +25,6 @@ public class ApiTestMain implements CommandLineRunner {
     @Autowired
     private TestCasesToJsonNodeReader testCasesToJsonNodeReader;
 
-
     @Override
     public void run(String... args) {
         try {

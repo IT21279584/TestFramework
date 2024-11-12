@@ -89,4 +89,23 @@ public class TestCasesToJsonNodeReader {
 
         return includeJsonNodeList;
     }
+
+
+    public List<JsonNode> getTestCasesByFlowData(JsonNode flowData) throws IOException {
+        List<JsonNode> testCases = new ArrayList<>();
+
+        // Assuming flowData contains a list of flows with test cases in them
+        if (flowData.isArray()) {
+            for (JsonNode flow : flowData) {
+                JsonNode testCaseNode = flow.get("testCase");
+                if (testCaseNode != null && testCaseNode.isObject()) {
+                    testCases.add(testCaseNode);
+                }
+            }
+        }
+
+        // Return the list of test case nodes extracted from flow data
+        return testCases;
+    }
+
 }

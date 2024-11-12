@@ -1,4 +1,4 @@
-testCaseName: "GetCourse"
+testCaseName: "UpdateCourse"
 baseUri: "{{include baseUri_new}}"
 auth: "{{include auth_info_1_new}}"
 

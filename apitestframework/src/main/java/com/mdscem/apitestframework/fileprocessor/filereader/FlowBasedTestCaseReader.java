@@ -6,10 +6,8 @@ import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.nio.file.*;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 @Component
@@ -23,30 +21,60 @@ public class FlowBasedTestCaseReader {
     }
 
     // Load flows and retrieve ordered test cases as JsonNode list
-    public List<JsonNode> loadTestCasesByFlow(String flowsFilePath, String testCaseDirectory) throws IOException {
+    public List<JsonNode> loadTestCasesByFlow(String flowsDirectory , String testCaseDirectory) throws IOException {
         List<JsonNode> orderedTestCases = new ArrayList<>();
+        Path flowPath = Paths.get(flowsDirectory);
 
-        // Load flows.yaml as JsonNode
-        Path flowPath = Paths.get(flowsFilePath);
-        JsonNode flowsNode = yamlMapper.readTree(flowPath.toFile());
-        System.out.println("My flows data : " + flowsNode);
+        // Check if the path is a directory
+        if (Files.isDirectory(flowPath)) {
+            try (DirectoryStream<Path> stream = Files.newDirectoryStream(flowPath, "*.yaml")) {
+                // Iterate through each YAML file in the directory
+                for (Path file : stream) {
+                    JsonNode flowsNode = yamlMapper.readTree(file.toFile());
+                    System.out.println("My flows data: " + flowsNode);
 
-        // Iterate over each flow item and retrieve test cases by name
-        for (JsonNode flowItem : flowsNode) {
-            String testCaseName = flowItem.get("testCaseName").asText();
-            String testCaseFilePath = testCaseDirectory + "/" + testCaseName + ".yaml";
+                    // Process each flow in the YAML file
+                    for (JsonNode flowItem : flowsNode) {
+                        String testCaseName = flowItem.get("testCase").get("name").asText();
+                        String testCaseFilePath = testCaseDirectory + "/" + testCaseName + ".yaml";
+                        JsonNode testCaseNode = testCaseReader.loadFileAsJsonNode(testCaseFilePath);
 
-            // Load each test case file based on the name in flows.yaml
-            JsonNode testCaseNode = testCaseReader.loadFileAsJsonNode(testCaseFilePath);
-            orderedTestCases.add(testCaseNode);
+                        orderedTestCases.add(testCaseNode);
+                    }
+                }
+            } catch (IOException e) {
+                System.err.println("Error processing directory " + flowPath + ": " + e.getMessage());
+                throw e;
+            }
+        } else {
+            // If the given path is neither a directory nor a regular file, handle appropriately
+            throw new IOException("Invalid path: " + flowsDirectory + " is not a directory.");
         }
 
         return orderedTestCases;
     }
 
-    public JsonNode getFlowData(String flowsFilePath) throws IOException {
-        Path flowPath = Paths.get(flowsFilePath);
-        JsonNode flowNode = yamlMapper.readTree(flowPath.toFile());
-        return flowNode;
+    // Loads flow data from a single file (not directory)
+    public List<JsonNode> getFlowData(String flowsDirectoryPath) throws IOException {
+        List<JsonNode> flowDataList = new ArrayList<>();
+        Path flowPath = Paths.get(flowsDirectoryPath);
+
+        if (Files.isDirectory(flowPath)) {
+            try (DirectoryStream<Path> stream = Files.newDirectoryStream(flowPath, "*.yaml")) {
+                // Iterate through each YAML file in the directory
+                for (Path file : stream) {
+                    JsonNode flowNode = yamlMapper.readTree(file.toFile());
+                    flowDataList.add(flowNode); // Add each flow data to the list
+                }
+            } catch (IOException e) {
+                System.err.println("Error processing directory " + flowPath + ": " + e.getMessage());
+                throw e; // Propagate the exception
+            }
+        } else {
+            // If the given path is not a directory, throw an exception
+            throw new IOException("Invalid path: " + flowsDirectoryPath + " is not a directory.");
+        }
+
+        return flowDataList;
     }
 }

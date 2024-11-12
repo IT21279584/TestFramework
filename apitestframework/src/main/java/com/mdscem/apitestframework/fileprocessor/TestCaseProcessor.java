@@ -34,27 +34,42 @@ public class TestCaseProcessor {
     /**
      * Process Test Cases from Flow Data and Merge Placeholders
      */
-    public void processTestCasesFromFlows(String flowsFilePath, String testCaseDirectory, List<JsonNode> includeNodes) throws IOException {
-        List<JsonNode> orderedTestCases = flowBasedTestCaseReader.loadTestCasesByFlow(flowsFilePath, testCaseDirectory);
-        JsonNode combinedValuesNode = combineIncludeNodes(includeNodes);
+    public void processTestCasesFromFlows(String flowsDirectoryPath, String testCaseDirectory, List<JsonNode> includeNodes) throws IOException {
+        // Combine include nodes into a single JsonNode to apply to all test cases
+        JsonNode combinedValuesNode = combineNodes(includeNodes);
 
-        for (JsonNode testCaseNode : orderedTestCases) {
-            TestCase[] finalResults = testCaseReplacer.replacePlaceholdersInNode(testCaseNode, combinedValuesNode);
+        // Load flow data only once
+        List<JsonNode> flowData = flowBasedTestCaseReader.getFlowData(flowsDirectoryPath);
 
-            for (TestCase testCase : finalResults) {
-                JsonNode flowData = flowBasedTestCaseReader.getFlowData(flowsFilePath);
-                JsonNode processedTestCase = processTestCaseWithFlowData(testCase, testCaseNode, combinedValuesNode, flowData);
-                saveTestCases(processedTestCase);
+        for (JsonNode flow : flowData) {
+            // Load the test cases specific to this flow
+            List<JsonNode> orderedTestCases = flowBasedTestCaseReader.loadTestCasesByFlow(flowsDirectoryPath, testCaseDirectory);
+
+            // For each test case in this flow, replace placeholders and process
+            for (JsonNode testCaseNode : orderedTestCases) {
+                TestCase[] finalResults = testCaseReplacer.replacePlaceholdersInNode(testCaseNode, combinedValuesNode);
+
+                for (TestCase testCase : finalResults) {
+                    // Process the test case with flow-specific data (pathParam, queryParam, delay, etc.)
+                    JsonNode processedTestCase = processTestCaseWithFlowData(testCase, testCaseNode, combinedValuesNode, flow);
+
+                    // Save the processed test case for this flow
+                    saveTestCases(processedTestCase);
+                }
             }
+
+            // Optional: If you want to log that a particular flow has been processed, you can add a log here.
+//            System.out.println("Processed test cases for flow: " + flow.get("testCase").get("name").asText());
         }
     }
 
+
     /**
-     * Combine multiple include nodes into a single node.
+     * Combine multiple nodes into a single node.
      */
-    private JsonNode combineIncludeNodes(List<JsonNode> includeNodes) {
+    private JsonNode combineNodes(List<JsonNode> node) {
         ObjectNode combinedValuesNode = objectMapper.createObjectNode();
-        includeNodes.forEach(includeNode ->
+        node.forEach(includeNode ->
                 includeNode.fields().forEachRemaining(entry ->
                         combinedValuesNode.set(entry.getKey(), entry.getValue())
                 )
@@ -65,22 +80,22 @@ public class TestCaseProcessor {
     /**
      * Process each TestCase with flow-specific data (pathParam, queryParam, delay, etc.).
      */
-    /**
-     * Process each TestCase with flow-specific data (pathParam, queryParam, delay, etc.).
-     */
-    private JsonNode processTestCaseWithFlowData(TestCase testCase, JsonNode testCaseNode, JsonNode combinedValuesNode, JsonNode flowsData) {
+    public JsonNode processTestCaseWithFlowData(TestCase testCase, JsonNode testCaseNode, JsonNode combinedValuesNode, JsonNode flowsData) {
         ObjectNode updatedTestCase = objectMapper.createObjectNode();
+
         updatedTestCase.set("testCaseName", testCaseNode.get("testCaseName"));
         updatedTestCase.set("baseUri", testCaseNode.get("baseUri"));
         updatedTestCase.set("auth", testCaseNode.get("auth"));
+
+        System.out.println("My TestCase Node" + testCaseNode);
 
         // Create the request object node to include pathParam and queryParam
         ObjectNode requestNode = objectMapper.createObjectNode();
 
         for (JsonNode flowSection : flowsData) {
-            String flowName = flowSection.get("testCaseName").asText();
+            String flowName = flowSection.get("testCase").get("name").asText();
             if (testCase.getTestCaseName().equals(flowName)) {
-                JsonNode request = flowSection.get("request");
+                JsonNode request = flowSection.get("testCase");
 
                 // Set pathParam and queryParam within request node if they exist in flow data
                 requestNode.set("pathParam", request.has("pathParam") ? mergeParams(request.get("pathParam"), combinedValuesNode) : objectMapper.createObjectNode());
@@ -102,12 +117,10 @@ public class TestCaseProcessor {
         // Set the response as usual
         updatedTestCase.set("response", testCaseNode.get("response"));
 
-
-        System.out.println("Updated Test Case with Flow Data: " + updatedTestCase);
+        JsonNode finalResult = mergeMissingFields(testCaseNode, updatedTestCase);
+        System.out.println("Updated Test Case with Flow Data: " + finalResult);
         return updatedTestCase;
     }
-
-
 
 
     /**
@@ -146,5 +159,26 @@ public class TestCaseProcessor {
     private void saveTestCases(JsonNode processedTestCase) {
         TestCase testCase = objectMapper.convertValue(processedTestCase, TestCase.class);
         testCaseRepository.save(testCase);
+    }
+
+    /**
+     * Merges missing fields from `testCaseNode` into `updatedTestCase` recursively.
+     */
+    public JsonNode mergeMissingFields(JsonNode testCaseNode, ObjectNode updatedTestCase) {
+        testCaseNode.fields().forEachRemaining(entry -> {
+            String fieldName = entry.getKey();
+            JsonNode sourceField = entry.getValue();
+
+            if (updatedTestCase.has(fieldName)) {
+                // If target already has the field, check if it's an object to merge recursively
+                if (sourceField.isObject() && updatedTestCase.get(fieldName).isObject()) {
+                    mergeMissingFields(sourceField, (ObjectNode) updatedTestCase.get(fieldName));
+                }
+            } else {
+                // Otherwise, add the field from source to target
+                updatedTestCase.set(fieldName, sourceField);
+            }
+        });
+        return updatedTestCase;
     }
 }

@@ -1,5 +1,5 @@
 - testCase:
-    name: GetDepartment
+    name: UpdateStudent
     pathParam:
       userId: 1
       caseId: 23
@@ -8,12 +8,12 @@
     delay: 1000
 
 - testCase:
-    name: GetStudent
+    name: UpdateCourse
     pathParam:
       userId: 12
     capture: [nic, hometown]
 
 - testCase:
-    name: GetCourse
+    name: UpdateDepartment
     pathParam:
       userId: 15
