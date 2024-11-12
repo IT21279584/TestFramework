@@ -8,19 +8,14 @@ import javax.annotation.PostConstruct;
 @Component
 public class DirectoryPaths {
 
-    private static String basePath;
+    @Value("${base.directory.path}")
+    private  String basePath;
 
     public static String TEST_CASES_DIRECTORY;
     public static String INCLUDES_DIRECTORY;
     public static String FLOWS_DIRECTORY;
 
     public static String VALIDATION_FILE_PATH;
-
-    // Inject base path from application.properties
-    @Value("${base.directory.path}")
-    public void setBasePath(String basePath) {
-        DirectoryPaths.basePath = basePath;
-    }
 
 
     @PostConstruct

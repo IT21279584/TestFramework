@@ -18,7 +18,6 @@ public class TestCase {
     private Request request;
     private Response response;
     private Map<String, String> capture;
-    @JsonDeserialize(using = DelayDeserializer.class)
-    private Integer delay;
+    private int delay;
 
 }

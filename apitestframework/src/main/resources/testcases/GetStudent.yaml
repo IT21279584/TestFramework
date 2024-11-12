@@ -1,6 +1,6 @@
 testCaseName: "GetStudent"
-baseUri: "{{include baseUri}}"
-auth: "{{include auth_info_1}}"
+baseUri: {{include baseUri}}
+auth: {{include auth_info_1}}
 
 request:
   headers:

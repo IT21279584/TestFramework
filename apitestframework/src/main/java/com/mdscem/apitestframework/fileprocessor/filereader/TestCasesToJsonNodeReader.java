@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.mdscem.apitestframework.constants.Constant;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.nio.file.DirectoryStream;
@@ -13,29 +14,21 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
+@Component
 public class TestCasesToJsonNodeReader {
     private final ObjectMapper jsonMapper = new ObjectMapper();
     private final ObjectMapper yamlMapper = new ObjectMapper(new YAMLFactory());
-    // Store the files separately for includes and flows
-    private List<JsonNode> includeJsonNodeList = new ArrayList<>();
-    private List<JsonNode> flowJsonNodeList = new ArrayList<>();
 
-    // Existing method to load a single file as JsonNode
-    public JsonNode loadFileAsJsonNode(String filePath) throws IOException {
+
+    // Read the file
+    public JsonNode readFile(String filePath) throws IOException {
         Path path = Paths.get(filePath);
 
-        if (!Files.exists(path)) {
-            throw new IOException("File not found: " + filePath);
-        }
-
         String content = new String(Files.readAllBytes(path));
-//        System.out.println("Reading Content from: " + filePath);
 
-        // Parse the content based on file extension
-        return parseContentByExtension(filePath, content);
-    }
+        content = content.replaceAll("\\{\\{(.*?)\\}\\}", "\"{{$1}}\"");
 
-    private JsonNode parseContentByExtension(String filePath, String content) throws IOException {
+        // Determine parser based on file extension and parse the content
         if (filePath.endsWith(".json")) {
             return jsonMapper.readTree(content);
         } else if (filePath.endsWith(".yaml") || filePath.endsWith(".yml")) {
@@ -45,68 +38,23 @@ public class TestCasesToJsonNodeReader {
         }
     }
 
-    // Load test case files from the test cases directory
-    public List<String> loadTestCaseFilePathsFromDirectory(String directoryPath) throws Exception {
-        List<String> filePaths = new ArrayList<>();
-        Path directory = Paths.get(directoryPath);
-
-        if (!Files.isDirectory(directory)) {
-            throw new IOException("Directory not found: " + directoryPath);
-        }
-
-        try (DirectoryStream<Path> stream = Files.newDirectoryStream(directory, "*.{json,yaml,yml}")) {
-            for (Path file : stream) {
-                filePaths.add(file.toAbsolutePath().toString());
-            }
-        }
-
-        System.out.println("My File Paths: " + filePaths);
-        return filePaths;
-    }
-
-    // Generalized method to load files from any directory and return them as JsonNode list
-    private List<JsonNode> loadFilesFromDirectoryAsJsonNodes(String directoryPath) throws IOException {
+    //Load files from directory and read and return them as JsonNode list
+    public List<JsonNode> loadFilesFromDirectoryAsJsonNodes() throws IOException {
         List<JsonNode> jsonNodeList = new ArrayList<>();
-        Path directory = Paths.get(directoryPath);
+        Path directory = Paths.get(Constant.INCLUDES_DIRECTORY);
 
         // Check if the directory exists
         if (!Files.isDirectory(directory)) {
-            throw new IOException("Directory not found: " + directoryPath);
+            throw new IOException("Directory not found: " + directory);
         }
 
-        try (DirectoryStream<Path> stream = Files.newDirectoryStream(directory, "*.{json,yaml,yml}")) {
+        // Read each file in the directory
+        try (DirectoryStream<Path> stream = Files.newDirectoryStream(directory)) {
             for (Path file : stream) {
-                JsonNode jsonNode = loadFileAsJsonNode(file.toAbsolutePath().toString());
-                jsonNodeList.add(jsonNode);
-            }
+                    jsonNodeList.add(readFile(file.toString()));
+                }
+
         }
         return jsonNodeList;
     }
-
-    // Method to load include files
-    public List<JsonNode> loadIncludeFilesAsJsonNodes() throws IOException {
-        String directoryPath = Constant.INCLUDES_DIRECTORY;
-        includeJsonNodeList = loadFilesFromDirectoryAsJsonNodes(directoryPath);
-        System.out.println("Loaded Include Files: " + includeJsonNodeList + "\n");
-
-        return includeJsonNodeList;
-    }
-
-    public List<JsonNode> getTestCasesByFlowData(JsonNode flowData) throws IOException {
-        List<JsonNode> testCases = new ArrayList<>();
-
-        // Assuming flowData contains a list of flows with test cases in them
-        if (flowData.isArray()) {
-            for (JsonNode flow : flowData) {
-                JsonNode testCaseNode = flow.get("testCase");
-                if (testCaseNode != null && testCaseNode.isObject()) {
-                    testCases.add(testCaseNode);
-                }
-            }
-        }
-
-        // Return the list of test case nodes extracted from flow data
-        return testCases;
-    }
-
 }

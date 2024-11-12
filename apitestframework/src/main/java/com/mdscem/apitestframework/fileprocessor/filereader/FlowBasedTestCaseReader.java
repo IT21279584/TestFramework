@@ -8,7 +8,6 @@ import com.mdscem.apitestframework.fileprocessor.TestCaseProcessor;
 import com.mdscem.apitestframework.fileprocessor.filereader.model.TestCase;
 import com.mdscem.apitestframework.fileprocessor.validator.TestCaseReplacer;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -21,36 +20,26 @@ import static com.mdscem.apitestframework.fileprocessor.TestCaseProcessor.proces
 @Component
 public class FlowBasedTestCaseReader {
 
-    private final TestCaseReplacer testCaseReplacer;
-    private final TestCasesToJsonNodeReader testCasesToJsonNodeReader;
-    private final TestCaseProcessor testCaseProcessor;
-    private final ObjectMapper yamlMapper = new ObjectMapper(new YAMLFactory());
-
     @Autowired
-    @Lazy
-    public FlowBasedTestCaseReader(TestCaseReplacer testCaseReplacer,
-                                   TestCasesToJsonNodeReader testCasesToJsonNodeReader,
-                                   TestCaseProcessor testCaseProcessor) {
-        this.testCaseReplacer = testCaseReplacer;
-        this.testCasesToJsonNodeReader = testCasesToJsonNodeReader;
-        this.testCaseProcessor = testCaseProcessor;
-    }
+    private  TestCaseReplacer testCaseReplacer;
+    @Autowired
+    private  TestCasesToJsonNodeReader testCasesToJsonNodeReader;
+    @Autowired
+    private  TestCaseProcessor testCaseProcessor;
+    private final ObjectMapper yamlMapper = new ObjectMapper(new YAMLFactory());
 
     // Main method to load test cases based on flows
     public List<JsonNode> loadTestCasesByFlow(JsonNode combinedValuesNode) throws IOException {
 
-        String flowsDirectory = Constant.FLOWS_DIRECTORY;
-        String testCaseDirectory = Constant.TEST_CASES_DIRECTORY;
-
-                List<JsonNode> orderedTestCases = new ArrayList<>();
-        List<Path> flowFiles = getFlowFilesFromDirectory(flowsDirectory);
+        List<JsonNode> testCases = new ArrayList<>();
+        List<Path> flowFiles = getFlowFilesFromDirectory(Constant.FLOWS_DIRECTORY);
 
         for (Path flowFile : flowFiles) {
-            List<JsonNode> flowTestCases = processFlowFileAndRead(flowFile, testCaseDirectory, combinedValuesNode);
-            orderedTestCases.addAll(flowTestCases);
+            List<JsonNode> flowTestCases = processFlowFileAndRead(flowFile, combinedValuesNode);
+            testCases.addAll(flowTestCases);
         }
 
-        return orderedTestCases;
+        return testCases;
     }
 
     // Get all flow YAML files from the directory
@@ -75,17 +64,17 @@ public class FlowBasedTestCaseReader {
     }
 
     // Process individual flow file and return the list of test cases
-    private List<JsonNode> processFlowFileAndRead(Path flowFile, String testCaseDirectory, JsonNode combinedValuesNode) throws IOException {
+    private List<JsonNode> processFlowFileAndRead(Path flowFile, JsonNode combinedValuesNode) throws IOException {
         List<JsonNode> processedTestCases = new ArrayList<>();
         JsonNode flowsNode = yamlMapper.readTree(flowFile.toFile());
 
         // Process each flow item in the YAML file
         for (JsonNode flowItem : flowsNode) {
             String testCaseName = flowItem.get("testCase").get("name").asText();
-            String testCaseFilePath = testCaseDirectory + "/" + testCaseName + ".yaml";
+            String testCaseFilePath = Constant.TEST_CASES_DIRECTORY + "/" + testCaseName + ".yaml";
 
             //Read the testcases
-            JsonNode testCaseNode = testCasesToJsonNodeReader.loadFileAsJsonNode(testCaseFilePath);
+            JsonNode testCaseNode = testCasesToJsonNodeReader.readFile(testCaseFilePath);
 
             // Call to method that replaces placeholders
             TestCase finalResults = TestCaseReplacer.replacePlaceholdersInTestCase(testCaseNode, combinedValuesNode);
