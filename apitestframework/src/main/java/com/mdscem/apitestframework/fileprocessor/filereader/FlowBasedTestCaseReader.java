@@ -3,6 +3,7 @@ package com.mdscem.apitestframework.fileprocessor.filereader;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+import com.mdscem.apitestframework.constants.Constant;
 import com.mdscem.apitestframework.fileprocessor.TestCaseProcessor;
 import com.mdscem.apitestframework.fileprocessor.filereader.model.TestCase;
 import com.mdscem.apitestframework.fileprocessor.validator.TestCaseReplacer;
@@ -36,8 +37,12 @@ public class FlowBasedTestCaseReader {
     }
 
     // Main method to load test cases based on flows
-    public List<JsonNode> loadTestCasesByFlow(String flowsDirectory, String testCaseDirectory, JsonNode combinedValuesNode) throws IOException {
-        List<JsonNode> orderedTestCases = new ArrayList<>();
+    public List<JsonNode> loadTestCasesByFlow(JsonNode combinedValuesNode) throws IOException {
+
+        String flowsDirectory = Constant.FLOWS_DIRECTORY;
+        String testCaseDirectory = Constant.TEST_CASES_DIRECTORY;
+
+                List<JsonNode> orderedTestCases = new ArrayList<>();
         List<Path> flowFiles = getFlowFilesFromDirectory(flowsDirectory);
 
         for (Path flowFile : flowFiles) {
