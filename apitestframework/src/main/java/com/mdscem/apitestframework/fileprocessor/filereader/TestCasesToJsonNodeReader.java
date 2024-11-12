@@ -3,6 +3,7 @@ package com.mdscem.apitestframework.fileprocessor.filereader;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+import com.mdscem.apitestframework.constants.Constant;
 
 import java.io.IOException;
 import java.nio.file.DirectoryStream;
@@ -83,13 +84,13 @@ public class TestCasesToJsonNodeReader {
     }
 
     // Method to load include files
-    public List<JsonNode> loadIncludeFilesAsJsonNodes(String directoryPath) throws IOException {
+    public List<JsonNode> loadIncludeFilesAsJsonNodes() throws IOException {
+        String directoryPath = Constant.INCLUDES_DIRECTORY;
         includeJsonNodeList = loadFilesFromDirectoryAsJsonNodes(directoryPath);
         System.out.println("Loaded Include Files: " + includeJsonNodeList + "\n");
 
         return includeJsonNodeList;
     }
-
 
     public List<JsonNode> getTestCasesByFlowData(JsonNode flowData) throws IOException {
         List<JsonNode> testCases = new ArrayList<>();

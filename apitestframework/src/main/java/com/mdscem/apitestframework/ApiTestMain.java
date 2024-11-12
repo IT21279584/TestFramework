@@ -26,7 +26,7 @@ public class ApiTestMain implements CommandLineRunner {
     public void run(String... args) {
         try {
             // Load include files and combine them into one node
-            List<JsonNode> includeNodes = testCasesToJsonNodeReader.loadIncludeFilesAsJsonNodes(Constant.INCLUDES_DIRECTORY);
+            List<JsonNode> includeNodes = testCasesToJsonNodeReader.loadIncludeFilesAsJsonNodes();
             JsonNode combinedValuesNode = TestCaseProcessor.combineNodes(includeNodes);
 
             // Load test cases by flow, passing the combinedValuesNode
