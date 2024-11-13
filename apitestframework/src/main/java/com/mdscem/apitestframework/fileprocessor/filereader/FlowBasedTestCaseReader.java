@@ -32,7 +32,7 @@ public class FlowBasedTestCaseReader {
     public List<JsonNode> loadTestCasesByFlow(JsonNode combinedValuesNode) throws IOException {
 
         List<JsonNode> testCases = new ArrayList<>();
-        List<Path> flowFiles = getFlowFilesFromDirectory(Constant.FLOWS_DIRECTORY);
+        List<Path> flowFiles = getFlowFilesFromDirectory();
 
         for (Path flowFile : flowFiles) {
             List<JsonNode> flowTestCases = processFlowFileAndRead(flowFile, combinedValuesNode);
@@ -43,8 +43,8 @@ public class FlowBasedTestCaseReader {
     }
 
     // Get all flow YAML files from the directory
-    private List<Path> getFlowFilesFromDirectory(String flowsDirectory) throws IOException {
-        Path flowPath = Paths.get(flowsDirectory);
+    private List<Path> getFlowFilesFromDirectory() throws IOException {
+        Path flowPath = Paths.get(Constant.FLOWS_DIRECTORY);
         List<Path> flowFiles = new ArrayList<>();
 
         if (Files.isDirectory(flowPath)) {
@@ -57,7 +57,7 @@ public class FlowBasedTestCaseReader {
                 throw e;
             }
         } else {
-            throw new IOException("Invalid path: " + flowsDirectory + " is not a directory.");
+            throw new IOException("Invalid path is not a directory.");
         }
 
         return flowFiles;
