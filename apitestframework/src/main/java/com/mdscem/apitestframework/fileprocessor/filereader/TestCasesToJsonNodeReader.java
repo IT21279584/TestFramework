@@ -39,7 +39,7 @@ public class TestCasesToJsonNodeReader {
     }
 
     //Load files from directory and read and return them as JsonNode list
-    public List<JsonNode> loadFilesFromDirectoryAsJsonNodes() throws IOException {
+    public List<JsonNode> loadFilesFromDirectory() throws IOException {
         List<JsonNode> jsonNodeList = new ArrayList<>();
         Path directory = Paths.get(Constant.INCLUDES_DIRECTORY);
 

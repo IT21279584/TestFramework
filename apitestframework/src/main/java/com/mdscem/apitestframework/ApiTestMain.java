@@ -1,6 +1,5 @@
 package com.mdscem.apitestframework;
 
-import com.mdscem.apitestframework.constants.Constant;
 import com.mdscem.apitestframework.fileprocessor.TestCaseProcessor;
 import com.mdscem.apitestframework.fileprocessor.filereader.TestCasesToJsonNodeReader;
 import com.mdscem.apitestframework.fileprocessor.filereader.FlowBasedTestCaseReader;
@@ -26,7 +25,7 @@ public class ApiTestMain implements CommandLineRunner {
     public void run(String... args) {
         try {
             // Load include files and combine them into one node
-            List<JsonNode> includeNodes = testCasesToJsonNodeReader.loadFilesFromDirectoryAsJsonNodes();
+            List<JsonNode> includeNodes = testCasesToJsonNodeReader.loadFilesFromDirectory();
             JsonNode combinedValuesNode = TestCaseProcessor.combineNodes(includeNodes);
 
             // Load test cases by flow, passing the combinedValuesNode
