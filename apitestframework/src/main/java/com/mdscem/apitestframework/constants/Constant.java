@@ -8,4 +8,10 @@ public interface Constant {
     String FLOWS_DIRECTORY = DirectoryPaths.FLOWS_DIRECTORY;
     String VALIDATION_FILE_PATH = DirectoryPaths.VALIDATION_FILE_PATH;
     String FLOW_VALIDATION_PATH= DirectoryPaths.FLOW_VALIDATION_PATH;
+    String PATH_PARAM = "pathParam";
+    String QUERY_PARAM = "queryParam";
+    String DELAY = "delay";
+    String RESPONSE = "response";
+    String TESTCASE_NAME = "name";
+    String REQUEST = "request";
 }

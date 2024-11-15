@@ -9,7 +9,11 @@ import java.util.List;
 
 @Component
 public class Flow {
+
+    //flow file content
     private List<JsonNode> flowContentList;
+
+    //testcases are stored into array
     private ArrayList<TestCase> testCaseArrayList;
 
     public List<JsonNode> getFlowContentList() {

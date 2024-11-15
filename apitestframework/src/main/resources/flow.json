@@ -13,13 +13,13 @@
           "pathParam": {
             "type": "object",
             "additionalProperties": {
-              "type": "integer"
+              "type":  ["integer", "string"]
             }
           },
           "queryParam": {
             "type": "object",
             "additionalProperties": {
-              "type": "integer"
+              "type":  ["integer", "string", "array"]
             }
           },
           "delay": {
@@ -29,7 +29,7 @@
           "capture": {
             "type": "array",
             "items": {
-              "type": "string"
+              "type":  ["integer", "string"]
             }
           }
         },

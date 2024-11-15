@@ -9,9 +9,9 @@ import java.util.Map;
 @Component
 public class FlowContext {
 
-    public Map<String, Flow> flowMap = new HashMap<>();
+    private Map<String, Flow> flowMap = new HashMap<>();
 
-    public Map<String,TestCase> testCaseMap = new HashMap<>();
+    private Map<String,TestCase> testCaseMap = new HashMap<>();
 
     public Map<String, Flow> getFlowMap() {
         return flowMap;

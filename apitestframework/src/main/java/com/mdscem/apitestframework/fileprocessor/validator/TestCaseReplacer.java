@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.Map;
 
+import static com.mdscem.apitestframework.constants.Constant.*;
 import static com.mdscem.apitestframework.fileprocessor.TestCaseProcessor.jsonNodeToTestCase;
 
 /**
@@ -133,26 +134,26 @@ public class TestCaseReplacer {
         ObjectNode requestNode = objectMapper.createObjectNode();
 
         for (JsonNode flowSection : flowsData) {
-            if (flowSection.has("name")) {
-                String flowName = flowSection.get("name").asText();
+            if (flowSection.has(TESTCASE_NAME)) {
+                String flowName = flowSection.get(TESTCASE_NAME).asText();
                 if (testCase.getTestCaseName().equals(flowName)) {
                     // Add path and query parameters
-                    requestNode.set("pathParam", flowSection.get("pathParam"));
-                    requestNode.set("queryParam", flowSection.get("queryParam"));
+                    requestNode.set(PATH_PARAM, flowSection.get(PATH_PARAM));
+                    requestNode.set(QUERY_PARAM, flowSection.get(QUERY_PARAM));
                     // Add delay
-                    updatedTestCase.set("delay", flowSection.get("delay"));
+                    updatedTestCase.set(DELAY, flowSection.get(DELAY));
                 }
             }
         }
 
         // Add the request object to the updated test case
-        updatedTestCase.set("request", requestNode);
+        updatedTestCase.set(REQUEST, requestNode);
 
         // Set the response data from the original test case
-        updatedTestCase.set("response", testCaseNode.get("response"));
+        updatedTestCase.set(RESPONSE, testCaseNode.get(RESPONSE));
 
         // Merge the updated fields back into the test case
-        JsonNode finalResult = testCaseProcessor.mergeMissingFields(testCaseNode, updatedTestCase);
+        JsonNode finalResult = testCaseProcessor.mergeFlowNodeWithTestCaseNode(testCaseNode, updatedTestCase);
         return jsonNodeToTestCase(finalResult);
     }
 }

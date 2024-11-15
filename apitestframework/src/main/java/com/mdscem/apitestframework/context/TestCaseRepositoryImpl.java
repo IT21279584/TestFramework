@@ -13,7 +13,7 @@ public class TestCaseRepositoryImpl implements TestCaseRepository {
     private FlowContext context;
 
     @Override
-    public void saveTestCase(String testCaseName, TestCase testCase) {
+    public void save(String testCaseName, TestCase testCase) {
         context.getTestCaseMap().put(testCaseName, testCase);
     }
 
@@ -24,21 +24,11 @@ public class TestCaseRepositoryImpl implements TestCaseRepository {
 
     @Override
     public TestCase findByName(String testCaseName) {
-        return context.testCaseMap.get(testCaseName);
+        return context.getTestCaseMap().get(testCaseName);
     }
 
     @Override
     public List<TestCase> findAll() {
         return new ArrayList<>(context.getTestCaseMap().values());
-    }
-
-    @Override
-    public void saveFlow(String flowName, Flow flow) {
-        context.getFlowMap().put(flowName, flow);
-    }
-
-    @Override
-    public List<Flow> findAllFlows() {
-        return new ArrayList<>(context.getFlowMap().values());
     }
 }

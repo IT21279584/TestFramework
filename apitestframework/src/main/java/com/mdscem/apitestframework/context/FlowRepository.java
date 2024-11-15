@@ -2,19 +2,15 @@ package com.mdscem.apitestframework.context;
 
 
 import com.mdscem.apitestframework.fileprocessor.filereader.model.TestCase;
-
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 @Repository
-public interface TestCaseRepository {
+public interface FlowRepository {
 
-    TestCase findByName(String testCaseName);
-    List<TestCase> findAll();
-    void save(String testCaseName, TestCase testCase);
-    void deleteById(String id);
-
+    void save(String flowName, Flow flow);
+    List<Flow> findAll();
 
 
 }
