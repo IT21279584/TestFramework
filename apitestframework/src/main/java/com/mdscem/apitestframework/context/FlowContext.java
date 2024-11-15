@@ -7,9 +7,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Component
-public class TestCaseContext {
+public class FlowContext {
 
-    public Map<String, FlowObject> flowObjectMap = new HashMap<>();
+    public Map<String, Flow> flowMap = new HashMap<>();
 
     public Map<String,TestCase> testCaseMap = new HashMap<>();
 

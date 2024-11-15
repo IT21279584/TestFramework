@@ -7,4 +7,5 @@ public interface Constant {
     String INCLUDES_DIRECTORY = DirectoryPaths.INCLUDES_DIRECTORY;
     String FLOWS_DIRECTORY = DirectoryPaths.FLOWS_DIRECTORY;
     String VALIDATION_FILE_PATH = DirectoryPaths.VALIDATION_FILE_PATH;
+    String FLOW_VALIDATION_PATH= DirectoryPaths.FLOW_VALIDATION_PATH;
 }

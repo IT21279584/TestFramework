@@ -3,12 +3,13 @@ package com.mdscem.apitestframework.fileprocessor.flowprocessor;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mdscem.apitestframework.constants.Constant;
-import com.mdscem.apitestframework.context.FlowObject;
-import com.mdscem.apitestframework.context.TestCaseContext;
+import com.mdscem.apitestframework.context.Flow;
+import com.mdscem.apitestframework.context.FlowContext;
 import com.mdscem.apitestframework.fileprocessor.filereader.FlowContentReader;
-import com.mdscem.apitestframework.fileprocessor.filereader.TestCasesReader;
 import com.mdscem.apitestframework.fileprocessor.filereader.model.TestCase;
 import com.mdscem.apitestframework.fileprocessor.validator.TestCaseReplacer;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -21,12 +22,13 @@ import java.util.List;
 @Component
 public class FlowProcessor {
 
+    private static final Logger logger = LogManager.getLogger(FlowProcessor.class);
     @Autowired
     private FlowContentReader flowContentReader;
     @Autowired
-    private TestCaseContext testCaseContext;
+    private FlowContext testCaseContext;
     @Autowired
-    private FlowObject flowObject;
+    private Flow flow;
     @Autowired
     private TestCaseReplacer testCaseReplacer;
 
@@ -39,13 +41,13 @@ public class FlowProcessor {
 
         for (Path flowPath : flowPaths) {
             String flowFileName;
-            List<JsonNode> flowContentList = new ArrayList<>();
             ArrayList<TestCase> flowContentTestCaseList = new ArrayList<>();
             try {
                 flowFileName = String.valueOf(flowPath.getFileName());
-                flowContentList = flowContentReader.getFlowContentAsJsonNodes(flowPath);
+                List<JsonNode> flowContentList = flowContentReader.getFlowContentAsJsonNodes(flowPath);
 
                 for (JsonNode flowTestCase : flowContentList) {
+
                     String testCaseName = flowTestCase.get("testCase").get("name").asText();
                     if (testCaseContext.testCaseMap.containsKey(testCaseName)) {
                         TestCase testCase = testCaseContext.testCaseMap.get(testCaseName);
@@ -58,10 +60,18 @@ public class FlowProcessor {
                     flowContentTestCaseList.add(completeTestCase);
                 }
 
-                flowObject.setFlowContentList(flowContentList);
-                flowObject.setTestCaseArrayList(flowContentTestCaseList);
-                testCaseContext.flowObjectMap.put(flowFileName, flowObject);
+                flow.setFlowContentList(flowContentList);
+                flow.setTestCaseArrayList(flowContentTestCaseList);
+                testCaseContext.flowMap.put(flowFileName, flow);
 
+                logger.info("FlowObject data: {}", objectMapper.writeValueAsString(flow));
+                logger.info("FlowObjectMap data: {}", objectMapper.writeValueAsString(testCaseContext.flowMap));
+                logger.info("TestCaseMap data: {}", objectMapper.writeValueAsString(testCaseContext.testCaseMap));
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
 
 
             } catch (Exception e) {
@@ -72,46 +82,5 @@ public class FlowProcessor {
         printFlowObjectData(flowObject);
         printFlowObjectMap();
         printTestCaseMap();
-    }
-
-    /**
-     * Prints the flowObject data.
-     *
-     * @param flowObject The FlowObject to be printed.
-     */
-    private void printFlowObjectData(FlowObject flowObject) {
-        try {
-            String jsonString = objectMapper.writeValueAsString(flowObject);
-            System.out.println("FlowObject data: " + jsonString);
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("Error converting FlowObject to JSON: " + e.getMessage());
-        }
-    }
-
-    /**
-     * Prints the flowObjectMap data.
-     */
-    private void printFlowObjectMap() {
-        try {
-            String jsonString = objectMapper.writeValueAsString(testCaseContext.flowObjectMap);
-            System.out.println("FlowObjectMap data: " + jsonString);
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("Error converting FlowObjectMap to JSON: " + e.getMessage());
-        }
-    }
-
-    /**
-     * Prints the testCaseMap data.
-     */
-    private void printTestCaseMap() {
-        try {
-            String jsonString = objectMapper.writeValueAsString(testCaseContext.testCaseMap);
-            System.out.println("TestCaseMap data: " + jsonString);
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("Error converting TestCaseMap to JSON: " + e.getMessage());
-        }
     }
 }

@@ -14,8 +14,8 @@ public class DirectoryPaths {
     public static String TEST_CASES_DIRECTORY;
     public static String INCLUDES_DIRECTORY;
     public static String FLOWS_DIRECTORY;
-
     public static String VALIDATION_FILE_PATH;
+    public static String FLOW_VALIDATION_PATH;
 
 
     @PostConstruct
@@ -24,6 +24,7 @@ public class DirectoryPaths {
         INCLUDES_DIRECTORY = basePath + "includes/";
         FLOWS_DIRECTORY = basePath + "flows/";
         VALIDATION_FILE_PATH = basePath + "schema.json";
+        FLOW_VALIDATION_PATH = basePath + "flow.json";
     }
 
 }

@@ -3,9 +3,7 @@ package com.mdscem.apitestframework.fileprocessor;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.mdscem.apitestframework.context.TestCaseRepository;
 import com.mdscem.apitestframework.fileprocessor.filereader.model.TestCase;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -13,7 +11,7 @@ import java.util.List;
 @Component
 public class TestCaseProcessor {
 
-    private static final ObjectMapper objectMapper = new ObjectMapper();
+    private final static ObjectMapper objectMapper = new ObjectMapper();
 
     //JsonNode to TestCase object
     public static TestCase jsonNodeToTestCase(JsonNode jsonNode) {
@@ -25,9 +23,9 @@ public class TestCaseProcessor {
     }
 
     /**
-     * Merges missing fields from `testCaseNode` into `updatedTestCase` recursively.
+     * Merges missing fields from `testCaseNode` into `updatedTestCase` recursively in flow process.
      */
-    public static JsonNode mergeMissingFields(JsonNode testCaseNode, ObjectNode updatedTestCase) {
+    public JsonNode mergeMissingFields(JsonNode testCaseNode, ObjectNode updatedTestCase) {
         testCaseNode.fields().forEachRemaining(entry -> {
             String fieldName = entry.getKey();
             JsonNode sourceField = entry.getValue();
@@ -46,9 +44,9 @@ public class TestCaseProcessor {
     }
 
     /**
-     * Combine multiple nodes into a single node.
+     * Combine multiple nodes into a single node(include nodes).
      */
-    public static JsonNode combineNodes(List<JsonNode> node) {
+    public JsonNode combineNodes(List<JsonNode> node) {
         ObjectNode combinedValuesNode = objectMapper.createObjectNode();
         node.forEach(includeNode ->
                 includeNode.fields().forEachRemaining(entry ->
@@ -58,7 +56,8 @@ public class TestCaseProcessor {
         return combinedValuesNode;
     }
 
-    public static JsonNode convertToJsonNode(TestCase testCase) {
+    //Convert Testcase to the JsoNode
+    public JsonNode convertToJsonNode(TestCase testCase) {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             return objectMapper.valueToTree(testCase);

@@ -2,26 +2,20 @@ package com.mdscem.apitestframework.fileprocessor.validator;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.mdscem.apitestframework.fileprocessor.TestCaseProcessor;
-import com.mdscem.apitestframework.fileprocessor.filereader.FlowContentReader;
 import com.mdscem.apitestframework.fileprocessor.filereader.model.TestCase;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 import static com.mdscem.apitestframework.fileprocessor.TestCaseProcessor.jsonNodeToTestCase;
 
 @Component
 public class TestCaseReplacer {
-    @Autowired
-    private FlowContentReader flowContentReader;
 
     @Autowired
     private TestCaseProcessor testCaseProcessor;
@@ -36,7 +30,7 @@ public class TestCaseReplacer {
             for (int i = 0; i < testCaseNode.size(); i++) {
                 JsonNode element = testCaseNode.get(i);
                 JsonNode modifiedElement = replacePlaceholders(element, valuesNode);
-                ((ObjectNode) testCaseNode).set(String.valueOf(i), modifiedElement);  // Directly modify the array node
+                ((ObjectNode) testCaseNode).set(String.valueOf(i), modifiedElement);
             }
         } else {
             // If it's a single object, replace the placeholders directly
@@ -47,9 +41,7 @@ public class TestCaseReplacer {
         return testCaseNode;
     }
 
-
-
-    //replace place holders
+    //replace place holders(include nodes)
     public static JsonNode replacePlaceholders(JsonNode testCaseNode, JsonNode valuesNode) {
         Iterator<Map.Entry<String, JsonNode>> fields = testCaseNode.fields();
 
@@ -81,7 +73,7 @@ public class TestCaseReplacer {
     }
 
     /**
-     * Process each TestCase with flow-specific data (pathParam, queryParam, delay, etc.).
+     * Replace each TestCase with flow-specific data (pathParam, queryParam, delay, etc.).
      */
     public TestCase replaceTestCaseWithFlowData(TestCase testCase, JsonNode flowsData) {
         ObjectNode updatedTestCase = objectMapper.createObjectNode();
@@ -96,13 +88,8 @@ public class TestCaseReplacer {
                 if (testCase.getTestCaseName().equals(flowName)) {
 
                     // Check for pathParam and queryParam before setting
-                    if (flowSection.has("pathParam")) {
-                        requestNode.set("pathParam", flowSection.get("pathParam"));
-                    }
-                    if (flowSection.has("queryParam")) {
-                        requestNode.set("queryParam", flowSection.get("queryParam"));
-                    }
-
+                    requestNode.set("pathParam", flowSection.get("pathParam"));
+                    requestNode.set("queryParam", flowSection.get("queryParam"));
                     updatedTestCase.set("delay", flowSection.has("delay") ? flowSection.get("delay") : objectMapper.nullNode());
                     break;
                 }
@@ -119,5 +106,4 @@ public class TestCaseReplacer {
         JsonNode finalResult = testCaseProcessor.mergeMissingFields(testCaseNode, updatedTestCase);
         return jsonNodeToTestCase(finalResult);
     }
-
 }

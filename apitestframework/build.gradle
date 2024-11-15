@@ -29,9 +29,7 @@ dependencies {
 	implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.7.4'
 	implementation 'org.springframework.boot:spring-boot-starter-mustache'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	implementation('log4j:log4j:1.2.16') {
-		exclude group: 'junit', module: 'junit'
-	}
+
 
 
 	implementation 'org.apache.commons:commons-text:1.10.0'
