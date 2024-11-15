@@ -4,12 +4,12 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mdscem.apitestframework.constants.Constant;
 import com.mdscem.apitestframework.context.Flow;
-import com.mdscem.apitestframework.context.FlowContext;
+import com.mdscem.apitestframework.context.TestContext;
 import com.mdscem.apitestframework.context.FlowRepository;
 import com.mdscem.apitestframework.context.TestCaseRepository;
 import com.mdscem.apitestframework.fileprocessor.filereader.FlowContentReader;
 import com.mdscem.apitestframework.fileprocessor.filereader.model.TestCase;
-import com.mdscem.apitestframework.fileprocessor.validator.TestCaseReplacer;
+import com.mdscem.apitestframework.fileprocessor.validator.TestReplacer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,9 +34,9 @@ public class FlowProcessor {
     @Autowired
     private FlowContentReader flowContentReader;
     @Autowired
-    private FlowContext flowContext;
+    private TestContext testContext;
     @Autowired
-    private TestCaseReplacer testCaseReplacer;
+    private TestReplacer testReplacer;
     @Autowired
     private TestCaseRepository testCaseRepository;
     @Autowired
@@ -72,17 +72,11 @@ public class FlowProcessor {
                     String testCaseName = flowTestCase.get("testCase").get(TESTCASE_NAME).asText();
 
                     // If the test case is already in the context map, retrieve and update it
-                    if (flowContext.getTestCaseMap().containsKey(testCaseName)) {
-                        TestCase testCase = testCaseRepository.findByName(testCaseName);
-                        TestCase completeTestCase = testCaseReplacer.replaceTestCaseWithFlowData(testCase, flowTestCase);
-                        flowContentTestCaseList.add(completeTestCase);
-                    } else {
-                        // Otherwise, read a new test case, add it to the map, and update it
-                        TestCase newTestCase = flowContentReader.readNewTestCase(testCaseName);
-                        testCaseRepository.save(testCaseName, newTestCase);
-                        TestCase completeTestCase = testCaseReplacer.replaceTestCaseWithFlowData(newTestCase, flowTestCase);
-                        flowContentTestCaseList.add(completeTestCase);
-                    }
+                    TestCase testCase = testContext.getTestCaseMap().containsKey(testCaseName)
+                            ? testCaseRepository.findByName(testCaseName)
+                            : testCaseRepository.save(testCaseName, flowContentReader.readNewTestCase(testCaseName));
+
+                    flowContentTestCaseList.add(testReplacer.replaceTestCaseWithFlowData(testCase, flowTestCase));
                 }
 
                 // Update the flow object with content and test cases
@@ -98,8 +92,8 @@ public class FlowProcessor {
             }
         }
         // Log the resulting data for debugging and validation
-        logger.info("FlowObjectMap data: {}", objectMapper.writeValueAsString(flowContext.getFlowMap()));
-        logger.info("TestCaseMap data: {}", objectMapper.writeValueAsString(flowContext.getTestCaseMap()));
+        logger.info("FlowObjectMap data: {}", objectMapper.writeValueAsString(testContext.getFlowMap()));
+        logger.info("TestCaseMap data: {}", objectMapper.writeValueAsString(testContext.getTestCaseMap()));
 
     }
 }

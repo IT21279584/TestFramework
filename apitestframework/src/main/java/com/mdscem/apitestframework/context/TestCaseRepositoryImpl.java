@@ -10,11 +10,12 @@ import java.util.*;
 public class TestCaseRepositoryImpl implements TestCaseRepository {
 
     @Autowired
-    private FlowContext context;
+    private TestContext context;
 
     @Override
-    public void save(String testCaseName, TestCase testCase) {
+    public TestCase save(String testCaseName, TestCase testCase) {
         context.getTestCaseMap().put(testCaseName, testCase);
+        return testCase;
     }
 
     @Override

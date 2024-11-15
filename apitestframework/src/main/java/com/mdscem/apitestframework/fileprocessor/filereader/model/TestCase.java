@@ -17,7 +17,7 @@ public class TestCase {
     private Map<String, String> auth;
     private Request request;
     private Response response;
-    private Map<String, String> capture;
+    private Map<String, Object> capture;
     private int delay;
 
 }

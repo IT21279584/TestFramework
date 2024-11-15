@@ -1,6 +1,5 @@
 package com.mdscem.apitestframework.context;
 
-import com.mdscem.apitestframework.fileprocessor.filereader.model.TestCase;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -11,7 +10,7 @@ import java.util.List;
 public class FlowRepositoryImpl implements FlowRepository {
 
     @Autowired
-    private FlowContext context;
+    private TestContext context;
 
     @Override
     public void save(String flowName, Flow flow) {

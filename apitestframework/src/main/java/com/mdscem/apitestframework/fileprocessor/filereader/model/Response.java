@@ -15,5 +15,4 @@ public class Response {
     private Map<String, String> cookie;
     private Map<String, String> body;
     private String log;
-
 }

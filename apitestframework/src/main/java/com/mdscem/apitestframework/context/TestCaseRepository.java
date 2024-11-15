@@ -12,7 +12,7 @@ public interface TestCaseRepository {
 
     TestCase findByName(String testCaseName);
     List<TestCase> findAll();
-    void save(String testCaseName, TestCase testCase);
+    TestCase save(String testCaseName, TestCase testCase);
     void deleteById(String id);
 
 

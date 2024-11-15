@@ -23,7 +23,7 @@ import static com.mdscem.apitestframework.fileprocessor.TestCaseProcessor.jsonNo
  * It also supports flow-specific replacements for path parameters, query parameters, and delays.
  */
 @Component
-public class TestCaseReplacer {
+public class TestReplacer {
 
     private static final Logger logger = LogManager.getLogger(FlowProcessor.class);
 
@@ -41,7 +41,7 @@ public class TestCaseReplacer {
      * @return Updated JsonNode with placeholders replaced.
      * @throws IOException if there is an issue during processing.
      */
-    public static JsonNode replacePlaceholdersInNode(JsonNode testCaseNode, JsonNode valuesNode) throws IOException {
+    public static JsonNode replacePlaceholder(JsonNode testCaseNode, JsonNode valuesNode) throws IOException {
         if (testCaseNode.isArray()) {
             // Process each element in the array
             for (int i = 0; i < testCaseNode.size(); i++) {
