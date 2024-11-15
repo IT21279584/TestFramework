@@ -1,7 +1,5 @@
 package com.mdscem.apitestframework.config;
 
-
-import com.mdscem.apitestframework.context.FlowRepository;
 import com.mdscem.apitestframework.context.FlowRepositoryImpl;
 import com.mdscem.apitestframework.context.TestCaseRepository;
 import com.mdscem.apitestframework.context.TestCaseRepositoryImpl;
@@ -16,7 +14,7 @@ public class TestCaseConfig {
     }
 
     @Bean
-    public FlowRepository flowRepository() {
+    public TestCaseRepository flowRepository() {
         return new FlowRepositoryImpl();
     }
 

@@ -25,14 +25,13 @@ public class TestCaseProcessor {
     /**
      * Recursively merges fields from the source JSON node (`testCaseNode`)
      * into the target JSON object node (`updatedTestCase`).
-     *
      * This method ensures that any fields present in the source but not in the
      * target are added to the target. If a field is an object in both the source
      * and target, the method performs a recursive merge to ensure nested structures
      * are handled.
      *
      * @param testCaseNode     the source JSON node containing fields to merge
-     * @param updatedTestCase  the target JSON object node to which missing fields are added
+     * @param TestCase  the target JSON object node to which missing fields are added
      * @return                 the updated JSON object node with fields merged
      */
     public JsonNode mergeFlowNodeWithTestCaseNode(JsonNode testCaseNode, ObjectNode TestCase) {

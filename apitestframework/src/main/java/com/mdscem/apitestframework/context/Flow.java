@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class Flow {
+public class Flow implements Testable{
 
     //flow file content
     private List<JsonNode> flowContentList;

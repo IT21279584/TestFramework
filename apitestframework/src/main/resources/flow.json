@@ -27,7 +27,7 @@
             "minimum": 0
           },
           "capture": {
-            "type": "array",
+            "type": ["string", "array"],
             "items": {
               "type":  ["integer", "string"]
             }

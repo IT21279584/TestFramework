@@ -11,7 +11,7 @@
     name: UpdateCourse
     pathParam:
       userId: 45
-    capture: [nic, hometown]
+    capture: nic
 
 - testCase:
     name: UpdateDepartment
