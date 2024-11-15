@@ -19,68 +19,85 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Component responsible for processing flow definitions,
+ * replacing placeholders, and generating complete test cases.
+ */
 @Component
 public class FlowProcessor {
 
     private static final Logger logger = LogManager.getLogger(FlowProcessor.class);
+
     @Autowired
     private FlowContentReader flowContentReader;
+
     @Autowired
     private FlowContext testCaseContext;
+
     @Autowired
     private Flow flow;
+
     @Autowired
     private TestCaseReplacer testCaseReplacer;
 
     private static final ObjectMapper objectMapper = new ObjectMapper(); // Jackson ObjectMapper
 
+    /**
+     * Processes flow files from the specified directory and generates complete test cases.
+     *
+     * @throws IOException if there is an issue reading files or processing test cases.
+     */
     public void flowProcess() throws IOException {
+        // Directory containing flow definitions
         Path flowPathDir = Paths.get(Constant.FLOWS_DIRECTORY);
-        // list of flow paths
+        // Retrieve a list of flow file paths
         List<Path> flowPaths = flowContentReader.getFlowFilesFromDirectory(flowPathDir);
 
         for (Path flowPath : flowPaths) {
-            String flowFileName;
-            ArrayList<TestCase> flowContentTestCaseList = new ArrayList<>();
             try {
+                String flowFileName;
+                ArrayList<TestCase> flowContentTestCaseList = new ArrayList<>();
+
+                // Get the file name of the current flow file
                 flowFileName = String.valueOf(flowPath.getFileName());
+
+                // Read the flow content into a list of JsonNodes
                 List<JsonNode> flowContentList = flowContentReader.getFlowContentAsJsonNodes(flowPath);
 
                 for (JsonNode flowTestCase : flowContentList) {
-
+                    // Extract the test case name
                     String testCaseName = flowTestCase.get("testCase").get("name").asText();
+
+                    // If the test case is already in the context map, retrieve and update it
                     if (testCaseContext.testCaseMap.containsKey(testCaseName)) {
                         TestCase testCase = testCaseContext.testCaseMap.get(testCaseName);
                         TestCase completeTestCase = testCaseReplacer.replaceTestCaseWithFlowData(testCase, flowTestCase);
                         flowContentTestCaseList.add(completeTestCase);
+                    } else {
+                        // Otherwise, read a new test case, add it to the map, and update it
+                        TestCase newTestCase = flowContentReader.readNewTestCase(testCaseName);
+                        testCaseContext.testCaseMap.put(testCaseName, newTestCase);
+                        TestCase completeTestCase = testCaseReplacer.replaceTestCaseWithFlowData(newTestCase, flowTestCase);
+                        flowContentTestCaseList.add(completeTestCase);
                     }
-                    TestCase newTestCase = flowContentReader.readNewTestCase(testCaseName);
-                    testCaseContext.testCaseMap.put(testCaseName, newTestCase);
-                    TestCase completeTestCase = testCaseReplacer.replaceTestCaseWithFlowData(newTestCase, flowTestCase);
-                    flowContentTestCaseList.add(completeTestCase);
                 }
 
+                // Update the flow object with content and test cases
                 flow.setFlowContentList(flowContentList);
                 flow.setTestCaseArrayList(flowContentTestCaseList);
+
+                // Add the flow to the context map using the file name as the key
                 testCaseContext.flowMap.put(flowFileName, flow);
 
+                // Log the resulting data for debugging and validation
                 logger.info("FlowObject data: {}", objectMapper.writeValueAsString(flow));
                 logger.info("FlowObjectMap data: {}", objectMapper.writeValueAsString(testCaseContext.flowMap));
                 logger.info("TestCaseMap data: {}", objectMapper.writeValueAsString(testCaseContext.testCaseMap));
 
             } catch (Exception e) {
-                e.printStackTrace();
+                // Handle exceptions and log the stack trace for troubleshooting
+                logger.error("Error processing flow: " + flowPath, e);
             }
         }
-
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        // Print flowObject, flowObjectMap, and testCaseMap data
-        printFlowObjectData(flowObject);
-        printFlowObjectMap();
-        printTestCaseMap();
     }
 }
