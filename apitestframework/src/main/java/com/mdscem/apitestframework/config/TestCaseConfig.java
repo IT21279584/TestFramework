@@ -10,10 +10,10 @@ import org.springframework.context.annotation.Primary;
 
 @Configuration
 public class TestCaseConfig {
-    @Bean
-    public TestCaseContext testCaseContext() {
-        return new TestCaseContext();
-    }
+//    @Bean
+//    public TestCaseContext testCaseContext() {
+//        return new TestCaseContext();
+//    }
 
     @Bean
     public TestCaseRepository testCaseRepository() {

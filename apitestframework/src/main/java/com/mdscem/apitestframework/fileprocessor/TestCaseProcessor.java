@@ -4,10 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.mdscem.apitestframework.context.TestCaseRepository;
-import com.mdscem.apitestframework.fileprocessor.filereader.FlowBasedTestCaseReader;
-import com.mdscem.apitestframework.fileprocessor.filereader.TestCasesToJsonNodeReader;
 import com.mdscem.apitestframework.fileprocessor.filereader.model.TestCase;
-import com.mdscem.apitestframework.fileprocessor.validator.TestCaseReplacer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -23,7 +20,7 @@ public class TestCaseProcessor {
     /**
      * Process each TestCase with flow-specific data (pathParam, queryParam, delay, etc.).
      */
-    public static JsonNode processTestCaseWithFlowData(TestCase testCase, JsonNode testCaseNode, JsonNode combinedValuesNode, JsonNode flowsData) {
+    public JsonNode processTestCaseWithFlowData(TestCase testCase, JsonNode testCaseNode, JsonNode combinedValuesNode, JsonNode flowsData) {
         ObjectNode updatedTestCase = objectMapper.createObjectNode();
 
         updatedTestCase.set("testCaseName", testCaseNode.get("testCaseName"));
@@ -132,13 +129,13 @@ public class TestCaseProcessor {
     /**
      * Combine multiple nodes into a single node.
      */
-    public static JsonNode combineNodes(List<JsonNode> node) {
-        ObjectNode combinedValuesNode = objectMapper.createObjectNode();
-        node.forEach(includeNode ->
-                includeNode.fields().forEachRemaining(entry ->
-                        combinedValuesNode.set(entry.getKey(), entry.getValue())
-                )
-        );
-        return combinedValuesNode;
-    }
+//    public static JsonNode combineNodes(List<JsonNode> node) {
+//        ObjectNode combinedValuesNode = objectMapper.createObjectNode();
+//        node.forEach(includeNode ->
+//                includeNode.fields().forEachRemaining(entry ->
+//                        combinedValuesNode.set(entry.getKey(), entry.getValue())
+//                )
+//        );
+//        return combinedValuesNode;
+//    }
 }

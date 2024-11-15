@@ -1,36 +1,26 @@
 package com.mdscem.apitestframework;
 
-import com.mdscem.apitestframework.fileprocessor.TestCaseProcessor;
-import com.mdscem.apitestframework.fileprocessor.filereader.TestCasesToJsonNodeReader;
-import com.mdscem.apitestframework.fileprocessor.filereader.FlowBasedTestCaseReader;
-import com.fasterxml.jackson.databind.JsonNode;
+import com.mdscem.apitestframework.fileprocessor.filereader.FlowContentReader;
+import com.mdscem.apitestframework.fileprocessor.flowprocessor.FlowProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 
 import java.io.IOException;
-import java.util.List;
 
 @SpringBootApplication(exclude = {DataSourceAutoConfiguration.class})
 public class ApiTestMain implements CommandLineRunner {
 
     @Autowired
-    private FlowBasedTestCaseReader flowBasedTestCaseReader;
-
+    private FlowContentReader flowContentReader;
     @Autowired
-    private TestCasesToJsonNodeReader testCasesToJsonNodeReader;
+    private FlowProcessor flowProcessor;
 
     @Override
     public void run(String... args) {
-        try {
-            // Load include files and combine them into one node
-            List<JsonNode> includeNodes = testCasesToJsonNodeReader.loadFilesFromDirectory();
-            JsonNode combinedValuesNode = TestCaseProcessor.combineNodes(includeNodes);
-
-            // Load test cases by flow, passing the combinedValuesNode
-            List<JsonNode> orderedTestCases = flowBasedTestCaseReader.loadTestCasesByFlow(combinedValuesNode);
-
+    try {
+        flowProcessor.abc();
         } catch (IOException e) {
             System.err.println("Error occurred while loading files: " + e.getMessage());
             e.printStackTrace();

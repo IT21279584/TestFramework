@@ -37,9 +37,19 @@ public class TestCaseReplacer {
         }
     }
 
+    //remove this
+    public static TestCase jsonNodeToTestCase(JsonNode jsonNode) {
+        try {
+            return objectMapper.treeToValue(jsonNode, TestCase.class);
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Failed to convert JsonNode to TestCase: " + e.getMessage(), e);
+        }
+    }
+
+
 
     //check the reader return and array of jsonNode or one jsonNode
-    public static TestCase replacePlaceholdersInNode(JsonNode testCaseNode, JsonNode valuesNode) throws IOException {
+    public static JsonNode replacePlaceholdersInNode(JsonNode testCaseNode, JsonNode valuesNode) throws IOException {
         // Ensure testCaseNode is an array
         ArrayNode arrayNode;
 
@@ -60,7 +70,7 @@ public class TestCaseReplacer {
         }
 
         // Convert modified ArrayNode to TestCase array
-        return JsonNodeToJavaObjConverter(arrayNode);
+        return arrayNode;
     }
 
 
@@ -97,8 +107,16 @@ public class TestCaseReplacer {
     }
 
     //handle placeholder replacement
-    public static TestCase replacePlaceholdersInTestCase(JsonNode testCaseNode, JsonNode combinedValuesNode) throws IOException {
-        return replacePlaceholdersInNode(testCaseNode, combinedValuesNode);
+//    public static TestCase replacePlaceholdersInTestCase(JsonNode testCaseNode, JsonNode combinedValuesNode) throws IOException {
+//        return replacePlaceholdersInNode(testCaseNode, combinedValuesNode);
+//    }
+
+    //handle placeholder replacement
+    public static TestCase validateTestcase(JsonNode testCaseNode) throws IOException {
+        //Validate testcases against the schema
+        JsonNode validateNode = SchemaValidation.validateFile(testCaseNode);
+
+        return jsonNodeToTestCase(testCaseNode);
     }
 
 }
