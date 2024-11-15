@@ -47,7 +47,7 @@ public class FlowContentReader {
                 throw e;
             }
         } else {
-            throw new IOException("Invalid path is not a directory.");
+            throw new IOException("Invalid path. not a directory.");
         }
         return flowFiles;
     }

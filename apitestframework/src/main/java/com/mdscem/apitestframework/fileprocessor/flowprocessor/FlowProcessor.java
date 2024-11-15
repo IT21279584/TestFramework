@@ -62,15 +62,16 @@ public class FlowProcessor {
                 flowObject.setTestCaseArrayList(flowContentTestCaseList);
                 testCaseContext.flowObjectMap.put(flowFileName, flowObject);
 
-                // Print flowObject, flowObjectMap, and testCaseMap data
-                printFlowObjectData(flowObject);
-                printFlowObjectMap();
-                printTestCaseMap();
+
 
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
+        // Print flowObject, flowObjectMap, and testCaseMap data
+        printFlowObjectData(flowObject);
+        printFlowObjectMap();
+        printTestCaseMap();
     }
 
     /**
