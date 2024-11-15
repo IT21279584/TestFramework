@@ -5,6 +5,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.mdscem.apitestframework.fileprocessor.TestCaseProcessor;
 import com.mdscem.apitestframework.fileprocessor.filereader.model.TestCase;
+import com.mdscem.apitestframework.fileprocessor.flowprocessor.FlowProcessor;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -20,6 +23,8 @@ import static com.mdscem.apitestframework.fileprocessor.TestCaseProcessor.jsonNo
  */
 @Component
 public class TestCaseReplacer {
+
+    private static final Logger logger = LogManager.getLogger(FlowProcessor.class);
 
     @Autowired
     private TestCaseProcessor testCaseProcessor;
@@ -106,18 +111,12 @@ public class TestCaseReplacer {
      */
     private static void validateNoPlaceholdersRemaining(JsonNode node) {
         if (node.isTextual() && node.asText().matches("\\{\\{.*\\}\\}")) {
-            throw new IllegalArgumentException("Unresolved placeholder found: " + node.asText());
-        } else if (node.isObject()) {
-            Iterator<Map.Entry<String, JsonNode>> fields = node.fields();
-            while (fields.hasNext()) {
-                validateNoPlaceholdersRemaining(fields.next().getValue());
-            }
-        } else if (node.isArray()) {
-            for (JsonNode arrayElement : node) {
-                validateNoPlaceholdersRemaining(arrayElement);
-            }
+            String errorMessage = "Unresolved placeholder found: " + node.asText();
+            logger.error(errorMessage);
+            throw new IllegalArgumentException(errorMessage);
         }
     }
+
 
     /**
      * Replaces placeholders in a TestCase object with flow-specific data like path parameters, query parameters, and delays.
