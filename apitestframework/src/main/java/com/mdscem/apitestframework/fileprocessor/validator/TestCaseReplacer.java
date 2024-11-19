@@ -18,26 +18,6 @@ public class TestCaseReplacer {
 
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
-    public static TestCase JsonNodeToJavaObjConverter(JsonNode jsonArrayNode) {
-        // Check if JsonNode is an array
-        if (jsonArrayNode.isArray()) {
-            ArrayNode arrayNode = (ArrayNode) jsonArrayNode;
-
-            // Convert ArrayNode to TestCase array
-            TestCase[] testCaseArray = objectMapper.convertValue(arrayNode, TestCase[].class);
-
-            // Return the first TestCase object in the array
-            if (testCaseArray.length > 0) {
-                return testCaseArray[0];
-            } else {
-                throw new IllegalArgumentException("JSON array is empty.");
-            }
-        } else {
-            throw new IllegalArgumentException("Expected a JSON array.");
-        }
-    }
-
-    //remove this
     public static TestCase jsonNodeToTestCase(JsonNode jsonNode) {
         try {
             return objectMapper.treeToValue(jsonNode, TestCase.class);
@@ -46,31 +26,23 @@ public class TestCaseReplacer {
         }
     }
 
-
-
     //check the reader return and array of jsonNode or one jsonNode
     public static JsonNode replacePlaceholdersInNode(JsonNode testCaseNode, JsonNode valuesNode) throws IOException {
-        // Ensure testCaseNode is an array
-        ArrayNode arrayNode;
-
+        // Check if the input node is an array or a single object
         if (testCaseNode.isArray()) {
-            arrayNode = (ArrayNode) testCaseNode;
+            // If the node is an array, process each element of the array and replace placeholders
+            for (int i = 0; i < testCaseNode.size(); i++) {
+                JsonNode element = testCaseNode.get(i);
+                JsonNode modifiedElement = replacePlaceholders(element, valuesNode);
+                ((ObjectNode) testCaseNode).set(String.valueOf(i), modifiedElement);  // Directly modify the array node
+            }
         } else {
-            // Wrap testCaseNode in an array if it's not already an array
-            arrayNode = objectMapper.createArrayNode().add(testCaseNode);
+            // If it's a single object, replace the placeholders directly
+            testCaseNode = replacePlaceholders(testCaseNode, valuesNode);
         }
 
-        // Replace placeholders in each element
-        for (int i = 0; i < arrayNode.size(); i++) {
-            JsonNode modifiedElement = replacePlaceholders(arrayNode.get(i), valuesNode);
-
-            //Validate testcases against the schema
-//            JsonNode validateNode = SchemaValidation.validateFile(modifiedElement);
-            arrayNode.set(i, modifiedElement);
-        }
-
-        // Convert modified ArrayNode to TestCase array
-        return arrayNode;
+        // Return the processed JsonNode
+        return testCaseNode;
     }
 
 
@@ -107,16 +79,11 @@ public class TestCaseReplacer {
     }
 
     //handle placeholder replacement
-//    public static TestCase replacePlaceholdersInTestCase(JsonNode testCaseNode, JsonNode combinedValuesNode) throws IOException {
-//        return replacePlaceholdersInNode(testCaseNode, combinedValuesNode);
-//    }
-
-    //handle placeholder replacement
     public static TestCase validateTestcase(JsonNode testCaseNode) throws IOException {
         //Validate testcases against the schema
         JsonNode validateNode = SchemaValidation.validateFile(testCaseNode);
 
-        return jsonNodeToTestCase(testCaseNode);
+        return jsonNodeToTestCase(validateNode);
     }
 
 }

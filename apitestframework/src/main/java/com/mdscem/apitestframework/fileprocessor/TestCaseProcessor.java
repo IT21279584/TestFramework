@@ -34,7 +34,6 @@ public class TestCaseProcessor {
             if (flowSection.has("name")) {
                 String flowName = flowSection.get("name").asText();
                 if (testCase.getTestCaseName().equals(flowName)) {
-//                    JsonNode request = flowSection.get("testCase");
 
                     // Check for pathParam and queryParam before setting
                     if (flowSection.has("pathParam")) {
@@ -125,17 +124,4 @@ public class TestCaseProcessor {
         });
         return updatedTestCase;
     }
-
-    /**
-     * Combine multiple nodes into a single node.
-     */
-//    public static JsonNode combineNodes(List<JsonNode> node) {
-//        ObjectNode combinedValuesNode = objectMapper.createObjectNode();
-//        node.forEach(includeNode ->
-//                includeNode.fields().forEachRemaining(entry ->
-//                        combinedValuesNode.set(entry.getKey(), entry.getValue())
-//                )
-//        );
-//        return combinedValuesNode;
-//    }
 }

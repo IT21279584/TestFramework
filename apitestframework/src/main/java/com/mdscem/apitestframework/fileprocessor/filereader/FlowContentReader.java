@@ -10,8 +10,6 @@ import com.mdscem.apitestframework.fileprocessor.filereader.model.TestCase;
 import com.mdscem.apitestframework.fileprocessor.validator.TestCaseReplacer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import static com.mdscem.apitestframework.fileprocessor.validator.TestCaseReplacer.JsonNodeToJavaObjConverter;
-import static com.mdscem.apitestframework.fileprocessor.validator.TestCaseReplacer.validateTestcase;
 
 
 import java.io.IOException;
@@ -19,17 +17,12 @@ import java.nio.file.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.mdscem.apitestframework.fileprocessor.validator.TestCaseReplacer.*;
+
 @Component
 public class FlowContentReader {
-
-    @Autowired
-    private  TestCaseReplacer testCaseReplacer;
     @Autowired
     private TestCasesReader testCasesReader;
-    @Autowired
-    private  TestCaseProcessor testCaseProcessor;
-
-
     private final ObjectMapper yamlMapper = new ObjectMapper(new YAMLFactory());
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
@@ -53,37 +46,11 @@ public class FlowContentReader {
         return flowFiles;
     }
 
-    // Process individual flow file and return the list of test cases
-//    public List<JsonNode> processFlowFileAndRead(Path flowFile, JsonNode combinedValuesNode) throws IOException {
-//        List<JsonNode> processedTestCases = new ArrayList<>();
-//        JsonNode flowsNode = yamlMapper.readTree(flowFile.toFile());
-//
-//        // Process each flow item in the YAML file
-//        for (JsonNode flowItem : flowsNode) {
-//            String testCaseName = flowItem.get("testCase").get("name").asText();
-//            String testCaseFilePath = Constant.TEST_CASES_DIRECTORY + "/" + testCaseName + ".yaml";
-//
-//            //Read the testcases
-//            JsonNode testCaseNode = testCasesReader.readFile(testCaseFilePath);
-//
-//            // Call to method that replaces placeholders
-//            TestCase finalResults = TestCaseReplacer.replacePlaceholdersInTestCase(testCaseNode, combinedValuesNode);
-//
-//            // Process the final test case with flow data
-//            JsonNode processedTestCase = processTestCaseWithFlowData(finalResults, testCaseNode, combinedValuesNode, flowItem);
-//
-//            processedTestCases.add(processedTestCase);
-//            testCaseProcessor.saveTestCases(processedTestCase);
-//        }
-//
-//        return processedTestCases;
-//    }
-
     public List<JsonNode> getFlowContentAsJsonNodes(Path flowPath) throws IOException {
         List<JsonNode> flowContentsList = new ArrayList<>();
         JsonNode flowsNode = yamlMapper.readTree(flowPath.toFile());
 
-        for(JsonNode singleFlow : flowsNode ){
+        for (JsonNode singleFlow : flowsNode) {
             flowContentsList.add(singleFlow);
         }
         return flowContentsList;
@@ -117,7 +84,6 @@ public class FlowContentReader {
     public TestCase replaceTestCaseWithFlowData(TestCase testCase, JsonNode flowsData) {
         ObjectNode updatedTestCase = objectMapper.createObjectNode();
         JsonNode testCaseNode = convertToJsonNode(testCase);
-        System.out.println("My TestCase JsoNode : ");
 
         // Create the request object node to include pathParam and queryParam
         ObjectNode requestNode = objectMapper.createObjectNode();
@@ -149,16 +115,8 @@ public class FlowContentReader {
         updatedTestCase.set("response", testCaseNode.get("response"));
 
         JsonNode finalResult = mergeMissingFields(testCaseNode, updatedTestCase);
-        return JsonNodeToJavaObjConverter(finalResult);
+        return jsonNodeToTestCase(finalResult);
     }
-
-    /**
-     * Save the processed test case into the repository.
-     */
-//    public void saveTestCases(TestCase processedTestCase) {
-//        TestCase testCase = objectMapper.convertValue(processedTestCase, TestCase.class);
-//        testCaseRepository.save(testCase);
-//    }
 
     /**
      * Merges missing fields from `testCaseNode` into `updatedTestCase` recursively.
@@ -194,7 +152,6 @@ public class FlowContentReader {
         return combinedValuesNode;
     }
 
-
     public static JsonNode convertToJsonNode(TestCase testCase) {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
@@ -204,6 +161,4 @@ public class FlowContentReader {
             throw new RuntimeException("Failed to convert object to JsonNode", e);
         }
     }
-
-
 }
