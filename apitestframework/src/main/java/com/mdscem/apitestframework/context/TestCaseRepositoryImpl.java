@@ -24,7 +24,7 @@ public class TestCaseRepositoryImpl implements TestCaseRepository {
 
     @Override
     public TestCase findByName(String testCaseName) {
-        return context.testCaseMap.get(testCaseName);
+        return context.getTestCaseMap().get(testCaseName);
     }
 
     @Override
