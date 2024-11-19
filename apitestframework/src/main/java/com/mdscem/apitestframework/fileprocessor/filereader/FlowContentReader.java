@@ -17,6 +17,9 @@ import java.nio.file.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.mdscem.apitestframework.constants.Constant.FLOW_VALIDATION_PATH;
+import static com.mdscem.apitestframework.constants.Constant.VALIDATION_FILE_PATH;
+
 
 @Component
 public class FlowContentReader {
@@ -51,8 +54,10 @@ public class FlowContentReader {
     public List<JsonNode> getFlowContentAsJsonNodes(Path flowPath) throws IOException {
         List<JsonNode> flowContentsList = new ArrayList<>();
         JsonNode flowsNode = yamlMapper.readTree(flowPath.toFile());
+        JsonNode validateFlowNode = schemaValidation.validateTestcase(flowsNode, FLOW_VALIDATION_PATH);
 
-        for (JsonNode singleFlow : flowsNode) {
+        for (JsonNode singleFlow : validateFlowNode) {
+
             flowContentsList.add(singleFlow);
         }
         return flowContentsList;
@@ -73,7 +78,9 @@ public class FlowContentReader {
         JsonNode replaceJsonNode = TestCaseReplacer.replacePlaceholdersInNode(testCaseNode, combinedValuesNode);
 
         //Validate TestCase against the testcase schema
-        return schemaValidation.validateTestcase(replaceJsonNode);
+        JsonNode schemaValidate = schemaValidation.validateTestcase(replaceJsonNode, VALIDATION_FILE_PATH);
+
+        return testCaseProcessor.jsonNodeToTestCase(schemaValidate);
     }
 
 }

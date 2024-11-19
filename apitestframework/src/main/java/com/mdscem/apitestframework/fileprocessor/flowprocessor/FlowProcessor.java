@@ -25,7 +25,7 @@ public class FlowProcessor {
     @Autowired
     private TestCaseContext testCaseContext;
     @Autowired
-    private Flow flowObject;
+    private Flow flow;
     @Autowired
     private TestCaseReplacer testCaseReplacer;
 
@@ -44,6 +44,7 @@ public class FlowProcessor {
                 List<JsonNode> flowContentList = flowContentReader.getFlowContentAsJsonNodes(flowPath);
 
                 for (JsonNode flowTestCase : flowContentList) {
+
                     String testCaseName = flowTestCase.get("testCase").get("name").asText();
                     if (testCaseContext.testCaseMap.containsKey(testCaseName)) {
                         TestCase testCase = testCaseContext.testCaseMap.get(testCaseName);
@@ -56,12 +57,12 @@ public class FlowProcessor {
                     flowContentTestCaseList.add(completeTestCase);
                 }
 
-                flowObject.setFlowContentList(flowContentList);
-                flowObject.setTestCaseArrayList(flowContentTestCaseList);
-                testCaseContext.flowMap.put(flowFileName, flowObject);
+                flow.setFlowContentList(flowContentList);
+                flow.setTestCaseArrayList(flowContentTestCaseList);
+                testCaseContext.flowMap.put(flowFileName, flow);
 
                 // Print flowObject, flowObjectMap, and testCaseMap data
-                printFlowObjectData(flowObject);
+                printFlowObjectData(flow);
                 printFlowObjectMap();
                 printTestCaseMap();
 

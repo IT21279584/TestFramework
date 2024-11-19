@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.mdscem.apitestframework.fileprocessor.TestCaseProcessor;
-import com.mdscem.apitestframework.fileprocessor.filereader.FlowContentReader;
 import com.mdscem.apitestframework.fileprocessor.filereader.model.TestCase;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -31,7 +30,7 @@ public class TestCaseReplacer {
             for (int i = 0; i < testCaseNode.size(); i++) {
                 JsonNode element = testCaseNode.get(i);
                 JsonNode modifiedElement = replacePlaceholders(element, valuesNode);
-                ((ObjectNode) testCaseNode).set(String.valueOf(i), modifiedElement);  // Directly modify the array node
+                ((ObjectNode) testCaseNode).set(String.valueOf(i), modifiedElement);
             }
         } else {
             // If it's a single object, replace the placeholders directly
@@ -42,7 +41,7 @@ public class TestCaseReplacer {
         return testCaseNode;
     }
 
-    //replace place holders
+    //replace place holders(include nodes)
     public static JsonNode replacePlaceholders(JsonNode testCaseNode, JsonNode valuesNode) {
         Iterator<Map.Entry<String, JsonNode>> fields = testCaseNode.fields();
 
@@ -74,7 +73,7 @@ public class TestCaseReplacer {
     }
 
     /**
-     * Process each TestCase with flow-specific data (pathParam, queryParam, delay, etc.).
+     * Replace each TestCase with flow-specific data (pathParam, queryParam, delay, etc.).
      */
     public TestCase replaceTestCaseWithFlowData(TestCase testCase, JsonNode flowsData) {
         ObjectNode updatedTestCase = objectMapper.createObjectNode();

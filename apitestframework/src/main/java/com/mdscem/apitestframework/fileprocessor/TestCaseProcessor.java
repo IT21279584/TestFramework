@@ -11,7 +11,7 @@ import java.util.List;
 @Component
 public class TestCaseProcessor {
 
-    private static ObjectMapper objectMapper = new ObjectMapper();
+    private final static ObjectMapper objectMapper = new ObjectMapper();
 
     //JsonNode to TestCase object
     public static TestCase jsonNodeToTestCase(JsonNode jsonNode) {
@@ -23,7 +23,7 @@ public class TestCaseProcessor {
     }
 
     /**
-     * Merges missing fields from `testCaseNode` into `updatedTestCase` recursively.
+     * Merges missing fields from `testCaseNode` into `updatedTestCase` recursively in flow process.
      */
     public JsonNode mergeMissingFields(JsonNode testCaseNode, ObjectNode updatedTestCase) {
         testCaseNode.fields().forEachRemaining(entry -> {
@@ -44,7 +44,7 @@ public class TestCaseProcessor {
     }
 
     /**
-     * Combine multiple nodes into a single node.
+     * Combine multiple nodes into a single node(include nodes).
      */
     public JsonNode combineNodes(List<JsonNode> node) {
         ObjectNode combinedValuesNode = objectMapper.createObjectNode();
@@ -56,6 +56,7 @@ public class TestCaseProcessor {
         return combinedValuesNode;
     }
 
+    //Convert Testcase to the JsoNode
     public JsonNode convertToJsonNode(TestCase testCase) {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
