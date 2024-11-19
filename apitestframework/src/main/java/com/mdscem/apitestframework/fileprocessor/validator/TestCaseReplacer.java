@@ -89,11 +89,8 @@ public class TestCaseReplacer {
                 if (testCase.getTestCaseName().equals(flowName)) {
 
                     // Check for pathParam and queryParam before setting
-                        requestNode.set("pathParam", flowSection.get("pathParam"));
-
-                        requestNode.set("queryParam", flowSection.get("queryParam"));
-
-
+                    requestNode.set("pathParam", flowSection.get("pathParam"));
+                    requestNode.set("queryParam", flowSection.get("queryParam"));
                     updatedTestCase.set("delay", flowSection.has("delay") ? flowSection.get("delay") : objectMapper.nullNode());
                     break;
                 }
