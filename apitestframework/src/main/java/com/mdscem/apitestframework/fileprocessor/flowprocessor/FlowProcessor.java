@@ -8,6 +8,7 @@ import com.mdscem.apitestframework.context.TestCaseContext;
 import com.mdscem.apitestframework.fileprocessor.filereader.FlowContentReader;
 import com.mdscem.apitestframework.fileprocessor.filereader.TestCasesReader;
 import com.mdscem.apitestframework.fileprocessor.filereader.model.TestCase;
+import com.mdscem.apitestframework.fileprocessor.validator.TestCaseReplacer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -26,6 +27,8 @@ public class FlowProcessor {
     private TestCaseContext testCaseContext;
     @Autowired
     private FlowObject flowObject;
+    @Autowired
+    private TestCaseReplacer testCaseReplacer;
 
     private static final ObjectMapper objectMapper = new ObjectMapper(); // Jackson ObjectMapper
 
@@ -46,12 +49,12 @@ public class FlowProcessor {
                     String testCaseName = flowTestCase.get("testCase").get("name").asText();
                     if (testCaseContext.testCaseMap.containsKey(testCaseName)) {
                         TestCase testCase = testCaseContext.testCaseMap.get(testCaseName);
-                        TestCase completeTestCase = flowContentReader.replaceTestCaseWithFlowData(testCase, flowTestCase);
+                        TestCase completeTestCase = testCaseReplacer.replaceTestCaseWithFlowData(testCase, flowTestCase);
                         flowContentTestCaseList.add(completeTestCase);
                     }
                     TestCase newTestCase = flowContentReader.readNewTestCase(testCaseName);
                     testCaseContext.testCaseMap.put(testCaseName, newTestCase);
-                    TestCase completeTestCase = flowContentReader.replaceTestCaseWithFlowData(newTestCase, flowTestCase);
+                    TestCase completeTestCase = testCaseReplacer.replaceTestCaseWithFlowData(newTestCase, flowTestCase);
                     flowContentTestCaseList.add(completeTestCase);
                 }
 

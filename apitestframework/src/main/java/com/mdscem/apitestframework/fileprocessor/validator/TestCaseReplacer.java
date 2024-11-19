@@ -4,7 +4,10 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.mdscem.apitestframework.fileprocessor.TestCaseProcessor;
+import com.mdscem.apitestframework.fileprocessor.filereader.FlowContentReader;
 import com.mdscem.apitestframework.fileprocessor.filereader.model.TestCase;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -13,8 +16,17 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import static com.mdscem.apitestframework.fileprocessor.TestCaseProcessor.jsonNodeToTestCase;
+
 @Component
 public class TestCaseReplacer {
+    @Autowired
+    private FlowContentReader flowContentReader;
+
+    @Autowired
+    private TestCaseProcessor testCaseProcessor;
+
+    private static final ObjectMapper objectMapper = new ObjectMapper();
 
     //check the reader return and array of jsonNode or one jsonNode
     public static JsonNode replacePlaceholdersInNode(JsonNode testCaseNode, JsonNode valuesNode) throws IOException {
@@ -66,6 +78,46 @@ public class TestCaseReplacer {
             }
         }
         return testCaseNode;
+    }
+
+    /**
+     * Process each TestCase with flow-specific data (pathParam, queryParam, delay, etc.).
+     */
+    public TestCase replaceTestCaseWithFlowData(TestCase testCase, JsonNode flowsData) {
+        ObjectNode updatedTestCase = objectMapper.createObjectNode();
+        JsonNode testCaseNode = testCaseProcessor.convertToJsonNode(testCase);
+
+        // Create the request object node to include pathParam and queryParam
+        ObjectNode requestNode = objectMapper.createObjectNode();
+
+        for (JsonNode flowSection : flowsData) {
+            if (flowSection.has("name")) {
+                String flowName = flowSection.get("name").asText();
+                if (testCase.getTestCaseName().equals(flowName)) {
+
+                    // Check for pathParam and queryParam before setting
+                    if (flowSection.has("pathParam")) {
+                        requestNode.set("pathParam", flowSection.get("pathParam"));
+                    }
+                    if (flowSection.has("queryParam")) {
+                        requestNode.set("queryParam", flowSection.get("queryParam"));
+                    }
+
+                    updatedTestCase.set("delay", flowSection.has("delay") ? flowSection.get("delay") : objectMapper.nullNode());
+                    break;
+                }
+            }
+
+        }
+
+        // Add the request object to updatedTestCase
+        updatedTestCase.set("request", requestNode);
+
+        // Set the response as usual
+        updatedTestCase.set("response", testCaseNode.get("response"));
+
+        JsonNode finalResult = testCaseProcessor.mergeMissingFields(testCaseNode, updatedTestCase);
+        return jsonNodeToTestCase(finalResult);
     }
 
 }

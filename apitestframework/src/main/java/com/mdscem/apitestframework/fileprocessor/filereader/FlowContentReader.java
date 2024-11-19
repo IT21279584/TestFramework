@@ -27,6 +27,8 @@ public class FlowContentReader {
     private TestCasesReader testCasesReader;
     @Autowired
     private SchemaValidation schemaValidation;
+    @Autowired
+    private TestCaseProcessor testCaseProcessor;
     private final ObjectMapper yamlMapper = new ObjectMapper(new YAMLFactory());
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
@@ -64,7 +66,7 @@ public class FlowContentReader {
 
         // Load include files and combine them into one node
         List<JsonNode> includeNodes = testCasesReader.loadFilesFromDirectory();
-        JsonNode combinedValuesNode = combineNodes(includeNodes);
+        JsonNode combinedValuesNode = testCaseProcessor.combineNodes(includeNodes);
 
         String testCaseFilePath = Constant.TEST_CASES_DIRECTORY + "/" + testCaseName + ".yaml";
 
@@ -80,88 +82,4 @@ public class FlowContentReader {
         return finalResult;
     }
 
-
-    /**
-     * Process each TestCase with flow-specific data (pathParam, queryParam, delay, etc.).
-     */
-    public TestCase replaceTestCaseWithFlowData(TestCase testCase, JsonNode flowsData) {
-        ObjectNode updatedTestCase = objectMapper.createObjectNode();
-        JsonNode testCaseNode = convertToJsonNode(testCase);
-
-        // Create the request object node to include pathParam and queryParam
-        ObjectNode requestNode = objectMapper.createObjectNode();
-
-        for (JsonNode flowSection : flowsData) {
-            if (flowSection.has("name")) {
-                String flowName = flowSection.get("name").asText();
-                if (testCase.getTestCaseName().equals(flowName)) {
-
-                    // Check for pathParam and queryParam before setting
-                    if (flowSection.has("pathParam")) {
-                        requestNode.set("pathParam", flowSection.get("pathParam"));
-                    }
-                    if (flowSection.has("queryParam")) {
-                        requestNode.set("queryParam", flowSection.get("queryParam"));
-                    }
-
-                    updatedTestCase.set("delay", flowSection.has("delay") ? flowSection.get("delay") : objectMapper.nullNode());
-                    break;
-                }
-            }
-
-        }
-
-        // Add the request object to updatedTestCase
-        updatedTestCase.set("request", requestNode);
-
-        // Set the response as usual
-        updatedTestCase.set("response", testCaseNode.get("response"));
-
-        JsonNode finalResult = mergeMissingFields(testCaseNode, updatedTestCase);
-        return jsonNodeToTestCase(finalResult);
-    }
-
-    /**
-     * Merges missing fields from `testCaseNode` into `updatedTestCase` recursively.
-     */
-    public static JsonNode mergeMissingFields(JsonNode testCaseNode, ObjectNode updatedTestCase) {
-        testCaseNode.fields().forEachRemaining(entry -> {
-            String fieldName = entry.getKey();
-            JsonNode sourceField = entry.getValue();
-
-            if (updatedTestCase.has(fieldName)) {
-                // If target already has the field, check if it's an object to merge recursively
-                if (sourceField.isObject() && updatedTestCase.get(fieldName).isObject()) {
-                    mergeMissingFields(sourceField, (ObjectNode) updatedTestCase.get(fieldName));
-                }
-            } else {
-                // Otherwise, add the field from source to target
-                updatedTestCase.set(fieldName, sourceField);
-            }
-        });
-        return updatedTestCase;
-    }
-
-    /**
-     * Combine multiple nodes into a single node.
-     */
-    public static JsonNode combineNodes(List<JsonNode> node) {
-        ObjectNode combinedValuesNode = objectMapper.createObjectNode();
-        node.forEach(includeNode ->
-                includeNode.fields().forEachRemaining(entry ->
-                        combinedValuesNode.set(entry.getKey(), entry.getValue())
-                )
-        );
-        return combinedValuesNode;
-    }
-
-    public static JsonNode convertToJsonNode(TestCase testCase) {
-        ObjectMapper objectMapper = new ObjectMapper();
-        try {
-            return objectMapper.valueToTree(testCase);
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new RuntimeException("Failed to convert object to JsonNode", e);
-        }
-    }
 }
