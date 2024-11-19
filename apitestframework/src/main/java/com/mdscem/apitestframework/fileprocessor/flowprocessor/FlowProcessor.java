@@ -31,22 +31,22 @@ public class FlowProcessor {
 
     private static final ObjectMapper objectMapper = new ObjectMapper(); // Jackson ObjectMapper
 
-    public void abc() throws IOException {
+    public void flowProcess() throws IOException {
         Path flowPathDir = Paths.get(Constant.FLOWS_DIRECTORY);
         // list of flow paths
         List<Path> flowPaths = flowContentReader.getFlowFilesFromDirectory(flowPathDir);
 
-        for(Path flowPath : flowPaths){
+        for (Path flowPath : flowPaths) {
             String flowFileName;
             List<JsonNode> flowContentList = new ArrayList<>();
             ArrayList<TestCase> flowContentTestCaseList = new ArrayList<>();
-            try{
+            try {
                 flowFileName = String.valueOf(flowPath.getFileName());
                 flowContentList = flowContentReader.getFlowContentAsJsonNodes(flowPath);
 
-                for (JsonNode flowTestCase : flowContentList){
+                for (JsonNode flowTestCase : flowContentList) {
                     String testCaseName = flowTestCase.get("testCase").get("name").asText();
-                    if (testCaseContext.testCaseMap.containsKey(testCaseName)){
+                    if (testCaseContext.testCaseMap.containsKey(testCaseName)) {
                         TestCase testCase = testCaseContext.testCaseMap.get(testCaseName);
                         TestCase completeTestCase = flowContentReader.replaceTestCaseWithFlowData(testCase, flowTestCase);
                         flowContentTestCaseList.add(completeTestCase);
@@ -61,8 +61,10 @@ public class FlowProcessor {
                 flowObject.setTestCaseArrayList(flowContentTestCaseList);
                 testCaseContext.flowObjectMap.put(flowFileName, flowObject);
 
-                // Print flowObject data as key-value pairs
+                // Print flowObject, flowObjectMap, and testCaseMap data
                 printFlowObjectData(flowObject);
+                printFlowObjectMap();
+                printTestCaseMap();
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -70,14 +72,44 @@ public class FlowProcessor {
         }
     }
 
+    /**
+     * Prints the flowObject data.
+     *
+     * @param flowObject The FlowObject to be printed.
+     */
     private void printFlowObjectData(FlowObject flowObject) {
         try {
-            // Convert flowObject to JSON string to make it readable
             String jsonString = objectMapper.writeValueAsString(flowObject);
             System.out.println("FlowObject data: " + jsonString);
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("Error converting FlowObject to JSON: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Prints the flowObjectMap data.
+     */
+    private void printFlowObjectMap() {
+        try {
+            String jsonString = objectMapper.writeValueAsString(testCaseContext.flowObjectMap);
+            System.out.println("FlowObjectMap data: " + jsonString);
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("Error converting FlowObjectMap to JSON: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Prints the testCaseMap data.
+     */
+    private void printTestCaseMap() {
+        try {
+            String jsonString = objectMapper.writeValueAsString(testCaseContext.testCaseMap);
+            System.out.println("TestCaseMap data: " + jsonString);
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("Error converting TestCaseMap to JSON: " + e.getMessage());
         }
     }
 }

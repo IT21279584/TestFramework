@@ -20,7 +20,7 @@ public class ApiTestMain implements CommandLineRunner {
     @Override
     public void run(String... args) {
     try {
-        flowProcessor.abc();
+        flowProcessor.flowProcess();
         } catch (IOException e) {
             System.err.println("Error occurred while loading files: " + e.getMessage());
             e.printStackTrace();
