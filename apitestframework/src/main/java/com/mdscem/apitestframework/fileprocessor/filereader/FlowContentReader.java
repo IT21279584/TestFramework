@@ -8,6 +8,8 @@ import com.mdscem.apitestframework.fileprocessor.TestCaseProcessor;
 import com.mdscem.apitestframework.fileprocessor.filereader.model.TestCase;
 import com.mdscem.apitestframework.fileprocessor.validator.SchemaValidation;
 import com.mdscem.apitestframework.fileprocessor.validator.TestCaseReplacer;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -23,6 +25,8 @@ import static com.mdscem.apitestframework.constants.Constant.VALIDATION_FILE_PAT
 
 @Component
 public class FlowContentReader {
+    private static final Logger logger = LogManager.getLogger(FlowContentReader.class);
+
     @Autowired
     private TestCasesReader testCasesReader;
     @Autowired
@@ -42,7 +46,8 @@ public class FlowContentReader {
                     flowFiles.add(file);
                 }
             } catch (IOException e) {
-                System.err.println("Error processing directory " + flowPath + ": " + e.getMessage());
+                logger.error("Error processing directory " + flowPath + ": " + e.getMessage());
+
                 throw e;
             }
         } else {
