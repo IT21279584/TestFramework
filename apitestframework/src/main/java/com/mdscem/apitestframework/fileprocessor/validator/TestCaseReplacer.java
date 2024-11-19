@@ -48,28 +48,23 @@ public class TestCaseReplacer {
 
     //check the reader return and array of jsonNode or one jsonNode
     public static JsonNode replacePlaceholdersInNode(JsonNode testCaseNode, JsonNode valuesNode) throws IOException {
-        ObjectMapper objectMapper = new ObjectMapper();
-        ArrayNode arrayNode;
-
+        // Check if the input node is an array or a single object
         if (testCaseNode.isArray()) {
-            arrayNode = (ArrayNode) testCaseNode;
-        } else {
-            arrayNode = objectMapper.createArrayNode().add(testCaseNode);
-        }
-
-        try {
-            for (int i = 0; i < arrayNode.size(); i++) {
-                JsonNode element = arrayNode.get(i);
+            // If the node is an array, process each element of the array and replace placeholders
+            for (int i = 0; i < testCaseNode.size(); i++) {
+                JsonNode element = testCaseNode.get(i);
                 JsonNode modifiedElement = replacePlaceholders(element, valuesNode);
-                arrayNode.set(i, modifiedElement);
+                ((ObjectNode) testCaseNode).set(String.valueOf(i), modifiedElement);  // Directly modify the array node
             }
-        } catch (IllegalArgumentException e) {
-            // Log the error and rethrow if desired
-            throw new IllegalArgumentException("Error replacing placeholders: " + e.getMessage(), e);
+        } else {
+            // If it's a single object, replace the placeholders directly
+            testCaseNode = replacePlaceholders(testCaseNode, valuesNode);
         }
 
-        return arrayNode;
+        // Return the processed JsonNode (it could be a modified ObjectNode or ArrayNode)
+        return testCaseNode;
     }
+
 
 
 
@@ -109,7 +104,7 @@ public class TestCaseReplacer {
         //Validate testcases against the schema
         JsonNode validateNode = SchemaValidation.validateFile(testCaseNode);
 
-        return JsonNodeToJavaObjConverter(validateNode);
+        return jsonNodeToTestCase(validateNode);
     }
 
 }

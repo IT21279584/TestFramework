@@ -13,7 +13,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-import static com.mdscem.apitestframework.fileprocessor.validator.TestCaseReplacer.JsonNodeToJavaObjConverter;
 import static com.mdscem.apitestframework.fileprocessor.validator.TestCaseReplacer.jsonNodeToTestCase;
 
 @Component
