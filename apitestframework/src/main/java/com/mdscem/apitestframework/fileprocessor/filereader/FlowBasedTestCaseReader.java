@@ -17,7 +17,7 @@ import java.util.List;
 
 import static com.mdscem.apitestframework.fileprocessor.TestCaseProcessor.convertToJsonNode;
 import static com.mdscem.apitestframework.fileprocessor.TestCaseProcessor.processTestCaseWithFlowData;
-import static com.mdscem.apitestframework.fileprocessor.validator.TestCaseReplacer.replacePlaceholdersInTestCase;
+import static com.mdscem.apitestframework.fileprocessor.validator.TestCaseReplacer.validateTestcase;
 
 
 @Component
@@ -86,7 +86,8 @@ public class FlowBasedTestCaseReader {
             // Call to method that replaces placeholders
             JsonNode replaceJsonNode = TestCaseReplacer.replacePlaceholdersInNode(testCaseNode, combinedValuesNode);
 
-            TestCase finalResult = replacePlaceholdersInTestCase(replaceJsonNode);
+
+            TestCase finalResult = validateTestcase(replaceJsonNode);
 
             // Process the final test case with flow data
             TestCase processedTestCase = processTestCaseWithFlowData(finalResult, flowItem);

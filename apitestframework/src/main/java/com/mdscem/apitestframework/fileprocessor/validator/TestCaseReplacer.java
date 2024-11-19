@@ -104,7 +104,7 @@ public class TestCaseReplacer {
     }
 
     //handle placeholder replacement
-    public static TestCase replacePlaceholdersInTestCase(JsonNode testCaseNode) throws IOException {
+    public static TestCase validateTestcase(JsonNode testCaseNode) throws IOException {
         //Validate testcases against the schema
         JsonNode validateNode = SchemaValidation.validateFile(testCaseNode);
 
