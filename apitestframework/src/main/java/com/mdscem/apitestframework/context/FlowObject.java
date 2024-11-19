@@ -16,10 +16,6 @@ public class FlowObject {
         this.flowContentList = flowContentList;
     }
 
-    public ArrayList<TestCase> getTestCaseArrayList() {
-        return testCaseArrayList;
-    }
-
     public void setTestCaseArrayList(ArrayList<TestCase> testCaseArrayList) {
         this.testCaseArrayList = testCaseArrayList;
     }
