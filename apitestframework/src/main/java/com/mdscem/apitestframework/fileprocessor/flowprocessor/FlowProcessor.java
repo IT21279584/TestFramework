@@ -8,6 +8,8 @@ import com.mdscem.apitestframework.context.FlowContext;
 import com.mdscem.apitestframework.fileprocessor.filereader.FlowContentReader;
 import com.mdscem.apitestframework.fileprocessor.filereader.model.TestCase;
 import com.mdscem.apitestframework.fileprocessor.validator.TestCaseReplacer;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -20,6 +22,7 @@ import java.util.List;
 @Component
 public class FlowProcessor {
 
+    private static final Logger logger = LogManager.getLogger(FlowProcessor.class);
     @Autowired
     private FlowContentReader flowContentReader;
     @Autowired
@@ -61,54 +64,13 @@ public class FlowProcessor {
                 flow.setTestCaseArrayList(flowContentTestCaseList);
                 testCaseContext.flowMap.put(flowFileName, flow);
 
-                // Print flowObject, flowObjectMap, and testCaseMap data
-                printFlowObjectData(flow);
-                printFlowObjectMap();
-                printTestCaseMap();
+                logger.info("FlowObject data: {}", objectMapper.writeValueAsString(flow));
+                logger.info("FlowObjectMap data: {}", objectMapper.writeValueAsString(testCaseContext.flowMap));
+                logger.info("TestCaseMap data: {}", objectMapper.writeValueAsString(testCaseContext.testCaseMap));
 
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        }
-    }
-
-    /**
-     * Prints the flowObject data.
-     *
-     */
-    private void printFlowObjectData(Flow flowObject) {
-        try {
-            String jsonString = objectMapper.writeValueAsString(flowObject);
-            System.out.println("FlowObject data: " + jsonString);
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("Error converting FlowObject to JSON: " + e.getMessage());
-        }
-    }
-
-    /**
-     * Prints the flowObjectMap data.
-     */
-    private void printFlowObjectMap() {
-        try {
-            String jsonString = objectMapper.writeValueAsString(testCaseContext.flowMap);
-            System.out.println("FlowObjectMap data: " + jsonString);
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("Error converting FlowObjectMap to JSON: " + e.getMessage());
-        }
-    }
-
-    /**
-     * Prints the testCaseMap data.
-     */
-    private void printTestCaseMap() {
-        try {
-            String jsonString = objectMapper.writeValueAsString(testCaseContext.testCaseMap);
-            System.out.println("TestCaseMap data: " + jsonString);
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("Error converting TestCaseMap to JSON: " + e.getMessage());
         }
     }
 }
