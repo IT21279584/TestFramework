@@ -2,42 +2,43 @@ package com.mdscem.apitestframework.context;
 
 import com.mdscem.apitestframework.fileprocessor.filereader.model.TestCase;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 import java.util.*;
 
+@Repository
 public class TestCaseRepositoryImpl implements TestCaseRepository {
+
     @Autowired
     private FlowContext context;
 
     @Override
-    public void save(TestCase testCase) {
-        // Directly access the testCaseStorage map from the context
-        context.getTestCaseMap().put(testCase.getTestCaseName(), testCase);
-        context.getTestCaseMap().put(testCase.getBaseUri(), testCase);
-        context.getTestCaseMap().put(testCase.getAuth().toString(), testCase);
-//        context.getTestCaseMap().put(testCase.getRequest().getPathParam().toString(), testCase);
-//        context.getTestCaseMap().put(testCase.getResponse().toString(), testCase);
-
-
-        System.out.println("Saved Test Case: " + testCase.toString() + "\n");
+    public void saveTestCase(String testCaseName, TestCase testCase) {
+        context.getTestCaseMap().put(testCaseName, testCase);
     }
 
     @Override
     public void deleteById(String id) {
-        // Directly access the testCaseStorage map from the context
         context.getTestCaseMap().remove(id);
-        System.out.println("Deleted Test Case with ID: " + id);
     }
 
     @Override
-    public Optional<TestCase> findById(String id) {
-        // Directly access the testCaseStorage map from the context
-        return Optional.ofNullable(context.getTestCaseMap().get(id));
+    public TestCase findByName(String testCaseName) {
+        return context.testCaseMap.get(testCaseName);
     }
 
     @Override
     public List<TestCase> findAll() {
-        // Directly access the testCaseStorage map from the context
         return new ArrayList<>(context.getTestCaseMap().values());
+    }
+
+    @Override
+    public void saveFlow(String flowName, Flow flow) {
+        context.getFlowMap().put(flowName, flow);
+    }
+
+    @Override
+    public List<Flow> findAllFlows() {
+        return new ArrayList<>(context.getFlowMap().values());
     }
 }

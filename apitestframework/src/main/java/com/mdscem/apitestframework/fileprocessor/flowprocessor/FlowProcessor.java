@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mdscem.apitestframework.constants.Constant;
 import com.mdscem.apitestframework.context.Flow;
 import com.mdscem.apitestframework.context.FlowContext;
+import com.mdscem.apitestframework.context.TestCaseRepository;
 import com.mdscem.apitestframework.fileprocessor.filereader.FlowContentReader;
 import com.mdscem.apitestframework.fileprocessor.filereader.model.TestCase;
 import com.mdscem.apitestframework.fileprocessor.validator.TestCaseReplacer;
@@ -30,15 +31,12 @@ public class FlowProcessor {
 
     @Autowired
     private FlowContentReader flowContentReader;
-
     @Autowired
     private FlowContext testCaseContext;
-
-    @Autowired
-    private Flow flow;
-
     @Autowired
     private TestCaseReplacer testCaseReplacer;
+    @Autowired
+    private TestCaseRepository testCaseRepository;
 
     private static final ObjectMapper objectMapper = new ObjectMapper(); // Jackson ObjectMapper
 
@@ -55,6 +53,7 @@ public class FlowProcessor {
 
         for (Path flowPath : flowPaths) {
             try {
+                Flow flow = new Flow();
                 String flowFileName;
                 ArrayList<TestCase> flowContentTestCaseList = new ArrayList<>();
 
@@ -70,13 +69,13 @@ public class FlowProcessor {
 
                     // If the test case is already in the context map, retrieve and update it
                     if (testCaseContext.testCaseMap.containsKey(testCaseName)) {
-                        TestCase testCase = testCaseContext.testCaseMap.get(testCaseName);
+                        TestCase testCase = testCaseRepository.findByName(testCaseName);
                         TestCase completeTestCase = testCaseReplacer.replaceTestCaseWithFlowData(testCase, flowTestCase);
                         flowContentTestCaseList.add(completeTestCase);
                     } else {
                         // Otherwise, read a new test case, add it to the map, and update it
                         TestCase newTestCase = flowContentReader.readNewTestCase(testCaseName);
-                        testCaseContext.testCaseMap.put(testCaseName, newTestCase);
+                        testCaseRepository.saveTestCase(testCaseName, newTestCase);
                         TestCase completeTestCase = testCaseReplacer.replaceTestCaseWithFlowData(newTestCase, flowTestCase);
                         flowContentTestCaseList.add(completeTestCase);
                     }
@@ -87,17 +86,16 @@ public class FlowProcessor {
                 flow.setTestCaseArrayList(flowContentTestCaseList);
 
                 // Add the flow to the context map using the file name as the key
-                testCaseContext.flowMap.put(flowFileName, flow);
-
-                // Log the resulting data for debugging and validation
-                logger.info("FlowObject data: {}", objectMapper.writeValueAsString(flow));
-                logger.info("FlowObjectMap data: {}", objectMapper.writeValueAsString(testCaseContext.flowMap));
-                logger.info("TestCaseMap data: {}", objectMapper.writeValueAsString(testCaseContext.testCaseMap));
+                testCaseRepository.saveFlow(flowFileName, flow);
 
             } catch (Exception e) {
                 // Handle exceptions and log the stack trace for troubleshooting
                 logger.error("Error processing flow: " + flowPath, e);
             }
         }
+        // Log the resulting data for debugging and validation
+        logger.info("FlowObjectMap data: {}", objectMapper.writeValueAsString(testCaseContext.flowMap));
+        logger.info("TestCaseMap data: {}", objectMapper.writeValueAsString(testCaseContext.testCaseMap));
+
     }
 }

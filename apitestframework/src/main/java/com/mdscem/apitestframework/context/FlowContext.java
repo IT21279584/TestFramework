@@ -13,6 +13,10 @@ public class FlowContext {
 
     public Map<String,TestCase> testCaseMap = new HashMap<>();
 
+    public Map<String, Flow> getFlowMap() {
+        return flowMap;
+    }
+
     public Map<String, TestCase> getTestCaseMap() {
         return testCaseMap;
     }

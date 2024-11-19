@@ -137,13 +137,11 @@ public class TestCaseReplacer {
             if (flowSection.has("name")) {
                 String flowName = flowSection.get("name").asText();
                 if (testCase.getTestCaseName().equals(flowName)) {
-                    // Add path and query parameters if present
+                    // Add path and query parameters
                     requestNode.set("pathParam", flowSection.get("pathParam"));
                     requestNode.set("queryParam", flowSection.get("queryParam"));
-
-                    // Add delay if available
-                    updatedTestCase.set("delay", flowSection.has("delay") ? flowSection.get("delay") : objectMapper.nullNode());
-                    break;
+                    // Add delay
+                    updatedTestCase.set("delay", flowSection.get("delay"));
                 }
             }
         }

@@ -8,7 +8,6 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class TestCaseConfig {
-
     @Bean
     public TestCaseRepository testCaseRepository() {
         return new TestCaseRepositoryImpl();

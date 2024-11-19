@@ -11,12 +11,12 @@ import java.util.Optional;
 @Repository
 public interface TestCaseRepository {
 
-    Optional<TestCase> findById(String id);
-
+    TestCase findByName(String id);
     List<TestCase> findAll();
-
-    void save(TestCase testCase);
-
+    void saveTestCase(String testCaseName, TestCase testCase);
     void deleteById(String id);
+    void saveFlow(String flowName, Flow flow);
+    List<Flow> findAllFlows();
+
 
 }
