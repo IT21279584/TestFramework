@@ -32,7 +32,7 @@ public class FlowContentReader {
     private final ObjectMapper yamlMapper = new ObjectMapper(new YAMLFactory());
 
 
-    // Get all flow YAML files from the directory
+    // Get all flow files from the directory
     public List<Path> getFlowFilesFromDirectory(Path flowPath) throws IOException {
         List<Path> flowFiles = new ArrayList<>();
 
@@ -63,6 +63,7 @@ public class FlowContentReader {
         return flowContentsList;
     }
 
+    //read the testcases, when the testcase map not inside the testcases(flow process)
     public TestCase readNewTestCase(String testCaseName) throws IOException {
 
         // Load include files and combine them into one node

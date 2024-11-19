@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mdscem.apitestframework.constants.Constant;
 import com.mdscem.apitestframework.context.Flow;
-import com.mdscem.apitestframework.context.TestCaseContext;
+import com.mdscem.apitestframework.context.FlowContext;
 import com.mdscem.apitestframework.fileprocessor.filereader.FlowContentReader;
 import com.mdscem.apitestframework.fileprocessor.filereader.model.TestCase;
 import com.mdscem.apitestframework.fileprocessor.validator.TestCaseReplacer;
@@ -23,7 +23,7 @@ public class FlowProcessor {
     @Autowired
     private FlowContentReader flowContentReader;
     @Autowired
-    private TestCaseContext testCaseContext;
+    private FlowContext testCaseContext;
     @Autowired
     private Flow flow;
     @Autowired

@@ -1,15 +1,13 @@
 package com.mdscem.apitestframework.context;
 
 import com.mdscem.apitestframework.fileprocessor.filereader.model.TestCase;
-import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
 
 import java.util.*;
 
 public class TestCaseRepositoryImpl implements TestCaseRepository {
     @Autowired
-    private TestCaseContext context;
+    private FlowContext context;
 
     @Override
     public void save(TestCase testCase) {
