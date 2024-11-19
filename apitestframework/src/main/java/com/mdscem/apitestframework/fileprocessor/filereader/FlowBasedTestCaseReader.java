@@ -15,7 +15,9 @@ import java.nio.file.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.mdscem.apitestframework.fileprocessor.TestCaseProcessor.convertToJsonNode;
 import static com.mdscem.apitestframework.fileprocessor.TestCaseProcessor.processTestCaseWithFlowData;
+
 
 @Component
 public class FlowBasedTestCaseReader {
@@ -29,13 +31,13 @@ public class FlowBasedTestCaseReader {
     private final ObjectMapper yamlMapper = new ObjectMapper(new YAMLFactory());
 
     // Main method to load test cases based on flows
-    public List<JsonNode> loadTestCasesByFlow(JsonNode combinedValuesNode) throws IOException {
+    public List<TestCase> loadTestCasesByFlow() throws IOException {
 
-        List<JsonNode> testCases = new ArrayList<>();
+        List<TestCase> testCases = new ArrayList<>();
         List<Path> flowFiles = getFlowFilesFromDirectory();
 
         for (Path flowFile : flowFiles) {
-            List<JsonNode> flowTestCases = processFlowFileAndRead(flowFile, combinedValuesNode);
+            List<TestCase> flowTestCases = processFlowFileAndRead(flowFile);
             testCases.addAll(flowTestCases);
         }
 
@@ -64,9 +66,13 @@ public class FlowBasedTestCaseReader {
     }
 
     // Process individual flow file and return the list of test cases
-    private List<JsonNode> processFlowFileAndRead(Path flowFile, JsonNode combinedValuesNode) throws IOException {
-        List<JsonNode> processedTestCases = new ArrayList<>();
+    private List<TestCase> processFlowFileAndRead(Path flowFile) throws IOException {
+        List<TestCase> processedTestCases = new ArrayList<>();
         JsonNode flowsNode = yamlMapper.readTree(flowFile.toFile());
+
+        // Load include files and combine them into one node
+        List<JsonNode> includeNodes = testCasesToJsonNodeReader.loadFilesFromDirectory();
+        JsonNode combinedValuesNode = TestCaseProcessor.combineNodes(includeNodes);
 
         // Process each flow item in the YAML file
         for (JsonNode flowItem : flowsNode) {
@@ -80,8 +86,7 @@ public class FlowBasedTestCaseReader {
             TestCase finalResults = TestCaseReplacer.replacePlaceholdersInTestCase(testCaseNode, combinedValuesNode);
 
             // Process the final test case with flow data
-            JsonNode processedTestCase = processTestCaseWithFlowData(finalResults, testCaseNode, combinedValuesNode, flowItem);
-
+            TestCase processedTestCase = processTestCaseWithFlowData(finalResults, flowItem);
             processedTestCases.add(processedTestCase);
             testCaseProcessor.saveTestCases(processedTestCase);
         }

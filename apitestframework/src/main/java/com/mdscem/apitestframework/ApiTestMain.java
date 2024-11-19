@@ -24,12 +24,10 @@ public class ApiTestMain implements CommandLineRunner {
     @Override
     public void run(String... args) {
         try {
-            // Load include files and combine them into one node
-            List<JsonNode> includeNodes = testCasesToJsonNodeReader.loadFilesFromDirectory();
-            JsonNode combinedValuesNode = TestCaseProcessor.combineNodes(includeNodes);
+
 
             // Load test cases by flow, passing the combinedValuesNode
-            List<JsonNode> orderedTestCases = flowBasedTestCaseReader.loadTestCasesByFlow(combinedValuesNode);
+            flowBasedTestCaseReader.loadTestCasesByFlow();
 
         } catch (IOException e) {
             System.err.println("Error occurred while loading files: " + e.getMessage());

@@ -37,6 +37,14 @@ public class TestCaseReplacer {
         }
     }
 
+    public static TestCase jsonNodeToTestCase(JsonNode jsonNode) {
+        try {
+            return objectMapper.treeToValue(jsonNode, TestCase.class);
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Failed to convert JsonNode to TestCase: " + e.getMessage(), e);
+        }
+    }
+
 
     //check the reader return and array of jsonNode or one jsonNode
     public static TestCase replacePlaceholdersInNode(JsonNode testCaseNode, JsonNode valuesNode) throws IOException {
