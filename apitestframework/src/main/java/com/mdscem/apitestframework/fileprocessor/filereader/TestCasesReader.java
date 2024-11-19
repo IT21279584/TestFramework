@@ -38,7 +38,7 @@ public class TestCasesReader {
         }
     }
 
-    //Load files from directory and read and return them as JsonNode list
+    //Load include files from directory and read and return them as JsonNode list
     public List<JsonNode> loadFilesFromDirectory() throws IOException {
         List<JsonNode> jsonNodeList = new ArrayList<>();
         Path directory = Paths.get(Constant.INCLUDES_DIRECTORY);

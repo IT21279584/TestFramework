@@ -7,6 +7,7 @@ import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.mdscem.apitestframework.constants.Constant;
 import com.mdscem.apitestframework.fileprocessor.TestCaseProcessor;
 import com.mdscem.apitestframework.fileprocessor.filereader.model.TestCase;
+import com.mdscem.apitestframework.fileprocessor.validator.SchemaValidation;
 import com.mdscem.apitestframework.fileprocessor.validator.TestCaseReplacer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -17,12 +18,15 @@ import java.nio.file.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.mdscem.apitestframework.fileprocessor.TestCaseProcessor.jsonNodeToTestCase;
 import static com.mdscem.apitestframework.fileprocessor.validator.TestCaseReplacer.*;
 
 @Component
 public class FlowContentReader {
     @Autowired
     private TestCasesReader testCasesReader;
+    @Autowired
+    private SchemaValidation schemaValidation;
     private final ObjectMapper yamlMapper = new ObjectMapper(new YAMLFactory());
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
@@ -71,8 +75,7 @@ public class FlowContentReader {
         JsonNode replaceJsonNode = TestCaseReplacer.replacePlaceholdersInNode(testCaseNode, combinedValuesNode);
 
         //Validate TestCase against the testcase schema
-        TestCase finalResult = validateTestcase(replaceJsonNode);
-
+        TestCase finalResult = schemaValidation.validateTestcase(replaceJsonNode);
 
         return finalResult;
     }

@@ -12,10 +12,6 @@ public class FlowObject {
     private List<JsonNode> flowContentList;
     private ArrayList<TestCase> testCaseArrayList;
 
-    public List<JsonNode> getFlowContentList() {
-        return flowContentList;
-    }
-
     public void setFlowContentList(List<JsonNode> flowContentList) {
         this.flowContentList = flowContentList;
     }

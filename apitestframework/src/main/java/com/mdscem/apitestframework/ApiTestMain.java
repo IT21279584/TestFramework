@@ -13,14 +13,14 @@ import java.io.IOException;
 public class ApiTestMain implements CommandLineRunner {
 
     @Autowired
-    private FlowContentReader flowContentReader;
-    @Autowired
     private FlowProcessor flowProcessor;
 
     @Override
     public void run(String... args) {
     try {
+
         flowProcessor.flowProcess();
+
         } catch (IOException e) {
             System.err.println("Error occurred while loading files: " + e.getMessage());
             e.printStackTrace();

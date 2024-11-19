@@ -26,8 +26,6 @@ public class FlowProcessor {
     private TestCaseContext testCaseContext;
     @Autowired
     private FlowObject flowObject;
-    @Autowired
-    private TestCasesReader testCasesReader;
 
     private static final ObjectMapper objectMapper = new ObjectMapper(); // Jackson ObjectMapper
 

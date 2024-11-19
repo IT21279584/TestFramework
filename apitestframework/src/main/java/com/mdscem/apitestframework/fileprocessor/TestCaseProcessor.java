@@ -124,4 +124,12 @@ public class TestCaseProcessor {
         });
         return updatedTestCase;
     }
+
+    public static TestCase jsonNodeToTestCase(JsonNode jsonNode) {
+        try {
+            return objectMapper.treeToValue(jsonNode, TestCase.class);
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Failed to convert JsonNode to TestCase: " + e.getMessage(), e);
+        }
+    }
 }

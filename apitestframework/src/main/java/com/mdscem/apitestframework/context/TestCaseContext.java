@@ -13,19 +13,8 @@ public class TestCaseContext {
 
     public Map<String,TestCase> testCaseMap = new HashMap<>();
 
-    public Map<String, FlowObject> getFlowObjectMap() {
-        return flowObjectMap;
-    }
-
-    public void setFlowObjectMap(Map<String, FlowObject> flowObjectMap) {
-        this.flowObjectMap = flowObjectMap;
-    }
-
     public Map<String, TestCase> getTestCaseMap() {
         return testCaseMap;
     }
 
-    public void setTestCaseMap(Map<String, TestCase> testCaseMap) {
-        this.testCaseMap = testCaseMap;
-    }
 }
