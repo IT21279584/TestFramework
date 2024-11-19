@@ -47,7 +47,7 @@ public class TestCaseReplacer {
 
 
     //check the reader return and array of jsonNode or one jsonNode
-    public static TestCase replacePlaceholdersInNode(JsonNode testCaseNode, JsonNode valuesNode) throws IOException {
+    public static JsonNode replacePlaceholdersInNode(JsonNode testCaseNode, JsonNode valuesNode) throws IOException {
         // Ensure testCaseNode is an array
         ArrayNode arrayNode;
 
@@ -62,13 +62,12 @@ public class TestCaseReplacer {
         for (int i = 0; i < arrayNode.size(); i++) {
             JsonNode modifiedElement = replacePlaceholders(arrayNode.get(i), valuesNode);
 
-            //Validate testcases against the schema
-//            JsonNode validateNode = SchemaValidation.validateFile(modifiedElement);
+
             arrayNode.set(i, modifiedElement);
         }
 
         // Convert modified ArrayNode to TestCase array
-        return JsonNodeToJavaObjConverter(arrayNode);
+        return arrayNode;
     }
 
 
@@ -105,8 +104,11 @@ public class TestCaseReplacer {
     }
 
     //handle placeholder replacement
-    public static TestCase replacePlaceholdersInTestCase(JsonNode testCaseNode, JsonNode combinedValuesNode) throws IOException {
-        return replacePlaceholdersInNode(testCaseNode, combinedValuesNode);
+    public static TestCase replacePlaceholdersInTestCase(JsonNode testCaseNode) throws IOException {
+        //Validate testcases against the schema
+        JsonNode validateNode = SchemaValidation.validateFile(testCaseNode);
+
+        return JsonNodeToJavaObjConverter(validateNode);
     }
 
 }
