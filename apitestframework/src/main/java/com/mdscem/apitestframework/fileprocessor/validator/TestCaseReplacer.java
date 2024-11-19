@@ -154,7 +154,7 @@ public class TestCaseReplacer {
         updatedTestCase.set(RESPONSE, testCaseNode.get(RESPONSE));
 
         // Merge the updated fields back into the test case
-        JsonNode finalResult = testCaseProcessor.mergeMissingFields(testCaseNode, updatedTestCase);
+        JsonNode finalResult = testCaseProcessor.mergeFlowNodeWithTestCaseNode(testCaseNode, updatedTestCase);
         return jsonNodeToTestCase(finalResult);
     }
 }
