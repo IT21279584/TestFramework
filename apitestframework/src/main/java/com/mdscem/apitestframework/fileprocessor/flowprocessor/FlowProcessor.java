@@ -3,10 +3,9 @@ package com.mdscem.apitestframework.fileprocessor.flowprocessor;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mdscem.apitestframework.constants.Constant;
-import com.mdscem.apitestframework.context.FlowObject;
+import com.mdscem.apitestframework.context.Flow;
 import com.mdscem.apitestframework.context.TestCaseContext;
 import com.mdscem.apitestframework.fileprocessor.filereader.FlowContentReader;
-import com.mdscem.apitestframework.fileprocessor.filereader.TestCasesReader;
 import com.mdscem.apitestframework.fileprocessor.filereader.model.TestCase;
 import com.mdscem.apitestframework.fileprocessor.validator.TestCaseReplacer;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +25,7 @@ public class FlowProcessor {
     @Autowired
     private TestCaseContext testCaseContext;
     @Autowired
-    private FlowObject flowObject;
+    private Flow flowObject;
     @Autowired
     private TestCaseReplacer testCaseReplacer;
 
@@ -39,11 +38,10 @@ public class FlowProcessor {
 
         for (Path flowPath : flowPaths) {
             String flowFileName;
-            List<JsonNode> flowContentList = new ArrayList<>();
             ArrayList<TestCase> flowContentTestCaseList = new ArrayList<>();
             try {
                 flowFileName = String.valueOf(flowPath.getFileName());
-                flowContentList = flowContentReader.getFlowContentAsJsonNodes(flowPath);
+                List<JsonNode> flowContentList = flowContentReader.getFlowContentAsJsonNodes(flowPath);
 
                 for (JsonNode flowTestCase : flowContentList) {
                     String testCaseName = flowTestCase.get("testCase").get("name").asText();
@@ -60,7 +58,7 @@ public class FlowProcessor {
 
                 flowObject.setFlowContentList(flowContentList);
                 flowObject.setTestCaseArrayList(flowContentTestCaseList);
-                testCaseContext.flowObjectMap.put(flowFileName, flowObject);
+                testCaseContext.flowMap.put(flowFileName, flowObject);
 
                 // Print flowObject, flowObjectMap, and testCaseMap data
                 printFlowObjectData(flowObject);
@@ -77,7 +75,7 @@ public class FlowProcessor {
      * Prints the flowObject data.
      *
      */
-    private void printFlowObjectData(FlowObject flowObject) {
+    private void printFlowObjectData(Flow flowObject) {
         try {
             String jsonString = objectMapper.writeValueAsString(flowObject);
             System.out.println("FlowObject data: " + jsonString);
@@ -92,7 +90,7 @@ public class FlowProcessor {
      */
     private void printFlowObjectMap() {
         try {
-            String jsonString = objectMapper.writeValueAsString(testCaseContext.flowObjectMap);
+            String jsonString = objectMapper.writeValueAsString(testCaseContext.flowMap);
             System.out.println("FlowObjectMap data: " + jsonString);
         } catch (Exception e) {
             e.printStackTrace();

@@ -8,12 +8,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class FlowObject {
+public class Flow {
     private List<JsonNode> flowContentList;
     private ArrayList<TestCase> testCaseArrayList;
 
+    public List<JsonNode> getFlowContentList() {
+        return flowContentList;
+    }
+
     public void setFlowContentList(List<JsonNode> flowContentList) {
         this.flowContentList = flowContentList;
+    }
+
+    public ArrayList<TestCase> getTestCaseArrayList() {
+        return testCaseArrayList;
     }
 
     public void setTestCaseArrayList(ArrayList<TestCase> testCaseArrayList) {

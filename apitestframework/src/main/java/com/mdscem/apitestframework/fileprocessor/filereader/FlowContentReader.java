@@ -2,7 +2,6 @@ package com.mdscem.apitestframework.fileprocessor.filereader;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.mdscem.apitestframework.constants.Constant;
 import com.mdscem.apitestframework.fileprocessor.TestCaseProcessor;
@@ -18,8 +17,6 @@ import java.nio.file.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.mdscem.apitestframework.fileprocessor.TestCaseProcessor.jsonNodeToTestCase;
-import static com.mdscem.apitestframework.fileprocessor.validator.TestCaseReplacer.*;
 
 @Component
 public class FlowContentReader {
@@ -30,7 +27,6 @@ public class FlowContentReader {
     @Autowired
     private TestCaseProcessor testCaseProcessor;
     private final ObjectMapper yamlMapper = new ObjectMapper(new YAMLFactory());
-    private static final ObjectMapper objectMapper = new ObjectMapper();
 
 
     // Get all flow YAML files from the directory
@@ -77,9 +73,7 @@ public class FlowContentReader {
         JsonNode replaceJsonNode = TestCaseReplacer.replacePlaceholdersInNode(testCaseNode, combinedValuesNode);
 
         //Validate TestCase against the testcase schema
-        TestCase finalResult = schemaValidation.validateTestcase(replaceJsonNode);
-
-        return finalResult;
+        return schemaValidation.validateTestcase(replaceJsonNode);
     }
 
 }

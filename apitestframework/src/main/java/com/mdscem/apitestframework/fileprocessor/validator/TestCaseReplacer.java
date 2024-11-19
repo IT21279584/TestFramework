@@ -2,7 +2,6 @@ package com.mdscem.apitestframework.fileprocessor.validator;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.mdscem.apitestframework.fileprocessor.TestCaseProcessor;
 import com.mdscem.apitestframework.fileprocessor.filereader.FlowContentReader;
@@ -11,17 +10,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 import static com.mdscem.apitestframework.fileprocessor.TestCaseProcessor.jsonNodeToTestCase;
 
 @Component
 public class TestCaseReplacer {
-    @Autowired
-    private FlowContentReader flowContentReader;
 
     @Autowired
     private TestCaseProcessor testCaseProcessor;
@@ -46,8 +41,6 @@ public class TestCaseReplacer {
         // Return the processed JsonNode
         return testCaseNode;
     }
-
-
 
     //replace place holders
     public static JsonNode replacePlaceholders(JsonNode testCaseNode, JsonNode valuesNode) {
@@ -119,5 +112,4 @@ public class TestCaseReplacer {
         JsonNode finalResult = testCaseProcessor.mergeMissingFields(testCaseNode, updatedTestCase);
         return jsonNodeToTestCase(finalResult);
     }
-
 }
