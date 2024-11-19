@@ -97,4 +97,26 @@ public class FlowBasedTestCaseReader {
 
         return processedTestCases;
     }
+
+    private TestCase processFlowFile(String testCaseName) throws IOException {
+
+        // Load include files and combine them into one node
+        List<JsonNode> includeNodes = testCasesToJsonNodeReader.loadFilesFromDirectory();
+        JsonNode combinedValuesNode = TestCaseProcessor.combineNodes(includeNodes);
+
+
+        String testCaseFilePath = Constant.TEST_CASES_DIRECTORY + "/" + testCaseName + ".yaml";
+
+        //Read the testcases
+        JsonNode testCaseNode = testCasesToJsonNodeReader.readFile(testCaseFilePath);
+
+        // Call to method that replaces placeholders
+        JsonNode replaceJsonNode = TestCaseReplacer.replacePlaceholdersInNode(testCaseNode, combinedValuesNode);
+
+        //Validate TestCase against the testcase schema
+        TestCase finalResult = validateTestcase(replaceJsonNode);
+
+
+        return finalResult;
+    }
 }

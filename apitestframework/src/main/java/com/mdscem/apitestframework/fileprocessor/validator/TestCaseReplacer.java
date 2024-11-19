@@ -48,25 +48,26 @@ public class TestCaseReplacer {
 
     //check the reader return and array of jsonNode or one jsonNode
     public static JsonNode replacePlaceholdersInNode(JsonNode testCaseNode, JsonNode valuesNode) throws IOException {
-        // Ensure testCaseNode is an array
+        ObjectMapper objectMapper = new ObjectMapper();
         ArrayNode arrayNode;
 
         if (testCaseNode.isArray()) {
             arrayNode = (ArrayNode) testCaseNode;
         } else {
-            // Wrap testCaseNode in an array if it's not already an array
             arrayNode = objectMapper.createArrayNode().add(testCaseNode);
         }
 
-        // Replace placeholders in each element
-        for (int i = 0; i < arrayNode.size(); i++) {
-            JsonNode modifiedElement = replacePlaceholders(arrayNode.get(i), valuesNode);
-
-
-            arrayNode.set(i, modifiedElement);
+        try {
+            for (int i = 0; i < arrayNode.size(); i++) {
+                JsonNode element = arrayNode.get(i);
+                JsonNode modifiedElement = replacePlaceholders(element, valuesNode);
+                arrayNode.set(i, modifiedElement);
+            }
+        } catch (IllegalArgumentException e) {
+            // Log the error and rethrow if desired
+            throw new IllegalArgumentException("Error replacing placeholders: " + e.getMessage(), e);
         }
 
-        // Convert modified ArrayNode to TestCase array
         return arrayNode;
     }
 
