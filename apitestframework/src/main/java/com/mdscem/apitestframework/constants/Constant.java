@@ -14,4 +14,5 @@ public interface Constant {
     String RESPONSE = "response";
     String TESTCASE_NAME = "name";
     String REQUEST = "request";
+    String CAPTURE = "capture";
 }

@@ -145,7 +145,7 @@ public class TestCaseReplacer {
                     // Add delay
                     updatedTestCase.set(DELAY, flowSection.get(DELAY));
 
-                    JsonNode capture = flowSection.get("capture");
+                    JsonNode capture = flowSection.get(CAPTURE);
 
                     // Check if capture exists and is not null
                     if (capture != null && !capture.isNull()) {
@@ -155,12 +155,13 @@ public class TestCaseReplacer {
                             for (JsonNode item : capture) {
                                 captureMap.put(item.asText(), (JsonNode) null); // Add key with null value
                             }
-                            updatedTestCase.set("capture", captureMap); // Set capture in updated test case
+                            updatedTestCase.set(CAPTURE, captureMap); // Set capture in updated test case
+
                         } else if (capture.isTextual()) {
                             // If capture is a string, set it directly with a null value
                             ObjectNode captureMap = objectMapper.createObjectNode();
                             captureMap.put(capture.asText(), (JsonNode) null); // Add key with null value
-                            updatedTestCase.set("capture", captureMap);
+                            updatedTestCase.set(CAPTURE, captureMap);
                         }
                     }
                 }
