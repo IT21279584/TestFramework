@@ -131,6 +131,7 @@ public class TestCaseReplacer {
         ObjectNode updatedTestCase = objectMapper.createObjectNode();
         JsonNode testCaseNode = testCaseProcessor.convertToJsonNode(testCase);
 
+
         // Create the request node to hold path and query parameters
         ObjectNode requestNode = objectMapper.createObjectNode();
 
@@ -143,6 +144,25 @@ public class TestCaseReplacer {
                     requestNode.set(QUERY_PARAM, flowSection.get(QUERY_PARAM));
                     // Add delay
                     updatedTestCase.set(DELAY, flowSection.get(DELAY));
+
+                    JsonNode capture = flowSection.get("capture");
+
+                    // Check if capture exists and is not null
+                    if (capture != null && !capture.isNull()) {
+                        if (capture.isArray()) {
+                            // If capture is an array, convert to a map with null values
+                            ObjectNode captureMap = objectMapper.createObjectNode();
+                            for (JsonNode item : capture) {
+                                captureMap.put(item.asText(), (JsonNode) null); // Add key with null value
+                            }
+                            updatedTestCase.set("capture", captureMap); // Set capture in updated test case
+                        } else if (capture.isTextual()) {
+                            // If capture is a string, set it directly with a null value
+                            ObjectNode captureMap = objectMapper.createObjectNode();
+                            captureMap.put(capture.asText(), (JsonNode) null); // Add key with null value
+                            updatedTestCase.set("capture", captureMap);
+                        }
+                    }
                 }
             }
         }

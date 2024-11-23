@@ -1,20 +1,10 @@
 package com.mdscem.apitestframework.context;
 
+public interface TestCaseRepository <T extends Testable> {
 
-import com.mdscem.apitestframework.fileprocessor.filereader.model.TestCase;
+    Testable findByName(String name);
 
-import org.springframework.stereotype.Repository;
+    void save(String name, T testable);
 
-import java.util.List;
-
-@Repository
-public interface TestCaseRepository {
-
-    TestCase findByName(String testCaseName);
-    List<TestCase> findAll();
-    void save(String testCaseName, TestCase testCase);
     void deleteById(String id);
-
-
-
 }

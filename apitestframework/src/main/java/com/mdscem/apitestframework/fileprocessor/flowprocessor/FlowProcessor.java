@@ -3,10 +3,7 @@ package com.mdscem.apitestframework.fileprocessor.flowprocessor;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mdscem.apitestframework.constants.Constant;
-import com.mdscem.apitestframework.context.Flow;
-import com.mdscem.apitestframework.context.FlowContext;
-import com.mdscem.apitestframework.context.FlowRepository;
-import com.mdscem.apitestframework.context.TestCaseRepository;
+import com.mdscem.apitestframework.context.*;
 import com.mdscem.apitestframework.fileprocessor.filereader.FlowContentReader;
 import com.mdscem.apitestframework.fileprocessor.filereader.model.TestCase;
 import com.mdscem.apitestframework.fileprocessor.validator.TestCaseReplacer;
@@ -38,9 +35,10 @@ public class FlowProcessor {
     @Autowired
     private TestCaseReplacer testCaseReplacer;
     @Autowired
-    private TestCaseRepository testCaseRepository;
+    private TestCaseRepository flowRepository;
     @Autowired
-    private FlowRepository flowRepository;
+    private TestCaseRepository testCaseRepository;
+
 
     private static final ObjectMapper objectMapper = new ObjectMapper(); // Jackson ObjectMapper
 
@@ -73,7 +71,7 @@ public class FlowProcessor {
 
                     // If the test case is already in the context map, retrieve and update it
                     if (flowContext.getTestCaseMap().containsKey(testCaseName)) {
-                        TestCase testCase = testCaseRepository.findByName(testCaseName);
+                        TestCase testCase = (TestCase) testCaseRepository.findByName(testCaseName);
                         TestCase completeTestCase = testCaseReplacer.replaceTestCaseWithFlowData(testCase, flowTestCase);
                         flowContentTestCaseList.add(completeTestCase);
                     } else {

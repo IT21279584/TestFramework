@@ -1,25 +1,26 @@
 package com.mdscem.apitestframework.context;
 
-import com.mdscem.apitestframework.fileprocessor.filereader.model.TestCase;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Repository
-public class FlowRepositoryImpl implements FlowRepository {
+public class FlowRepositoryImpl implements TestCaseRepository {
 
     @Autowired
     private FlowContext context;
 
     @Override
-    public void save(String flowName, Flow flow) {
-        context.getFlowMap().put(flowName, flow);
+    public Flow findByName(String name) {
+        return context.getFlowMap().get(name);
     }
 
     @Override
-    public List<Flow> findAll() {
-        return new ArrayList<>(context.getFlowMap().values());
+    public void save(String name, Testable testable) {
+        context.getFlowMap().put(name, (Flow) testable);
+    }
+
+    @Override
+    public void deleteById(String id) {
+        context.getFlowMap().remove(id);
     }
 }
