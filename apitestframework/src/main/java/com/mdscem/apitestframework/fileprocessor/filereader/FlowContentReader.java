@@ -7,7 +7,7 @@ import com.mdscem.apitestframework.constants.Constant;
 import com.mdscem.apitestframework.fileprocessor.TestCaseProcessor;
 import com.mdscem.apitestframework.fileprocessor.filereader.model.TestCase;
 import com.mdscem.apitestframework.fileprocessor.validator.SchemaValidation;
-import com.mdscem.apitestframework.fileprocessor.validator.TestReplacer;
+import com.mdscem.apitestframework.fileprocessor.validator.TestCaseReplacer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -81,7 +81,7 @@ public class FlowContentReader {
         JsonNode testCaseNode = testCasesReader.readFile(testCaseFilePath);
 
         // Call to method that replaces placeholders
-        JsonNode replaceJsonNode = TestReplacer.replacePlaceholder(testCaseNode, combinedValuesNode);
+        JsonNode replaceJsonNode = TestCaseReplacer.replacePlaceholder(testCaseNode, combinedValuesNode);
 
         //Validate TestCase against the testcase schema
         JsonNode schemaValidate = schemaValidation.validateTestcase(replaceJsonNode, VALIDATION_FILE_PATH);

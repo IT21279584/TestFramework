@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Component
-public class TestContext {
+public class FlowContext {
 
     //map that passes to req processor
     private Map<String, Flow> flowMap = new HashMap<>();

@@ -4,13 +4,9 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mdscem.apitestframework.constants.Constant;
 import com.mdscem.apitestframework.context.*;
-import com.mdscem.apitestframework.context.Flow;
-import com.mdscem.apitestframework.context.TestContext;
-import com.mdscem.apitestframework.context.FlowRepository;
-import com.mdscem.apitestframework.context.TestCaseRepository;
 import com.mdscem.apitestframework.fileprocessor.filereader.FlowContentReader;
 import com.mdscem.apitestframework.fileprocessor.filereader.model.TestCase;
-import com.mdscem.apitestframework.fileprocessor.validator.TestReplacer;
+import com.mdscem.apitestframework.fileprocessor.validator.TestCaseReplacer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,9 +31,9 @@ public class FlowProcessor {
     @Autowired
     private FlowContentReader flowContentReader;
     @Autowired
-    private TestContext testContext;
+    private FlowContext flowContext;
     @Autowired
-    private TestReplacer testReplacer;
+    private TestCaseReplacer testCaseReplacer;
     @Autowired
     private TestCaseRepository flowRepository;
     @Autowired
@@ -100,8 +96,8 @@ public class FlowProcessor {
             }
         }
         // Log the resulting data for debugging and validation
-        logger.info("FlowObjectMap data: {}", objectMapper.writeValueAsString(testContext.getFlowMap()));
-        logger.info("TestCaseMap data: {}", objectMapper.writeValueAsString(testContext.getTestCaseMap()));
+        logger.info("FlowObjectMap data: {}", objectMapper.writeValueAsString(flowContext.getFlowMap()));
+        logger.info("TestCaseMap data: {}", objectMapper.writeValueAsString(flowContext.getTestCaseMap()));
 
     }
 }

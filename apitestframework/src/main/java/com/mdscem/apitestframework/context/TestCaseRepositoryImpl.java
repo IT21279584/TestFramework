@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 public class TestCaseRepositoryImpl implements TestCaseRepository {
 
     @Autowired
-    private TestContext context;
+    private FlowContext context;
 
     @Override
     public Testable findByName(String name) {

@@ -23,7 +23,7 @@ import static com.mdscem.apitestframework.fileprocessor.TestCaseProcessor.jsonNo
  * It also supports flow-specific replacements for path parameters, query parameters, and delays.
  */
 @Component
-public class TestReplacer {
+public class TestCaseReplacer {
 
     private static final Logger logger = LogManager.getLogger(FlowProcessor.class);
 
