@@ -1,5 +1,6 @@
 package com.mdscem.apitestframework;
 
+import com.mdscem.apitestframework.fileprocessor.flowprocessor.CaptureValidation;
 import com.mdscem.apitestframework.fileprocessor.flowprocessor.FlowProcessor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -18,6 +19,7 @@ public class ApiTestMain implements CommandLineRunner {
     public void run(String... args) {
         try {
             flowProcessor.flowProcess();
+            CaptureValidation.printAllCaptures();
         } catch (Exception e) {
             logger.error("Unexpected error: " + e.getMessage());
             e.printStackTrace();
