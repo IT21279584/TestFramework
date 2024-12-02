@@ -6,7 +6,7 @@ import com.mdscem.apitestframework.requestprocessor.CoreFramework;
 public class KarateCoreFramework implements CoreFramework {
 
     @Override
-    public void executeTestCase(TestCase testCase) {
-
+    public String createFrameworkTypeTestFileAndexecute(TestCase testCase) {
+        return "";
     }
 }

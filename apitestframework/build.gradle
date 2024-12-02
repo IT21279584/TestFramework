@@ -40,7 +40,8 @@ dependencies {
 
 	// https://mvnrepository.com/artifact/io.rest-assured/rest-assured
 	testImplementation group: 'io.rest-assured', name: 'rest-assured', version: '4.3.3'
-
+	// https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api
+	testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.10.2'
 
 }
 

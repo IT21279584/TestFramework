@@ -1,44 +1,95 @@
 package com.mdscem.apitestframework.frameworkImplementation;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-//import com.mdscem.apitestframework.fileprocessor.filereader.TestCase;
 import com.mdscem.apitestframework.fileprocessor.filereader.model.TestCase;
+import com.mdscem.apitestframework.fileprocessor.filereader.model.Request;
 import com.mdscem.apitestframework.requestprocessor.CoreFramework;
 
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
-import org.skyscreamer.jsonassert.JSONAssert;
-import org.skyscreamer.jsonassert.JSONCompareMode;
+
+import org.junit.Assert;
+import org.junit.Test;
+
+import java.util.ArrayList;
+import java.util.Map;
 
 public class RestAssuredCoreFramework implements CoreFramework {
 
+    private ArrayList<TestCase> testcaseList;
+
+    @Test
+    public void testcaseInitializer(ArrayList<TestCase> testcaseList) {
+        this.testcaseList = testcaseList;
+
+        for (TestCase testCase : testcaseList) {
+            // Validate captured data or prerequisites if needed
+            // Authenticate if necessary
+            String result = createFrameworkTypeTestFileAndexecute(testCase);
+            System.out.println("Test Case Execution Result: " + result);
+            // Store captured data if necessary
+        }
+    }
+
     @Override
-    public void executeTestCase(TestCase testCase) {
-        // Build the common request specification
-//        RequestSpecification requestSpec = buildRequestSpecification(testCase);
+    public String createFrameworkTypeTestFileAndexecute(TestCase testCase) {
+        RequestSpecification requestSpec = buildRequestSpecification(testCase);
 
-        // Execute the HTTP method and get the response
-//        Response response = executeHttpMethod(testCase.getMethod(), requestSpec, testCase.getUrl());
-
-        // Attach request and response to Allure
-//        attachRequestAndResponseToAllure(testCase, response);
+        // Execute the HTTP method
+        Response response = executeHttpMethod(
+                testCase.getRequest().getMethod(),
+                requestSpec,
+                testCase.getBaseUri() + testCase.getRequest().getPath()
+        );
 
         // Validate the response
-//        validateResponse(testCase, response);
+        validateResponse(testCase, response);
+
+        // Return the response as a string (optional)
+        return response.getBody().asString();
     }
 
     private RequestSpecification buildRequestSpecification(TestCase testCase) {
-//        RequestSpecification requestSpec = RestAssured.given()
-//                .header("Authorization", "Bearer " + testCase.getAuthToken());
-//
-//        if (testCase.getPayload() != null && !testCase.getPayload().isEmpty()) {
-//            requestSpec.body(testCase.getPayload());
-//        }
-//
-//        return requestSpec;
-        return null;
+        Request request = testCase.getRequest();
+
+        RequestSpecification requestSpec = RestAssured.given();
+
+        // Add headers
+        if (request.getHeaders() != null && !request.getHeaders().isEmpty()) {
+            for (Map.Entry<String, String> header : request.getHeaders().entrySet()) {
+                requestSpec.header(header.getKey(), header.getValue());
+            }
+        }
+
+        // Add authentication if applicable
+        if (testCase.getAuth() != null && !testCase.getAuth().isEmpty()) {
+            String token = testCase.getAuth().get("token");
+            if (token != null) {
+                requestSpec.auth().oauth2(token);
+            }
+        }
+
+        // Add path parameters
+        if (request.getPathParam() != null && !request.getPathParam().isEmpty()) {
+            requestSpec.pathParams(request.getPathParam());
+        }
+
+        // Add query parameters
+        if (request.getQueryParam() != null && !request.getQueryParam().isEmpty()) {
+            requestSpec.queryParams(request.getQueryParam());
+        }
+
+        // Add request body
+        if (request.getBody() != null && !request.getBody().isEmpty()) {
+            requestSpec.body(request.getBody());
+        }
+
+        // Log request if specified
+        if ("ALL".equalsIgnoreCase(request.getLog())) {
+            requestSpec.log().all();
+        }
+
+        return requestSpec;
     }
 
     private Response executeHttpMethod(String method, RequestSpecification requestSpec, String url) {
@@ -58,29 +109,30 @@ public class RestAssuredCoreFramework implements CoreFramework {
         }
     }
 
-
-
-    // Validate the response
     private void validateResponse(TestCase testCase, Response response) {
         // Validate the response status code
-//        Assert.assertEquals(response.getStatusCode(), testCase.getExpectedResponseCode(), "Status code mismatch");
+        Assert.assertEquals(
+                "Status code mismatch",
+                testCase.getResponse().getStatusCode(),
+                response.getStatusCode()
+        );
 
-        // Validate response body using JSONAssert if provided
-//        JsonNode expectedResponseBodyNode = testCase.getExpectedResponseBody();
+        // Validate response body if expected
+        if (testCase.getResponse().getBody() != null) {
+            Assert.assertEquals(
+                    "Response body mismatch",
+                    testCase.getResponse().getBody().toString(),
+                    response.getBody().asString()
+            );
+        }
 
-//        if (expectedResponseBodyNode != null && !expectedResponseBodyNode.isEmpty()) {
-//            try {
-//                // Convert JsonNode to String
-//                ObjectMapper objectMapper = new ObjectMapper();
-//                String expectedResponseBodyString = objectMapper.writeValueAsString(expectedResponseBodyNode);
-//
-//                // Use JSONAssert to compare the response body
-//                JSONAssert.assertEquals(expectedResponseBodyString, response.getBody().asString(), JSONCompareMode.LENIENT);
-//            } catch (Exception e) {
-//                throw new RuntimeException("Failed to compare JSON response", e);
-//            }
-//        }
+        // Capture data if specified
+        if (testCase.getCapture() != null) {
+            for (Map.Entry<String, Object> entry : testCase.getCapture().entrySet()) {
+                String key = entry.getKey();
+                Object value = response.jsonPath().get(entry.getValue().toString());
+                testCase.getCapture().put(key, value);
+            }
+        }
     }
-
-
 }

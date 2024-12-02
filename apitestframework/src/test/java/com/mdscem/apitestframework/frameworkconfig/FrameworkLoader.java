@@ -1,6 +1,6 @@
 package com.mdscem.apitestframework.frameworkconfig;
 
-import com.mdscem.apitestframework.RestAssuredCoreFramework;
+import com.mdscem.apitestframework.frameworkImplementation.RestAssuredCoreFramework;
 import com.mdscem.apitestframework.requestprocessor.CoreFramework;
 import com.mdscem.apitestframework.requestprocessor.FrameworkAdapter;
 
