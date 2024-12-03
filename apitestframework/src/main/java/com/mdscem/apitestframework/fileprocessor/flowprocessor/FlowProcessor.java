@@ -17,6 +17,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import static com.mdscem.apitestframework.constants.Constant.TESTCASE_NAME;
 
@@ -95,9 +96,25 @@ public class FlowProcessor {
                 logger.error("Error processing flow: " + flowPath, e);
             }
         }
+        processFlows();
         // Log the resulting data for debugging and validation
-        logger.info("FlowObjectMap data: {}", objectMapper.writeValueAsString(flowContext.getFlowMap()));
-        logger.info("TestCaseMap data: {}", objectMapper.writeValueAsString(flowContext.getTestCaseMap()));
+//        logger.info("FlowObjectMap data: {}", objectMapper.writeValueAsString(flowContext.getFlowMap()));
+//        logger.info("TestCaseMap data: {}", objectMapper.writeValueAsString(flowContext.getTestCaseMap()));
 
+    }
+
+
+    public void processFlows() {
+        // Iterate through each flow
+        for (Map.Entry<String, Flow> flowEntry : flowContext.getFlowMap().entrySet()) {
+            Flow flow = flowEntry.getValue();
+            System.out.println("Processing flow: " + flowEntry.getKey());
+
+            // Fetch each TestCase one by one
+            TestCase testCase;
+            while ((testCase = flow.getNextTestCase()) != null) {
+                CaptureValidation.processCaptures(testCase);
+            }
+        }
     }
 }
