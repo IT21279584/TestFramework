@@ -41,8 +41,8 @@ public class FlowProcessor {
     @Autowired
     private TestCaseRepository testCaseRepository;
 
-    @Autowired
-    private CaptureValidation captureValidation;
+//    @Autowired
+//    private CaptureValidation captureValidation;
 
 
     private static final ObjectMapper objectMapper = new ObjectMapper(); // Jackson ObjectMapper
@@ -118,7 +118,7 @@ public class FlowProcessor {
             // Fetch each TestCase one by one
             TestCase testCase;
             while ((testCase = flow.getNextTestCase()) != null) {
-                captureValidation.processCaptures(testCase);
+//                captureValidation.processCaptures(testCase);
             }
         }
     }
