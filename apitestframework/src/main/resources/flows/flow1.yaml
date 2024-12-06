@@ -2,9 +2,9 @@
     name: GetDepartment
     pathParam:
       userId: 1
-      caseId: 23
+      productId: 23
     queryParam:
-      dept.exact: 20
+      caseId: 23
     delay: 1000
 
 - testCase:

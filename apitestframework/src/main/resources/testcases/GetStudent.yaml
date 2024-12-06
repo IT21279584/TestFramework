@@ -7,7 +7,7 @@ request:
     Content-Type: "application/json"
   log: "all"
   method: "GET"
-  path: "/api/users/:userId"
+  path: "/api/users/{{param userId}}"
   body: {}
 
 response:

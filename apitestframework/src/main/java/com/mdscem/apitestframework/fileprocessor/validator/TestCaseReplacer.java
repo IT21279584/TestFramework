@@ -14,6 +14,8 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static com.mdscem.apitestframework.constants.Constant.*;
 import static com.mdscem.apitestframework.fileprocessor.TestCaseProcessor.jsonNodeToTestCase;
@@ -175,6 +177,46 @@ public class TestCaseReplacer {
 
         // Merge the updated fields back into the test case
         JsonNode finalResult = testCaseProcessor.mergeFlowNodeWithTestCaseNode(testCaseNode, updatedTestCase);
-        return jsonNodeToTestCase(finalResult);
+        TestCase finalTestCase  = jsonNodeToTestCase(finalResult);
+        finalTestCase.getRequest().setPath(replaceParameterPlaceholders(finalTestCase));
+        return finalTestCase;
+    }
+
+
+    public String replaceParameterPlaceholders(TestCase testCase) {
+        try {
+            String path = testCase.getRequest().getPath();
+            // Extract placeholders for path and query parameters
+            Pattern pattern = Pattern.compile("\\{\\{param (\\w+)\\}}");
+            Matcher matcher = pattern.matcher(path);
+
+            // Access pathParams and queryParams from the testCase
+            Map<String, String> pathParams = testCase.getRequest().getPathParam();
+            Map<String, String> queryParams = testCase.getRequest().getQueryParam();
+
+            // Replace each placeholder with its corresponding value from pathParams or queryParams
+            while (matcher.find()) {
+                String placeholder = matcher.group(); // e.g., "{{param userId}}"
+                String key = matcher.group(1); // e.g., "userId"
+
+                // Check if the key exists in pathParams first
+                if (pathParams != null && pathParams.containsKey(key)) {
+                    String value = pathParams.get(key);
+                    path = path.replace(placeholder, value);
+                }
+                // If not found in pathParams, check in queryParams
+                else if (queryParams != null && queryParams.containsKey(key)) {
+                    String value = queryParams.get(key);
+                    path = path.replace(placeholder, value);
+                } else {
+                    throw new IllegalArgumentException("Key '" + key + "' not found in pathParam or queryParam.");
+                }
+            }
+            path = path.replace("'", "");
+            return path;
+
+        } catch (Exception e) {
+            throw new RuntimeException("Error while replacing placeholders in the path", e);
+        }
     }
 }

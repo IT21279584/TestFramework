@@ -1,14 +1,17 @@
 testCaseName: "GetDepartment"
-baseUri: {{include baseUri}}
-auth: {{include auth_info_1}}
+baseUri: {{include baseUri_new}}
+auth: {{include auth_info_1_new}}
 
 request:
   headers:
     Content-Type: "application/json"
-  log: "all"
+  log: "all_newwwwww"
   method: "GET"
-  path: "/api/users/:userId"
-  body: {}
+  path: "api/users?category={{param userId}}&productId={{param productId}}"
+  body:
+    {
+
+    }
 
 response:
   statusCode: 200
@@ -16,3 +19,4 @@ response:
     Content-Type: "application/json"
   cookie: {}
   body: {}
+

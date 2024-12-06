@@ -7,6 +7,7 @@ import com.mdscem.apitestframework.context.*;
 import com.mdscem.apitestframework.fileprocessor.filereader.FlowContentReader;
 import com.mdscem.apitestframework.fileprocessor.filereader.model.TestCase;
 import com.mdscem.apitestframework.fileprocessor.validator.TestCaseReplacer;
+import com.mdscem.apitestframework.requestprocessor.CaptureValidation;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +40,9 @@ public class FlowProcessor {
     private TestCaseRepository flowRepository;
     @Autowired
     private TestCaseRepository testCaseRepository;
+
+    @Autowired
+    private CaptureValidation captureValidation;
 
 
     private static final ObjectMapper objectMapper = new ObjectMapper(); // Jackson ObjectMapper
@@ -74,6 +78,7 @@ public class FlowProcessor {
                     if (flowContext.getTestCaseMap().containsKey(testCaseName)) {
                         TestCase testCase = (TestCase) testCaseRepository.findByName(testCaseName);
                         TestCase completeTestCase = testCaseReplacer.replaceTestCaseWithFlowData(testCase, flowTestCase);
+
                         flowContentTestCaseList.add(completeTestCase);
                     } else {
                         // Otherwise, read a new test case, add it to the map, and update it
@@ -98,7 +103,7 @@ public class FlowProcessor {
         }
         processFlows();
         // Log the resulting data for debugging and validation
-//        logger.info("FlowObjectMap data: {}", objectMapper.writeValueAsString(flowContext.getFlowMap()));
+        logger.info("FlowObjectMap data: {}", objectMapper.writeValueAsString(flowContext.getFlowMap()));
 //        logger.info("TestCaseMap data: {}", objectMapper.writeValueAsString(flowContext.getTestCaseMap()));
 
     }
@@ -113,7 +118,7 @@ public class FlowProcessor {
             // Fetch each TestCase one by one
             TestCase testCase;
             while ((testCase = flow.getNextTestCase()) != null) {
-                CaptureValidation.processCaptures(testCase);
+                captureValidation.processCaptures(testCase);
             }
         }
     }
