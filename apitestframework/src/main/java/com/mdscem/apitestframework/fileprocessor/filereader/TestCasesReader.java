@@ -24,11 +24,15 @@ public class TestCasesReader {
     public JsonNode readFile(String filePath) throws IOException {
         Path path = Paths.get(filePath);
 
+        // Read the file content
         String content = new String(Files.readAllBytes(path));
 
-        content = content.replaceAll("\\{\\{(.*?)\\}\\}", "\"{{$1}}\"");
+        // Escape placeholders for YAML compatibility
+        // Ensure placeholders like {{param userId}} are wrapped correctly in single quotes
+        content = content.replaceAll("\\{\\{", "'{{")
+                .replaceAll("\\}\\}", "}}'");
 
-        // Determine parser based on file extension and parse the content
+        // Determine the parser based on file extension
         if (filePath.endsWith(".json")) {
             return jsonMapper.readTree(content);
         } else if (filePath.endsWith(".yaml") || filePath.endsWith(".yml")) {
@@ -37,6 +41,7 @@ public class TestCasesReader {
             throw new IllegalArgumentException("Unsupported file format: " + filePath);
         }
     }
+
 
     //Load include files from directory and read and return them as JsonNode list
     public List<JsonNode> loadFilesFromDirectory() throws IOException {
