@@ -6,7 +6,7 @@ import com.mdscem.apitestframework.constants.Constant;
 import com.mdscem.apitestframework.context.*;
 import com.mdscem.apitestframework.fileprocessor.filereader.FlowContentReader;
 import com.mdscem.apitestframework.fileprocessor.filereader.model.TestCase;
-import com.mdscem.apitestframework.requestprocessor.capturehandling.CaptureValidation;
+//import com.mdscem.apitestframework.requestprocessor.capturehandling.CaptureValidation;
 import com.mdscem.apitestframework.fileprocessor.validator.TestCaseReplacer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -52,7 +52,7 @@ public class FlowProcessor {
      *
      * @throws IOException if there is an issue reading files or processing test cases.
      */
-    public void flowProcess() throws IOException {
+    public FlowContext flowProcess() throws IOException {
         // Directory containing flow definitions
         Path flowPathDir = Paths.get(Constant.FLOWS_DIRECTORY);
         // Retrieve a list of flow file paths
@@ -105,7 +105,7 @@ public class FlowProcessor {
         // Log the resulting data for debugging and validation
         logger.info("FlowObjectMap data: {}", objectMapper.writeValueAsString(flowContext.getFlowMap()));
 //        logger.info("TestCaseMap data: {}", objectMapper.writeValueAsString(flowContext.getTestCaseMap()));
-
+        return flowContext;
     }
 
 
