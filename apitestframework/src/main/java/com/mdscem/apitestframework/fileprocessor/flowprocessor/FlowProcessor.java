@@ -6,6 +6,7 @@ import com.mdscem.apitestframework.constants.Constant;
 import com.mdscem.apitestframework.context.*;
 import com.mdscem.apitestframework.fileprocessor.filereader.FlowContentReader;
 import com.mdscem.apitestframework.fileprocessor.filereader.model.TestCase;
+import com.mdscem.apitestframework.requestprocessor.capturehandling.CaptureValidation;
 import com.mdscem.apitestframework.fileprocessor.validator.TestCaseReplacer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

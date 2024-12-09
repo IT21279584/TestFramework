@@ -1,6 +1,6 @@
 package com.mdscem.apitestframework;
 
-import com.mdscem.apitestframework.fileprocessor.flowprocessor.CaptureValidation;
+import com.mdscem.apitestframework.requestprocessor.capturehandling.CaptureValidation;
 import com.mdscem.apitestframework.fileprocessor.flowprocessor.FlowProcessor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

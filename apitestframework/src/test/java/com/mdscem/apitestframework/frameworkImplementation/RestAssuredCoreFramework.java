@@ -4,6 +4,8 @@ import com.mdscem.apitestframework.fileprocessor.filereader.model.TestCase;
 import com.mdscem.apitestframework.fileprocessor.filereader.model.Request;
 import com.mdscem.apitestframework.requestprocessor.CoreFramework;
 
+import com.mdscem.apitestframework.requestprocessor.authhandling.AuthenticationHandler;
+import com.mdscem.apitestframework.requestprocessor.authhandling.AuthenticationHandlerFactory;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
@@ -63,10 +65,9 @@ public class RestAssuredCoreFramework implements CoreFramework {
 
         // Add authentication if applicable
         if (testCase.getAuth() != null && !testCase.getAuth().isEmpty()) {
-            String token = testCase.getAuth().get("token");
-            if (token != null) {
-                requestSpec.auth().oauth2(token);
-            }
+            String type = testCase.getAuth().get("type");
+            AuthenticationHandler authHandler = AuthenticationHandlerFactory.getAuthenticationHandler(type);
+            authHandler.applyAuthentication(requestSpec, testCase.getAuth());
         }
 
         // Add path parameters

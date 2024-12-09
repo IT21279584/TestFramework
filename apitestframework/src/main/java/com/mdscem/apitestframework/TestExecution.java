@@ -1,8 +1,8 @@
 package com.mdscem.apitestframework;
 
 import com.mdscem.apitestframework.fileprocessor.filereader.model.TestCase;
-import com.mdscem.apitestframework.fileprocessor.flowprocessor.CaptureReplacer;
-import com.mdscem.apitestframework.fileprocessor.flowprocessor.CaptureValidation;
+import com.mdscem.apitestframework.requestprocessor.capturehandling.CaptureReplacer;
+import com.mdscem.apitestframework.requestprocessor.capturehandling.CaptureValidation;
 
 import java.util.HashMap;
 import java.util.Map;

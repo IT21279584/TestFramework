@@ -1,4 +1,4 @@
-package com.mdscem.apitestframework.fileprocessor.flowprocessor;
+package com.mdscem.apitestframework.requestprocessor.capturehandling;
 
 import com.mdscem.apitestframework.fileprocessor.filereader.model.TestCase;
 import org.springframework.beans.factory.annotation.Autowired;

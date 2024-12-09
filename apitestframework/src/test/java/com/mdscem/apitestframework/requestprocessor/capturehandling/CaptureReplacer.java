@@ -1,4 +1,4 @@
-package com.mdscem.apitestframework.fileprocessor.flowprocessor;
+package com.mdscem.apitestframework.requestprocessor.capturehandling;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
