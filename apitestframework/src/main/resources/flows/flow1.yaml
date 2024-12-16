@@ -1,19 +1,34 @@
-- testCase:
-    name: GetDepartment
-    pathParam:
-      userId: 1
-      productId: 23
-    queryParam:
-      caseId: 23
-    delay: 1000
+#- testCase:
+#    name: CreateUser
+#    capture: id
+
+#- testCase:
+#    name: CreatePhone
+#    capture: id
+
+#- testCase:
+#    name: GetUser
+#    pathParam:
+#      userId: 2
+#    delay: 1000
+#
+#- testCase:
+#    name: UpdateUser
+#    pathParam:
+#      userId: 2
+#
+#- testCase:
+#    name: GetPhone
+#    pathParam:
+#      phoneId: 7
+
+#- testCase:
+#    name: UpdatePhone
+#    pathParam:
+#      phoneId: 7
 
 - testCase:
-    name: GetStudent
+    name: GetEmployee
     pathParam:
-      userId: 12
-    capture: [nic, hometown]
-
-- testCase:
-    name: GetCourse
-    pathParam:
-      userId: 15
+      employeeId: 6
+    capture: [name]

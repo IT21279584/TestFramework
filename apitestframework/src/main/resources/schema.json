@@ -20,9 +20,7 @@
   },
   "required": [
     "testCaseName",
-    "baseUri",
-    "auth",
-    "request",
+    "baseUri", "request",
     "response"
   ],
   "additionalProperties": false

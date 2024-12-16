@@ -1,0 +1,25 @@
+testCaseName: "CreateUser"
+baseUri: {{include baseUri_new}}
+auth: {{include auth_info_1_new}}
+
+request:
+  headers:
+    Content-Type: "application/json"
+  log: "new"
+  method: "POST"
+  path: "api/users"
+  body:
+    name: "morpheus"
+    job: "leader"
+
+response:
+  statusCode: 201
+  headers:
+    Content-Type: "application/json"
+  cookie: {}
+  log: "new"
+  body:
+    name: "morpheus"
+    job: "leader"
+    id: "804"
+    createdAt: "2024-12-11T09:27:37.368Z"

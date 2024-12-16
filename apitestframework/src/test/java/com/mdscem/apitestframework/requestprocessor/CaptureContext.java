@@ -15,7 +15,7 @@ public class CaptureContext {
         return captureMap;
     }
 
-    // Add or update captures for a specific test case
+    // Add  captures for a specific test case
     public void addCapturesForTestCase(String testCaseName, Map<String, Object> captures) {
         captureMap.put(testCaseName, captures);
     }

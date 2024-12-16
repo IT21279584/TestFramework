@@ -1,19 +1,29 @@
-- testCase:
-    name: UpdateStudent
-    pathParam:
-      userId: 1
-      caseId: 23
-    queryParam:
-      dept.exact: 20
-    delay: 1000
+#- testCase:
+#    name: PatchUser
+#    pathParam:
+#      userId: 2
+#
+#- testCase:
+#    name: GetResource
+#    pathParam:
+#      resourceId: 2
+#
+#- testCase:
+#    name: DeleteUser
+#    pathParam:
+#      userId: 2
+
+#- testCase:
+#    name: DeletePhone
+#    pathParam:
+#      phoneId: 6
+
+#- testCase:
+#    name: CreateEmployee
+#
+
 
 - testCase:
-    name: UpdateCourse
+    name: UpdateEmployee
     pathParam:
-      userId: 45
-    capture: [nic, hometown]
-
-- testCase:
-    name: UpdateDepartment
-    pathParam:
-      userId: 15
+      employeeId: 6

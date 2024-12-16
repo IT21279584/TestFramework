@@ -25,7 +25,7 @@ public class DirectoryPaths {
         INCLUDES_DIRECTORY = basePath + "includes/";
         FLOWS_DIRECTORY = basePath + "flows/";
         VALIDATION_FILE_PATH = basePath + "schema.json";
-        FLOW_VALIDATION_PATH = basePath + "flow.json";
+        FLOW_VALIDATION_PATH = basePath + "flow-validation.json";
         CORE_FRAMEWORK_PATH = basePath + "framework-config.json";
     }
 

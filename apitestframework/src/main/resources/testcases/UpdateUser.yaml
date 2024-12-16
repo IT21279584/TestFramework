@@ -1,4 +1,4 @@
-testCaseName: "GetCourse"
+testCaseName: "UpdateUser"
 baseUri: {{include baseUri_new}}
 auth: {{include auth_info_1_new}}
 
@@ -6,12 +6,12 @@ request:
   headers:
     Content-Type: "application/json"
   log: "all_newwwwww"
-  method: "GET"
-  path: "api/users?category={{param userId}}"
+  method: "PUT"
+  path: "api/users/{{param userId}}"
   body:
     {
-      "userId": {{use GetStudent.userId}},
-      "hometown": {{use GetStudent.hometown}}
+      "name": "morpheus",
+      "job": "zion resident"
     }
 
 response:
@@ -19,5 +19,9 @@ response:
   headers:
     Content-Type: "application/json"
   cookie: {}
-  body: {}
-
+  body:
+    {
+      "name": "morpheus",
+      "job": "zion resident",
+      "updatedAt": "2024-12-11T06:31:16.710Z"
+    }

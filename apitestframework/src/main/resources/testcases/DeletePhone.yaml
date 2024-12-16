@@ -1,0 +1,19 @@
+testCaseName: "DeletePhone"
+baseUri: {{include baseUri_phone}}
+auth: {{include auth_info_1_phone}}
+
+request:
+  headers:
+    Content-Type: "application/json"
+  log: "all_new"
+  method: "DELETE"
+  path: "objects/{{param phoneId}}"
+  body: {}
+
+response:
+  statusCode: 405
+  headers:
+    Content-Type: "application/json"
+  cookie: {}
+  body:
+    "message": "Object with id = 6, has been deleted."

@@ -1,0 +1,25 @@
+testCaseName: "GetPhone"
+baseUri: {{include baseUri_phone}}
+auth: {{include auth_info_1_phone}}
+
+request:
+  headers:
+    Content-Type: "application/json"
+  log: "all_new"
+  method: "GET"
+  path: "objects/{{param phoneId}}"
+  body: {}
+
+response:
+  statusCode: 200
+  headers:
+    Content-Type: "application/json"
+  cookie: {}
+  body:
+    id: "7"
+    name: "Apple MacBook Pro 16"
+    data:
+      year: 2019
+      price: 1849.99
+      CPU model: "Intel Core i9"
+      Hard disk size: "1 TB"

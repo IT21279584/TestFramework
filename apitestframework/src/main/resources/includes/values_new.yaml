@@ -3,4 +3,4 @@ auth_info_1_new:
   username: "Hansaka"
   password: "hjs"
 content_type_new: "application/json"
-baseUri_new: "https://reqres.in"
+baseUri_new: "https://reqres.in/"

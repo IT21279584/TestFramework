@@ -55,8 +55,8 @@ class TestExecutor {
     }
 
     //call request processor
-
-
-
-
+    @Test
+    public void testExecutor(){
+        executeTests();
+    }
 }

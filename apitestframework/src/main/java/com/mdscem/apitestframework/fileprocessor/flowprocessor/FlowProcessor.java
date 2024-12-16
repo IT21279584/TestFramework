@@ -103,11 +103,11 @@ public class FlowProcessor {
         }
         processFlows();
         // Log the resulting data for debugging and validation
+        System.out.println("My flow " + flowContext.getFlowMap().get("flow1.yaml").getTestCaseArrayList().get(0));
         logger.info("FlowObjectMap data: {}", objectMapper.writeValueAsString(flowContext.getFlowMap()));
 //        logger.info("TestCaseMap data: {}", objectMapper.writeValueAsString(flowContext.getTestCaseMap()));
         return flowContext;
     }
-
 
     public void processFlows() {
         // Iterate through each flow

@@ -23,6 +23,7 @@ public class CaptureValidation {
 
         // Store the captures in the context map using the test case name
         captureContext.addCapturesForTestCase(testCaseName, capture);
+        printAllCaptures();
     }
 
     // Print all captures for all test cases

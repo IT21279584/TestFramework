@@ -1,4 +1,4 @@
-testCaseName: "UpdateCourse"
+testCaseName: "DeleteUser"
 baseUri: {{include baseUri_new}}
 auth: {{include auth_info_1_new}}
 
@@ -6,13 +6,12 @@ request:
   headers:
     Content-Type: "application/json"
   log: "all_newwwwww"
-  method: "GET"
-  path: "/api/users/{{param userId}}"
+  method: "DELETE"
+  path: "api/users/{{param userId}}"
   body: {}
 
 response:
-  statusCode: 200
-  headers:
-    Content-Type: "application/json"
+  statusCode: 204
+  headers: {}
   cookie: {}
-  body: {}
+  body: null

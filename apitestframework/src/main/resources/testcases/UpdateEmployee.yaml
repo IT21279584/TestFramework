@@ -1,0 +1,26 @@
+testCaseName: "UpdateEmployee"
+baseUri: "http://localhost:8080"
+auth: {}
+
+request:
+  headers:
+    Content-Type: "application/json"
+  log: "alll"
+  method: "PUT"
+  path: "/employee/{{param employeeId}}"
+  body:
+    address: "123 Main Street, Colombo"
+    dateOfBirth: "2001-05-15T00:00:00.000+00:00"
+    gender: "Male"
+    name: {{use GetEmployee.name}}
+
+response:
+  statusCode: 200
+  headers:
+    Content-Type: "application/json"
+  cookie: {}
+  body:
+    address: "123 Main Street, Colombo"
+    dateOfBirth: "2001-05-15T00:00:00.000+00:00"
+    gender: "Male"
+    name: "Kalana Silva"

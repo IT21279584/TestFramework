@@ -1,0 +1,6 @@
+auth_info_1_phone:
+  type: "Basic"
+  username: "Kavinda"
+  password: "kbm"
+content_type_phone: "application/json"
+baseUri_phone: "https://api.restful-api.dev/"
