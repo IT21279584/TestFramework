@@ -1,4 +1,4 @@
-testCaseName: "UpdateEmployee"
+testCaseName: "PatchEmployee"
 baseUri: "http://localhost:8080"
 auth: {}
 
@@ -20,7 +20,7 @@ response:
     Content-Type: "application/json"
   cookie: {}
   body:
-    address: "123 Main Street, Piliyandala"
+    address: "123 Main Street, Colombo"
     dateOfBirth: "2001-05-15T00:00:00.000+00:00"
     gender: "Male"
     name: "Kavinda Medagoda"

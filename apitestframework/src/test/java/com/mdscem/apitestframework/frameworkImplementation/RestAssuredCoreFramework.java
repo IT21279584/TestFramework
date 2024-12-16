@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.mdscem.apitestframework.fileprocessor.filereader.model.TestCase;
 import com.mdscem.apitestframework.fileprocessor.filereader.model.Request;
+import com.mdscem.apitestframework.requestprocessor.CaptureContext;
 import com.mdscem.apitestframework.requestprocessor.CaptureReplacer;
 import com.mdscem.apitestframework.requestprocessor.CaptureValidation;
 import com.mdscem.apitestframework.requestprocessor.CoreFramework;
@@ -30,18 +31,19 @@ public class RestAssuredCoreFramework implements CoreFramework {
     private CaptureValidation captureValidation = new CaptureValidation();
 
     private CaptureReplacer captureReplacer = new CaptureReplacer();
-
+    private final CaptureContext captureContext = CaptureContext.getInstance(); // Use Singleton
     @Test
     public void testcaseInitializer(ArrayList<TestCase> testcaseList) throws JsonProcessingException {
         this.testcaseList = testcaseList;
 
         for (TestCase testCase : testcaseList) {
             // Validate captured data or prerequisites if needed
+            captureValidation.processCaptures(testCase);
+            captureReplacer.replaceParameterPlaceholders(testCase);
             // Authenticate if necessary
             String result = createFrameworkTypeTestFileAndexecute(testCase);
             System.out.println("Test Case Execution Result: " + result);
             // Store captured data if necessary
-            captureValidation.processCaptures(testCase);
 
         }
     }
@@ -67,14 +69,13 @@ public class RestAssuredCoreFramework implements CoreFramework {
 
     private RequestSpecification buildRequestSpecification(TestCase testCase) {
         Request request = testCase.getRequest();
-
         RequestSpecification requestSpec = RestAssured.given();
 
         // Add headers
         if (request.getHeaders() != null && !request.getHeaders().isEmpty()) {
             for (Map.Entry<String, String> header : request.getHeaders().entrySet()) {
-                requestSpec.header(header.getKey(), header.getValue());
-            }
+                // Replace placeholders in header values
+                requestSpec.header(header.getKey(), header.getValue());            }
         }
 
         // Apply authentication using the handler
@@ -86,6 +87,7 @@ public class RestAssuredCoreFramework implements CoreFramework {
 
         // Add request body
         if (request.getBody() != null && !request.getBody().isEmpty()) {
+            // Replace placeholders in the body
             requestSpec.body(request.getBody());
         }
 
@@ -94,10 +96,9 @@ public class RestAssuredCoreFramework implements CoreFramework {
             requestSpec.log().all();
         }
 
-//        captureValidation.processCaptures(testCase);
-
         return requestSpec;
     }
+
 
     private Response executeHttpMethod(String method, RequestSpecification requestSpec, String url) {
         switch (method.toUpperCase()) {
@@ -134,8 +135,8 @@ public class RestAssuredCoreFramework implements CoreFramework {
 
         String res = response.asString();
         // Capture data if specified
-        captureValidation.processCaptures(testCase);
         captureReplacer.updateCapturesFromResponse(res);
+        System.out.println("My after captureMap " + captureContext.getCaptureMap());
     }
 
     // Helper method to log response details
@@ -171,18 +172,6 @@ public class RestAssuredCoreFramework implements CoreFramework {
         }
     }
 
-
-
-    // Helper method to capture data
-    private void captureData(TestCase testCase, Response response) {
-        if (testCase.getCapture() != null) {
-            for (Map.Entry<String, Object> entry : testCase.getCapture().entrySet()) {
-                String key = entry.getKey();
-                Object value = response.jsonPath().get(entry.getValue().toString());
-                testCase.getCapture().put(key, value);
-            }
-        }
-    }
 
 
 

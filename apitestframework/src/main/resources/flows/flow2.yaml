@@ -17,13 +17,13 @@
 #    name: DeletePhone
 #    pathParam:
 #      phoneId: 6
-
+#
 #- testCase:
 #    name: CreateEmployee
-#
+
 
 
 - testCase:
-    name: UpdateEmployee
+    name: PatchEmployee
     pathParam:
       employeeId: 6
