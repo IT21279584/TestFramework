@@ -28,39 +28,32 @@ class TestExecutor {
     @Autowired
     private FrameworkLoader frameworkLoader;
 
-    private final CaptureContext captureContext = CaptureContext.getInstance(); // Use Singleton
+    private RestAssuredCoreFramework restAssuredCoreFramework = new RestAssuredCoreFramework();
 
-    public void executeTests(){
-            try {
-                //flow processor process flows
-                FlowContext flowContext1 =  flowProcessor.flowProcess();
-                //selecting core framework
-                CoreFramework coreFramework = frameworkLoader.loadFrameworkFromConfig();
+    public void executeTests() {
+        try {
+            //flow processor process flows
+            FlowContext flowContext = flowProcessor.flowProcess();
 
-                // Check if the loaded framework is RestAssuredCoreFramework
-                if (coreFramework instanceof RestAssuredCoreFramework) {
-                    RestAssuredCoreFramework restAssuredFramework = (RestAssuredCoreFramework) coreFramework;
+            // Check if the loaded framework is RestAssuredCoreFramework
+            for (Map.Entry<String, Flow> flowEntry : flowContext.getFlowMap().entrySet()) {
+                Flow flow = flowEntry.getValue();
+                List<TestCase> flowTestCaseList = flow.getTestCaseArrayList();
 
-                    for (Map.Entry<String, Flow> flowEntry : flowContext1.getFlowMap().entrySet()) {
-                        Flow flow = flowEntry.getValue();
-                        List<TestCase> flowTestCaseList = flow.getTestCaseArrayList();
+                // Pass the test cases to the RestAssuredCoreFramework
+                restAssuredCoreFramework.testcaseInitializer(new ArrayList<>(flowTestCaseList));
+//              captureContext.clearCaptures();
 
-                        // Pass the test cases to the RestAssuredCoreFramework
-                        restAssuredFramework.testcaseInitializer(new ArrayList<>(flowTestCaseList));
-                        captureContext.clearCaptures();
-                    }
-                } else {
-                    logger.error("Loaded framework is not compatible with RestAssuredCoreFramework.");
-                }
-            } catch (IOException e) {
-                logger.error("Unexpected error: " + e.getMessage());
-                e.printStackTrace();
             }
+        } catch (IOException e) {
+            logger.error("Unexpected error: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     //call request processor
     @Test
-    public void testExecutor(){
+    public void testExecutor() {
         executeTests();
     }
 }

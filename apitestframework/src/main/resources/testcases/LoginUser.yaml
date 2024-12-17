@@ -4,7 +4,7 @@ baseUri: {{include baseUri_project}}
 request:
   headers:
     Content-Type: "application/json"
-  log: "alll"
+  log: "all"
   method: "POST"
   path: "/api/login"
   body:

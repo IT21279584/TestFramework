@@ -15,10 +15,22 @@
       ]
     },
     "request": {
-      "type": "object"
+      "type": "object",
+      "properties": {
+        "log": {
+          "type": "string",
+          "enum": ["all"]
+        }
+      }
     },
     "response": {
-      "type": "object"
+      "type": "object",
+      "properties": {
+        "log": {
+          "type": "string",
+          "enum": ["all"]
+        }
+      }
     }
   },
   "required": [

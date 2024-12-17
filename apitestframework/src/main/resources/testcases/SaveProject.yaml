@@ -5,7 +5,7 @@ auth: {{include auth_info_project}}
 request:
   headers:
     Content-Type: "application/json"
-  log: "alll"
+  log: "all"
   method: "POST"
   path: "/api/projects/project/save"
   body:

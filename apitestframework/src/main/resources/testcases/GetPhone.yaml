@@ -5,7 +5,7 @@ auth: {{include auth_info_1_phone}}
 request:
   headers:
     Content-Type: "application/json"
-  log: "all_new"
+  log: "all"
   method: "GET"
   path: "objects/{{param phoneId}}"
   body: {}

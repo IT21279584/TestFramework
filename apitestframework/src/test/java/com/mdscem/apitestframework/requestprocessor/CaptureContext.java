@@ -11,15 +11,24 @@ public class CaptureContext {
     private static final Logger logger = LogManager.getLogger(CaptureContext.class);
 
     private static CaptureContext instance; // Singleton instance
-    private final Map<String, Map<String, Object>> captureMap = new HashMap<>();
+    private Map<String, Map<String, Object>> captureMap;
 
-    public CaptureContext() {}
+    public CaptureContext() {
+        this.captureMap = new HashMap<>();
+    }
+
 
     public static synchronized CaptureContext getInstance() {
         if (instance == null) {
             instance = new CaptureContext();
         }
         return instance;
+    }
+
+    // Initialize a new CaptureContext instance
+    public static synchronized void initializeNewInstance() {
+        instance = new CaptureContext();
+        logger.info("================ New CaptureContext instance created ================");
     }
 
     public Map<String, Map<String, Object>> getCaptureMap() {

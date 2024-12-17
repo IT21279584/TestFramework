@@ -5,7 +5,7 @@ auth: {{include auth_info_1_new}}
 request:
   headers:
     Content-Type: "application/json"
-  log: "all_newwwwww"
+  log: "all"
   method: "GET"
   path: "api/unknown/{{param resourceId}}"
   body: {}

@@ -9,7 +9,7 @@ import java.util.Map;
 
 @Component
 public class CaptureValidation {
-    private static final Logger logger = LogManager.getLogger(CaptureContext.class);
+    private static final Logger logger = LogManager.getLogger(CaptureValidation.class);
 
     private final CaptureContext captureContext = CaptureContext.getInstance(); // Use Singleton
     // Process captures and store them with the test case name
