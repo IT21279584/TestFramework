@@ -1,6 +1,6 @@
-- testCase:
-    name: LoginUser
-    capture: token
+#- testCase:
+#    name: LoginUser
+#    capture: token
 
 #- testCase:
 #    name: SaveProject
