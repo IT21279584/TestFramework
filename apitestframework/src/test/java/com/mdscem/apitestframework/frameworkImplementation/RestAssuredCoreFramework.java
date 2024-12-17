@@ -19,20 +19,31 @@ import io.restassured.specification.RequestSpecification;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.junit.jupiter.api.DisplayName;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
+@Component
 public class RestAssuredCoreFramework implements CoreFramework {
 
-    private ArrayList<TestCase> testcaseList;
+    private List<TestCase> testcaseList;
     private ObjectMapper objectMapper = new ObjectMapper();
 
-    private CaptureValidation captureValidation = new CaptureValidation();
+    @Autowired
+    private CaptureContext captureContext;
 
-    private CaptureReplacer captureReplacer = new CaptureReplacer();
+    @Autowired
+    private CaptureValidation captureValidation;
 
-    public void testcaseInitializer(ArrayList<TestCase> testcaseList) throws JsonProcessingException {
+    @Autowired
+    private CaptureReplacer captureReplacer;
+
+
+    public void testcaseInitializer(List<TestCase> testcaseList) throws JsonProcessingException {
         this.testcaseList = testcaseList;
 
         for (TestCase testCase : testcaseList) {
@@ -135,7 +146,7 @@ public class RestAssuredCoreFramework implements CoreFramework {
         String res = response.asString();
         // Capture data if specified
         captureReplacer.updateCapturesFromResponse(res);
-        System.out.println("My after captureMap " + CaptureContext.getCaptureMap());
+        System.out.println("My after captureMap " + captureContext.getCaptureMap());
     }
 
     // Helper method to log response details
@@ -181,4 +192,7 @@ public class RestAssuredCoreFramework implements CoreFramework {
         jsonNode.remove("updatedAt");
         jsonNode.remove("token");
     }
+
+
+
 }

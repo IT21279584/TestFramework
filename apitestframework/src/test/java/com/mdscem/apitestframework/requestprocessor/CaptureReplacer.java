@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mdscem.apitestframework.fileprocessor.filereader.model.TestCase;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -14,6 +15,8 @@ import java.util.regex.Pattern;
 public class CaptureReplacer {
     private static final Logger logger = LogManager.getLogger(CaptureReplacer.class);
     private final ObjectMapper objectMapper = new ObjectMapper();
+    @Autowired
+    private CaptureContext captureContext;
 
     //update captureMap using the response data in testcase after the testcase execution
     public void updateCapturesFromResponse(String response) {
@@ -22,7 +25,7 @@ public class CaptureReplacer {
             JsonNode responseJson = objectMapper.readTree(response);
 
             // Iterate over all test case captures
-            CaptureContext.getCaptureMap().forEach((testCaseName, captures) -> captures.forEach((key, value) -> {
+            captureContext.getCaptureMap().forEach((testCaseName, captures) -> captures.forEach((key, value) -> {
                 if (responseJson.has(key)) {
                     // Extract the value from the JSON response
                     String newValue = responseJson.get(key).asText();
@@ -51,8 +54,8 @@ public class CaptureReplacer {
                 String key = matcher.group(2); // e.g., "name"
 
                 // Fetch value from capture context
-                if (CaptureContext.getCaptureMap().containsKey(testCaseName)) {
-                    Map<String, Object> innerMap = CaptureContext.getCaptureMap().get(testCaseName);
+                if (captureContext.getCaptureMap().containsKey(testCaseName)) {
+                    Map<String, Object> innerMap = captureContext.getCaptureMap().get(testCaseName);
                     if (innerMap.containsKey(key)) {
                         Object value = innerMap.get(key);
                         testCaseJson = testCaseJson.replace(placeholder, value.toString());
