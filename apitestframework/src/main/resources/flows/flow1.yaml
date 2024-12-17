@@ -20,3 +20,6 @@
     name: GetPhone
     pathParam:
       phoneId: 7
+
+- testCase:
+    name: BasicAuth

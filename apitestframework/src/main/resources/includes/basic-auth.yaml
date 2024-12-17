@@ -1,0 +1,6 @@
+auth_info_basic:
+  type: "Basic"
+  username: "postman"
+  password: "password"
+content_type: "application/json"
+baseUri_basic: "https://postman-echo.com/"
