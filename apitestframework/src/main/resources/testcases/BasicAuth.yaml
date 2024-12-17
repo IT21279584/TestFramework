@@ -1,0 +1,18 @@
+testCaseName: "BasicAuth"
+baseUri: {{include baseUri_basic}}
+auth: {{include auth_info_basic}}
+
+request:
+  headers:
+    Content-Type: "application/json"
+  log: "all_new"
+  method: "GET"
+  path: "basic-auth"
+
+response:
+  statusCode: 200
+  headers:
+    Content-Type: "application/json"
+  cookie: {}
+  body:
+    authenticated: true
