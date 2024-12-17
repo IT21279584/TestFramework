@@ -5,7 +5,7 @@ auth: {{include auth_info_basic}}
 request:
   headers:
     Content-Type: "application/json"
-  log: "all_new"
+  log: "all"
   method: "GET"
   path: "basic-auth"
 
