@@ -9,19 +9,17 @@ request:
   method: "PATCH"
   path: "api/users/{{param userId}}"
   body:
-    {
-      "name": "morpheus",
-      "job": "zion resident"
-    }
+    name: "morpheus"
+    job: "zion resident"
+
 
 response:
   statusCode: 200
   headers:
     Content-Type: "application/json"
-  cookie: {}
+  cookie: { }
   body:
-    {
-      "name": "morpheus",
-      "job": "zion resident",
-      "updatedAt": "2024-12-11T06:33:03.175Z"
-    }
+    name: "morpheus"
+    job: "zion resident"
+    updatedAt: "2024-12-11T06:33:03.175Z"
+

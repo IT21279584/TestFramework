@@ -1,8 +1,8 @@
-#- testCase:
-#    name: GetEmployee
-#    pathParam:
-#      employeeId: 6
-#    capture: [name, address]
+- testCase:
+    name: GetEmployee
+    pathParam:
+      employeeId: 6
+    capture: [name, address]
 
 - testCase:
     name: PatchUser
@@ -19,7 +19,7 @@
     pathParam:
       userId: 2
 
-#- testCase:
-#    name: PatchEmployee
-#    pathParam:
-#      employeeId: 6
+- testCase:
+    name: PatchEmployee
+    pathParam:
+      employeeId: 6

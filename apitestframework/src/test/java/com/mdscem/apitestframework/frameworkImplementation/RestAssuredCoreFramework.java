@@ -31,6 +31,7 @@ public class RestAssuredCoreFramework implements CoreFramework {
     private CaptureValidation captureValidation = new CaptureValidation();
 
     private CaptureReplacer captureReplacer = new CaptureReplacer();
+    private final CaptureContext captureContext = CaptureContext.getInstance(); // Use Singleton
 
     public void testcaseInitializer(ArrayList<TestCase> testcaseList) throws JsonProcessingException {
         this.testcaseList = testcaseList;
@@ -135,6 +136,7 @@ public class RestAssuredCoreFramework implements CoreFramework {
         String res = response.asString();
         // Capture data if specified
         captureReplacer.updateCapturesFromResponse(res);
+        System.out.println("My after captureMap " + captureContext.getCaptureMap());
     }
 
     // Helper method to log response details

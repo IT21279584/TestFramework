@@ -27,6 +27,7 @@ class TestExecutor {
     private FlowProcessor flowProcessor;
     @Autowired
     private FrameworkLoader frameworkLoader;
+    private CaptureContext captureContext = CaptureContext.getInstance(); // Use Singleton
 
     private RestAssuredCoreFramework restAssuredCoreFramework = new RestAssuredCoreFramework();
 
@@ -37,6 +38,9 @@ class TestExecutor {
 
             // Check if the loaded framework is RestAssuredCoreFramework
             for (Map.Entry<String, Flow> flowEntry : flowContext.getFlowMap().entrySet()) {
+
+                captureContext = new CaptureContext();
+
                 Flow flow = flowEntry.getValue();
                 List<TestCase> flowTestCaseList = flow.getTestCaseArrayList();
 

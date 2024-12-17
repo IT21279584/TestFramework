@@ -10,13 +10,13 @@ public class CaptureContext {
 
     private static final Logger logger = LogManager.getLogger(CaptureContext.class);
 
-    private static CaptureContext instance; // Singleton instance
-    private Map<String, Map<String, Object>> captureMap;
+    private static CaptureContext instance;
+    private  static Map<String, Map<String, Object>> captureMap;
 
     public CaptureContext() {
-        this.captureMap = new HashMap<>();
+      instance = null;
+      captureMap = new HashMap<>();
     }
-
 
     public static synchronized CaptureContext getInstance() {
         if (instance == null) {
