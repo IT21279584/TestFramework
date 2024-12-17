@@ -2,18 +2,19 @@ package com.mdscem.apitestframework.requestprocessor;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mdscem.apitestframework.fileprocessor.filereader.model.Request;
 import com.mdscem.apitestframework.fileprocessor.filereader.model.TestCase;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Component;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Component
 public class CaptureReplacer {
+
+    private static final Logger logger = LogManager.getLogger(CaptureContext.class);
 
     private final CaptureContext captureContext = CaptureContext.getInstance(); // Use Singleton
     private final ObjectMapper objectMapper = new ObjectMapper();
@@ -31,7 +32,7 @@ public class CaptureReplacer {
                         // Extract the value from the JSON response
                         String newValue = responseJson.get(key).asText();
                         captures.put(key, newValue);
-                        System.out.println("Updated capture for key: " + key + " with value: " + newValue);
+                        logger.info("Updated capture for key: " + key + " with value: " + newValue);
                     }
                 });
             });
