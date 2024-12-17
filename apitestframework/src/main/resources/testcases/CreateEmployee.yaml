@@ -1,5 +1,5 @@
 testCaseName: "CreateEmployee"
-baseUri: "http://localhost:8080"
+baseUri: {{include baseUri_testing}}
 auth: {}
 
 request:

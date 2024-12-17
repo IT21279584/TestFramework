@@ -1,27 +1,23 @@
-#- testCase:
-#    name: PatchUser
-#    pathParam:
-#      userId: 2
-#
-#- testCase:
-#    name: GetResource
-#    pathParam:
-#      resourceId: 2
-#
-#- testCase:
-#    name: DeleteUser
-#    pathParam:
-#      userId: 2
+- testCase:
+    name: GetEmployee
+    pathParam:
+      employeeId: 6
+    capture: [name, address]
 
-#- testCase:
-#    name: DeletePhone
-#    pathParam:
-#      phoneId: 6
-#
-#- testCase:
-#    name: CreateEmployee
+- testCase:
+    name: PatchUser
+    pathParam:
+      userId: 2
 
+- testCase:
+    name: GetResource
+    pathParam:
+      resourceId: 2
 
+- testCase:
+    name: DeleteUser
+    pathParam:
+      userId: 2
 
 - testCase:
     name: PatchEmployee

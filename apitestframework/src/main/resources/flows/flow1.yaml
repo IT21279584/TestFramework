@@ -1,34 +1,22 @@
-#- testCase:
-#    name: CreateUser
-#    capture: id
+- testCase:
+    name: LoginUser
+    capture: token
 
 #- testCase:
-#    name: CreatePhone
-#    capture: id
-
-#- testCase:
-#    name: GetUser
-#    pathParam:
-#      userId: 2
-#    delay: 1000
-#
-#- testCase:
-#    name: UpdateUser
-#    pathParam:
-#      userId: 2
-#
-#- testCase:
-#    name: GetPhone
-#    pathParam:
-#      phoneId: 7
-
-#- testCase:
-#    name: UpdatePhone
-#    pathParam:
-#      phoneId: 7
+#    name: SaveProject
 
 - testCase:
-    name: GetEmployee
+    name: GetUser
     pathParam:
-      employeeId: 6
-    capture: [name, address]
+      userId: 2
+    delay: 1000
+
+- testCase:
+    name: UpdateUser
+    pathParam:
+      userId: 2
+
+- testCase:
+    name: GetPhone
+    pathParam:
+      phoneId: 7

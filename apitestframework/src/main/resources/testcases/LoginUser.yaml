@@ -1,0 +1,20 @@
+testCaseName: "LoginUser"
+baseUri: {{include baseUri_project}}
+
+request:
+  headers:
+    Content-Type: "application/json"
+  log: "alll"
+  method: "POST"
+  path: "/api/login"
+  body:
+    username: "kavinda@mitrai.com"
+    password: "Hansaka123@"
+
+response:
+  statusCode: 200
+  headers:
+    Content-Type: "application/json"
+  cookie: {}
+  body:
+    token: "Bearer <JWT_TOKEN>"

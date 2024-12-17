@@ -5,6 +5,7 @@ import com.mdscem.apitestframework.context.FlowContext;
 import com.mdscem.apitestframework.fileprocessor.filereader.model.TestCase;
 import com.mdscem.apitestframework.fileprocessor.flowprocessor.FlowProcessor;
 import com.mdscem.apitestframework.frameworkImplementation.RestAssuredCoreFramework;
+import com.mdscem.apitestframework.requestprocessor.CaptureContext;
 import com.mdscem.apitestframework.requestprocessor.CoreFramework;
 import com.mdscem.apitestframework.requestprocessor.frameworkconfig.FrameworkLoader;
 import org.apache.logging.log4j.LogManager;
@@ -27,6 +28,8 @@ class TestExecutor {
     @Autowired
     private FrameworkLoader frameworkLoader;
 
+    private final CaptureContext captureContext = CaptureContext.getInstance(); // Use Singleton
+
     public void executeTests(){
             try {
                 //flow processor process flows
@@ -44,6 +47,7 @@ class TestExecutor {
 
                         // Pass the test cases to the RestAssuredCoreFramework
                         restAssuredFramework.testcaseInitializer(new ArrayList<>(flowTestCaseList));
+                        captureContext.clearCaptures();
                     }
                 } else {
                     logger.error("Loaded framework is not compatible with RestAssuredCoreFramework.");

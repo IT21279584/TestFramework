@@ -1,15 +1,18 @@
 package com.mdscem.apitestframework.requestprocessor;
 
+import org.springframework.stereotype.Component;
+
 import java.util.HashMap;
 import java.util.Map;
 
+@Component
 public class CaptureContext {
 
     private static CaptureContext instance; // Singleton instance
     private final Map<String, Map<String, Object>> captureMap = new HashMap<>();
 
     // Private constructor to prevent instantiation
-    private CaptureContext() {}
+    public CaptureContext() {}
 
     // Get the singleton instance of CaptureContext
     public static synchronized CaptureContext getInstance() {
@@ -31,5 +34,9 @@ public class CaptureContext {
     // Clear captures (optional for resetting between tests)
     public void clearCaptures() {
         captureMap.clear();
+        System.out.println("================Map cleaning===============");
     }
+
+
+
 }

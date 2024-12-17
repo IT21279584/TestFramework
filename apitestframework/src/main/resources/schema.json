@@ -9,7 +9,10 @@
       "type": "string"
     },
     "auth": {
-      "type": "object"
+      "oneOf": [
+        { "type": "object" },
+        { "type": "string" }
+      ]
     },
     "request": {
       "type": "object"
@@ -20,7 +23,8 @@
   },
   "required": [
     "testCaseName",
-    "baseUri", "request",
+    "baseUri",
+    "request",
     "response"
   ],
   "additionalProperties": false

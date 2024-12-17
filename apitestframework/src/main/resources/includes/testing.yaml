@@ -1,0 +1,6 @@
+auth_info_1:
+  type: "Basic"
+  username: "Kavinda"
+  password: "kbm"
+content_type: "application/json"
+baseUri_testing: "http://localhost:8081"

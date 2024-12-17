@@ -15,6 +15,6 @@ public class Request {
     private Map<String, String> headers;
     private Map<String, String> pathParam;
     private Map<String, String> queryParam;
-    private Map<String, String> body;
+    private Map<String, Object> body;
     private String log;
 }

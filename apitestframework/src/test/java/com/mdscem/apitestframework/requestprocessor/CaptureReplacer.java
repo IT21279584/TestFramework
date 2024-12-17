@@ -32,8 +32,6 @@ public class CaptureReplacer {
                         String newValue = responseJson.get(key).asText();
                         captures.put(key, newValue);
                         System.out.println("Updated capture for key: " + key + " with value: " + newValue);
-                    } else {
-                        System.err.println("Key '" + key + "' not found in the response for test case: " + testCaseName);
                     }
                 });
             });
@@ -44,47 +42,39 @@ public class CaptureReplacer {
 
     public TestCase replaceParameterPlaceholders(TestCase testCase) {
         try {
-            // Get the request from the test case
-            Request request = testCase.getRequest();
             ObjectMapper objectMapper = new ObjectMapper();
+            String testCaseJson = objectMapper.writeValueAsString(testCase);
 
-            // Serialize the request object into a JSON string for processing
-            String requestJson = objectMapper.writeValueAsString(request);
-
-            // Replace placeholders in the serialized JSON string
+            // Regex pattern to find placeholders
             Pattern pattern = Pattern.compile("\\{\\{use (\\w+)\\.(\\w+)}}");
-            Matcher matcher = pattern.matcher(requestJson);
+            Matcher matcher = pattern.matcher(testCaseJson);
 
+            // Replace placeholders
             while (matcher.find()) {
-                String placeholder = matcher.group(); // e.g., "{{use GetStudent.userId}}"
-                String testCaseName = matcher.group(1); // e.g., "GetStudent"
-                String key = matcher.group(2); // e.g., "userId"
+                String placeholder = matcher.group(); // e.g., "{{use GetEmployee.name}}"
+                String testCaseName = matcher.group(1); // e.g., "GetEmployee"
+                String key = matcher.group(2); // e.g., "name"
 
-                // Check captureContext for values
+                // Fetch value from capture context
                 if (captureContext.getCaptureMap().containsKey(testCaseName)) {
                     Map<String, Object> innerMap = captureContext.getCaptureMap().get(testCaseName);
                     if (innerMap.containsKey(key)) {
                         Object value = innerMap.get(key);
-                        requestJson = requestJson.replace(placeholder, value.toString());
-                    } else {
-                        throw new IllegalArgumentException("Key '" + key + "' not found in testCase '" + testCaseName + "'.");
+                        testCaseJson = testCaseJson.replace(placeholder, value.toString());
                     }
                 } else {
                     throw new IllegalArgumentException("TestCase '" + testCaseName + "' not found in CaptureMap.");
                 }
             }
 
-            // Deserialize the updated JSON string back into the Request object
-            Request updatedRequest = objectMapper.readValue(requestJson, Request.class);
-
-            // Set the updated request in the test case
-            testCase.setRequest(updatedRequest);
-            return testCase;
+            // Deserialize updated JSON back into TestCase
+            return objectMapper.readValue(testCaseJson, TestCase.class);
 
         } catch (Exception e) {
-            throw new RuntimeException("Error while replacing placeholders in the request", e);
+            throw new RuntimeException("Error while replacing placeholders in TestCase", e);
         }
     }
+
 
 
 }

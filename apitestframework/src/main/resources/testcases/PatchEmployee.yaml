@@ -1,5 +1,5 @@
 testCaseName: "PatchEmployee"
-baseUri: "http://localhost:8080"
+baseUri: {{include baseUri_testing}}
 auth: {}
 
 request:
@@ -23,4 +23,4 @@ response:
     address: "123 Main Street, Colombo"
     dateOfBirth: "2001-05-15T00:00:00.000+00:00"
     gender: "Male"
-    name: "Kavinda Medagoda"
+    name: "morpheus"

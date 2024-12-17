@@ -39,9 +39,9 @@ public class RestAssuredCoreFramework implements CoreFramework {
         for (TestCase testCase : testcaseList) {
             // Validate captured data or prerequisites if needed
             captureValidation.processCaptures(testCase);
-            captureReplacer.replaceParameterPlaceholders(testCase);
+            TestCase replcaedTestCase = captureReplacer.replaceParameterPlaceholders(testCase);
             // Authenticate if necessary
-            String result = createFrameworkTypeTestFileAndexecute(testCase);
+            String result = createFrameworkTypeTestFileAndexecute(replcaedTestCase);
             System.out.println("Test Case Execution Result: " + result);
             // Store captured data if necessary
 
@@ -180,5 +180,6 @@ public class RestAssuredCoreFramework implements CoreFramework {
     private void removeUnwantedFields(ObjectNode jsonNode) {
         jsonNode.remove("createdAt");
         jsonNode.remove("updatedAt");
+        jsonNode.remove("token");
     }
 }

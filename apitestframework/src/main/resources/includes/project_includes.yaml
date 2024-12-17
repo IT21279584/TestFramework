@@ -1,0 +1,5 @@
+auth_info_project:
+  type: "token"
+  token: {{use LoginUser.token}}
+content_type: "application/json"
+baseUri_project: "http://localhost:8080"

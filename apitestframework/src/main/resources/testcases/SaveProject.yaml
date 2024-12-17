@@ -1,0 +1,41 @@
+testCaseName: "SaveProject"
+baseUri: {{include baseUri_project}}
+auth: {{include auth_info_project}}
+
+request:
+  headers:
+    Content-Type: "application/json"
+  log: "alll"
+  method: "POST"
+  path: "/api/projects/project/save"
+  body:
+    project:
+      projectName: "Project KPM"
+      projectCode: "17555555555555555"
+    userID: 3
+
+response:
+  statusCode: 200
+  headers:
+    Content-Type: "application/json"
+  cookie: { }
+  body:
+    projectID: 157
+    projectName: "Project KPM"
+    projectCode: "17555555555555555"
+    users:
+      id: 3
+      firstName: "Kavinda"
+      lastName: "Medagoda"
+      username: "kavinda@mitrai.com"
+      password: "$2a$10$H.lPqu4RKHHkoGJJrZRWGuJvd2yRL5yxh8PKqOcFLD0pOoC/kSjvG"
+      role: "HR_PERSON"
+      interviewList: [ ]
+      position: "USER"
+      active: 1
+      enabled: true
+      authorities:
+        - authority: "HR_PERSON"
+      accountNonExpired: true
+      accountNonLocked: true
+      credentialsNonExpired: true
