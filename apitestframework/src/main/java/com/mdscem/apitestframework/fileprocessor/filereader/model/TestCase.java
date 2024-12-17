@@ -10,7 +10,6 @@ import java.util.Map;
 
 @Getter
 @Setter
-@Data@JsonIgnoreProperties(ignoreUnknown = true)
 public class TestCase implements Testable {
     private String testCaseName;
     private String baseUri;
