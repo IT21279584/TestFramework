@@ -171,8 +171,6 @@ public class RestAssuredCoreFramework implements CoreFramework {
         }
     }
 
-
-
     // Helper method to capture data
     private void captureData(TestCase testCase, Response response) {
         if (testCase.getCapture() != null) {
@@ -183,9 +181,6 @@ public class RestAssuredCoreFramework implements CoreFramework {
             }
         }
     }
-
-
-
 
     // Helper method to remove unwanted fields from JSON
     private void removeUnwantedFields(ObjectNode jsonNode) {

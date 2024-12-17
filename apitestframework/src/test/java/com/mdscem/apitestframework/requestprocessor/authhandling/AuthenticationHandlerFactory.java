@@ -5,7 +5,7 @@ public class AuthenticationHandlerFactory {
         if ("token".equalsIgnoreCase(type)) {
             return new TokenAuthenticationHandler();
         } else if ("Basic".equalsIgnoreCase(type)) {
-            return (AuthenticationHandler) new com.mdscem.apitestframework.requestprocessor.authhandling.BasicAuthenticationHandler();
+            return new BasicAuthenticationHandler();
         }
         throw new UnsupportedOperationException("Unsupported authentication type: " + type);
     }
