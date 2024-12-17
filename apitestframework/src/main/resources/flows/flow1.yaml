@@ -24,3 +24,8 @@
 - testCase:
     name: BasicAuth
 
+- testCase:
+    name: GetEmployee
+    pathParam:
+      employeeId: 6
+    capture: [name, address]

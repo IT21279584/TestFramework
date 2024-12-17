@@ -27,7 +27,7 @@ class TestExecutor {
     private FlowProcessor flowProcessor;
     @Autowired
     private FrameworkLoader frameworkLoader;
-    private CaptureContext captureContext = CaptureContext.getInstance(); // Use Singleton
+    private CaptureContext captureContext; // Use Singleton
 
     private RestAssuredCoreFramework restAssuredCoreFramework = new RestAssuredCoreFramework();
 

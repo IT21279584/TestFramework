@@ -11,7 +11,6 @@ import java.util.Map;
 public class CaptureValidation {
     private static final Logger logger = LogManager.getLogger(CaptureValidation.class);
 
-    private final CaptureContext captureContext = CaptureContext.getInstance(); // Use Singleton
     // Process captures and store them with the test case name
     public void processCaptures(TestCase testCase) {
         try{
@@ -26,7 +25,7 @@ public class CaptureValidation {
 
 
             // Store the captures in the context map using the test case name
-            captureContext.addCapturesForTestCase(testCaseName, capture);
+            CaptureContext.addCapturesForTestCase(testCaseName, capture);
             printAllCaptures();
         }catch (Exception e){
             e.printStackTrace();
@@ -35,12 +34,8 @@ public class CaptureValidation {
 
     // Print all captures for all test cases
     public void printAllCaptures() {
-        if (captureContext == null) {
-            logger.error("Error: captureContext is null.");
-            return;
-        }
 
-        captureContext.getCaptureMap().forEach((testCaseName, captures) -> {
+        CaptureContext.getCaptureMap().forEach((testCaseName, captures) -> {
             logger.info("Test Case: " + testCaseName);
             captures.forEach((key, value) -> {
                 logger.info("  Key: " + key + ", Value: " + value);
