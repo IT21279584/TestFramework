@@ -52,8 +52,6 @@ public class RestAssuredCoreFramework implements CoreFramework {
             TestCase replcaedTestCase = captureReplacer.replaceParameterPlaceholders(testCase);
             // Authenticate if necessary
             String result = createFrameworkTypeTestFileAndexecute(replcaedTestCase);
-            System.out.println("Test Case Execution Result: " + result);
-            // Store captured data if necessary
 
         }
     }
