@@ -15,10 +15,8 @@ public class CaptureContext {
     private static CaptureContext instance; // Singleton instance
     private final Map<String, Map<String, Object>> captureMap = new HashMap<>();
 
-    // Private constructor to prevent instantiation
     public CaptureContext() {}
 
-    // Get the singleton instance of CaptureContext
     public static synchronized CaptureContext getInstance() {
         if (instance == null) {
             instance = new CaptureContext();
@@ -35,7 +33,7 @@ public class CaptureContext {
         captureMap.put(testCaseName, captures);
     }
 
-    // Clear captures (optional for resetting between tests)
+    // Clear captures
     public void clearCaptures() {
         captureMap.clear();
         logger.info("================Map cleaning===============");
