@@ -242,6 +242,10 @@ public class RestAssuredCoreFramework implements CoreFramework {
                             Assert.fail("Field '" + fieldName + "' is not of type int");
                         }
                         break;
+                    case "string" :
+                        if (!actualValueNode.isTextual()) {
+                            Assert.fail("Field '" + fieldName + "' is not of type string");
+                        }
                     default:
                         Assert.fail("Unsupported type: " + type + " in assertJ validation");
                 }
