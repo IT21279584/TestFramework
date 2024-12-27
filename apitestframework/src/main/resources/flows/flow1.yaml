@@ -4,6 +4,8 @@
 
 #- testCase:
 #    name: SaveProject
+- testCase:
+    name: CreateEmployee
 
 - testCase:
     name: GetUser

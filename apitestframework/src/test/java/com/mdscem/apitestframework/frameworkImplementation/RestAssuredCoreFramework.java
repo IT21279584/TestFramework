@@ -17,6 +17,9 @@ import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 
+import  java.util.regex.Matcher;
+
+import org.assertj.core.api.Assertions;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.jupiter.api.DisplayName;
@@ -26,6 +29,7 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 @Component
 public class RestAssuredCoreFramework implements CoreFramework {
@@ -67,6 +71,8 @@ public class RestAssuredCoreFramework implements CoreFramework {
                 requestSpec,
                 testCase.getBaseUri() + testCase.getRequest().getPath()
         );
+
+        System.out.println("My Response : " + response.prettyPrint());
 
         // Validate the response
         validateResponse(testCase, response);
@@ -147,13 +153,6 @@ public class RestAssuredCoreFramework implements CoreFramework {
         System.out.println("My after captureMap " + captureContext.getCaptureMap());
     }
 
-    // Helper method to log response details
-    private void logResponseDetails(Response response) {
-        System.out.println("Response Status Code: " + response.getStatusCode());
-        System.out.println("Response Headers: " + response.getHeaders());
-        System.out.println("Response Body: " + response.getBody().asString());
-    }
-
     // Helper method to validate the response body
     private void validateResponseBody(TestCase testCase, Response response) {
         try {
@@ -169,20 +168,33 @@ public class RestAssuredCoreFramework implements CoreFramework {
             removeUnwantedFields((ObjectNode) actualJsonNode);
 
             // Use JsonAssert for validation
-            org.skyscreamer.jsonassert.JSONAssert.assertEquals(
-                    expectedJsonNode.toString(),
-                    actualJsonNode.toString(),
-                    false // Set to true for strict validation
-            );
+//            org.skyscreamer.jsonassert.JSONAssert.assertEquals(
+//                    expectedJsonNode.toString(),
+//                    actualJsonNode.toString(),
+//                    false // Set to true for strict validation
+//            );
+
+            // Iterate over expected fields and validate
+            expectedJsonNode.fields().forEachRemaining(entry -> {
+
+                String fieldName = entry.getKey();
+                JsonNode expectedValue = entry.getValue();
+
+                // Handle `assertJ` keyword for dynamic validation
+                if (expectedValue.isTextual() && expectedValue.asText().startsWith("{{assertJ")) {
+                    validateWithAssertJ(fieldName, expectedValue.asText(), actualJsonNode);
+                } else {
+                    // Standard field validation using JsonAssert
+                    JsonNode actualValue = actualJsonNode.get(fieldName);
+                    Assert.assertEquals("Field mismatch: " + fieldName, expectedValue, actualValue);
+                }
+            });
+
         } catch (Exception e) {
             e.printStackTrace();
             Assert.fail("Error validating JSON response: " + e.getMessage());
         }
     }
-
-
-
-
 
     // Helper method to remove unwanted fields from JSON
     private void removeUnwantedFields(ObjectNode jsonNode) {
@@ -191,6 +203,63 @@ public class RestAssuredCoreFramework implements CoreFramework {
         jsonNode.remove("token");
     }
 
+    // Helper method to validate using assertJ keyword
+    private void validateWithAssertJ(String fieldName, String assertJExpression, JsonNode actualJsonNode) {
+        try {
+            // Patterns for extracting range and type
+            String rangePattern = "range\\((\\d+),\\s*(\\d+)\\)";
+            String typePattern = "type\\((\\w+)\\)";
 
+            // Initialize variables for range and type
+            Integer minRange = null;
+            Integer maxRange = null;
+            String type = null;
 
+            // Extract range
+            Matcher rangeMatcher = Pattern.compile(rangePattern).matcher(assertJExpression);
+            if (rangeMatcher.find()) {
+                minRange = Integer.parseInt(rangeMatcher.group(1));
+                maxRange = Integer.parseInt(rangeMatcher.group(2));
+            }
+
+            // Extract type
+            Matcher typeMatcher = Pattern.compile(typePattern).matcher(assertJExpression);
+            if (typeMatcher.find()) {
+                type = typeMatcher.group(1);
+            }
+
+            // Get actual field value
+            JsonNode actualValueNode = actualJsonNode.get(fieldName);
+            if (actualValueNode == null) {
+                Assert.fail("Expected field '" + fieldName + "' is missing in the response");
+            }
+
+            // Validate based on type if specified
+            if (type != null) {
+                switch (type) {
+                    case "int":
+                        if (!actualValueNode.isInt()) {
+                            Assert.fail("Field '" + fieldName + "' is not of type int");
+                        }
+                        break;
+                    default:
+                        Assert.fail("Unsupported type: " + type + " in assertJ validation");
+                }
+            }
+
+            // Validate range if specified
+            if (minRange != null && maxRange != null) {
+
+                if (!actualValueNode.isInt()) {
+                    Assert.fail("Field '" + fieldName + "' is not of type int for range validation");
+                }
+                int actualValue = actualValueNode.asInt();
+                Assertions.assertThat(actualValue)
+                        .as("Validation for field: " + fieldName)
+                        .isBetween(minRange, maxRange);
+            }
+        } catch (Exception e) {
+            Assert.fail("Error parsing assertJ expression: " + assertJExpression + " for field: " + fieldName + ". " + e.getMessage());
+        }
+    }
 }

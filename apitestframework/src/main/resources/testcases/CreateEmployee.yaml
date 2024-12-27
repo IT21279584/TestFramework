@@ -13,6 +13,7 @@ request:
     dateOfBirth: "2001-05-15T00:00:00.000+00:00"
     gender: "Male"
     name: "Kavinda Medagoda"
+    age: 22
 
 response:
   statusCode: 200
@@ -24,3 +25,5 @@ response:
     dateOfBirth: "2001-05-15T00:00:00.000+00:00"
     gender: "Male"
     name: "Kavinda Medagoda"
+    age: {{assertJ range(20, 30), type(int)}}
+

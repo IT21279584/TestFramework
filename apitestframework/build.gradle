@@ -48,6 +48,9 @@ dependencies {
 	// https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api
 	testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.10.2'
 
+	//assertJ
+	testImplementation 'org.assertj:assertj-core:3.24.2'
+
 }
 
 tasks.named('test') {
