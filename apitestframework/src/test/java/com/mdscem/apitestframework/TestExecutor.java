@@ -115,7 +115,9 @@ class TestExecutor {
             test.pass("Test passed successfully");
 
         } catch (Exception e) {
-            logger.error("Error executing test case: " + testCase.getTestCaseName(), e);
+            test.fail("Test failed: " + e.getMessage());
+            throw e;
+        } catch (AssertionError e) {
             test.fail("Test failed: " + e.getMessage());
             throw e;
         }

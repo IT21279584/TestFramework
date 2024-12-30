@@ -17,19 +17,19 @@ import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 
-import  java.util.regex.Matcher;
+import java.time.LocalDate;
+import java.util.regex.Matcher;
 
 import org.assertj.core.api.Assertions;
 import org.junit.Assert;
-import org.junit.Test;
-import org.junit.jupiter.api.DisplayName;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 @Component
 public class RestAssuredCoreFramework implements CoreFramework {
@@ -89,7 +89,8 @@ public class RestAssuredCoreFramework implements CoreFramework {
         if (request.getHeaders() != null && !request.getHeaders().isEmpty()) {
             for (Map.Entry<String, String> header : request.getHeaders().entrySet()) {
                 // Replace placeholders in header values
-                requestSpec.header(header.getKey(), header.getValue());            }
+                requestSpec.header(header.getKey(), header.getValue());
+            }
         }
 
         // Apply authentication using the handler
@@ -132,8 +133,6 @@ public class RestAssuredCoreFramework implements CoreFramework {
     }
 
     private void validateResponse(TestCase testCase, Response response) throws JsonProcessingException {
-        // Log the response details
-//        logResponseDetails(response);
 
         // Validate the response status code
         Assert.assertEquals(
@@ -154,7 +153,7 @@ public class RestAssuredCoreFramework implements CoreFramework {
     }
 
     // Helper method to validate the response body
-    private void validateResponseBody(TestCase testCase, Response response) {
+    private void validateResponseBody(TestCase testCase, Response response) throws JsonProcessingException {
         try {
             // Convert expected response body to JSON string
             String expectedBody = objectMapper.writeValueAsString(testCase.getResponse().getBody());
@@ -184,15 +183,13 @@ public class RestAssuredCoreFramework implements CoreFramework {
                 if (expectedValue.isTextual() && expectedValue.asText().startsWith("{{assertJ")) {
                     validateWithAssertJ(fieldName, expectedValue.asText(), actualJsonNode);
                 } else {
-                    // Standard field validation using JsonAssert
                     JsonNode actualValue = actualJsonNode.get(fieldName);
-                    Assert.assertEquals("Field mismatch: " + fieldName, expectedValue, actualValue);
+                    Assert.assertEquals(expectedValue, actualValue);
                 }
             });
 
         } catch (Exception e) {
-            e.printStackTrace();
-            Assert.fail("Error validating JSON response: " + e.getMessage());
+            throw e;
         }
     }
 
@@ -206,64 +203,125 @@ public class RestAssuredCoreFramework implements CoreFramework {
     // Helper method to validate using assertJ keyword
     private void validateWithAssertJ(String fieldName, String assertJExpression, JsonNode actualJsonNode) {
         try {
-            // Patterns for extracting range and type
-            String rangePattern = "range\\((\\d+),\\s*(\\d+)\\)";
-            String typePattern = "type\\((\\w+)\\)";
+            // Define patterns for extracting range and type
+            final String RANGE_PATTERN = "range\\((\\d+),\\s*(\\d+)\\)";
+            final String TYPE_PATTERN = "type\\((\\w+)\\)";
+            final String ALLOW_NULL_PATTERN = "allowNull\\((true|false)\\)";
 
-            // Initialize variables for range and type
+            // Variables to hold extracted values
             Integer minRange = null;
             Integer maxRange = null;
             String type = null;
 
-            // Extract range
-            Matcher rangeMatcher = Pattern.compile(rangePattern).matcher(assertJExpression);
+            Matcher rangeMatcher = Pattern.compile(RANGE_PATTERN).matcher(assertJExpression);
+            Matcher typeMatcher = Pattern.compile(TYPE_PATTERN).matcher(assertJExpression);
+            Matcher allowNullMatcher = Pattern.compile(ALLOW_NULL_PATTERN).matcher(assertJExpression);
+
+            if (allowNullMatcher.find()) {
+                boolean allowNull = false;
+                allowNull = Boolean.parseBoolean(allowNullMatcher.group(1));
+                validateValue(allowNull, fieldName);
+            }
+
+
+            // Extract range values from the expression
             if (rangeMatcher.find()) {
                 minRange = Integer.parseInt(rangeMatcher.group(1));
                 maxRange = Integer.parseInt(rangeMatcher.group(2));
             }
 
-            // Extract type
-            Matcher typeMatcher = Pattern.compile(typePattern).matcher(assertJExpression);
+            // Extract type information from the expression
             if (typeMatcher.find()) {
                 type = typeMatcher.group(1);
             }
 
-            // Get actual field value
+            // Get the actual value of the field from the JSON node
             JsonNode actualValueNode = actualJsonNode.get(fieldName);
             if (actualValueNode == null) {
-                Assert.fail("Expected field '" + fieldName + "' is missing in the response");
+                throw new IllegalArgumentException("Expected field '" + fieldName + "' is missing in the response");
             }
 
-            // Validate based on type if specified
-            if (type != null) {
-                switch (type) {
-                    case "int":
-                        if (!actualValueNode.isInt()) {
-                            Assert.fail("Field '" + fieldName + "' is not of type int");
-                        }
-                        break;
-                    case "string" :
-                        if (!actualValueNode.isTextual()) {
-                            Assert.fail("Field '" + fieldName + "' is not of type string");
-                        }
-                    default:
-                        Assert.fail("Unsupported type: " + type + " in assertJ validation");
-                }
-            }
-
-            // Validate range if specified
+            // Validate based on the specified type
+            validateType( fieldName,  type,  actualValueNode);
+            // Validate the range
             if (minRange != null && maxRange != null) {
-
-                if (!actualValueNode.isInt()) {
-                    Assert.fail("Field '" + fieldName + "' is not of type int for range validation");
-                }
-                int actualValue = actualValueNode.asInt();
-                Assertions.assertThat(actualValue)
-                        .as("Validation for field: " + fieldName)
-                        .isBetween(minRange, maxRange);
+                validateRange(fieldName,minRange, maxRange, actualValueNode);
             }
+
         } catch (Exception e) {
-            Assert.fail("Error parsing assertJ expression: " + assertJExpression + " for field: " + fieldName + ". " + e.getMessage());
+            throw new RuntimeException("Error parsing assertJ expression: " + assertJExpression + " for field: " + fieldName + ". " + e.getMessage(), e);
         }
+    }
+
+    private void validateType(String fieldName, String type, JsonNode actualValueNode) {
+        if(type != null){
+            switch (type.toLowerCase()) {
+                case "int":
+                    assertThat(actualValueNode.isInt())
+                            .as("Field '%s' should be of type int", fieldName)
+                            .isTrue();
+                    break;
+                case "string":
+                    assertThat(actualValueNode.isTextual())
+                            .as("Field '%s' should be of type string", fieldName)
+                            .isTrue();
+                    break;
+                case "boolean":
+                    assertThat(actualValueNode.isBoolean())
+                            .as("Field '%s' should be of type boolean", fieldName)
+                            .isTrue();
+                    break;
+                case "double":
+                    assertThat(actualValueNode.isDouble())
+                            .as("Field '%s' should be of type double", fieldName)
+                            .isTrue();
+                    break;
+                case "float":
+                    assertThat(actualValueNode.isFloat())
+                            .as("Field '%s' should be of type float", fieldName)
+                            .isTrue();
+                    break;
+                case "date":
+                    try {
+                        assertThat(actualValueNode.isTextual())
+                                .as("Field '%s' should be a valid date string", fieldName)
+                                .isTrue();
+                        assertThat(LocalDate.parse(actualValueNode.asText()))
+                                .as("Field '%s' is not a valid date", fieldName);
+                    } catch (Exception e) {
+                        throw new IllegalArgumentException("Field '" + fieldName + "' is not a valid date");
+                    }
+                    break;
+                case "array":
+                    assertThat(actualValueNode.isArray())
+                            .as("Field '%s' should be of type array", fieldName)
+                            .isTrue();
+                    break;
+                default:
+                    throw new IllegalArgumentException("Unsupported type: " + type + " in AssertJ validation");
+            }
+        }
+    }
+
+    private void validateRange(String fieldName, int minRange, int maxRange, JsonNode actualValueNode) {
+        // Validate range if specified
+            if (!actualValueNode.isInt()) {
+                throw new IllegalArgumentException("Field '" + fieldName + "' is not of type int for range validation");
+            }
+            int actualValue = actualValueNode.asInt();
+            assertThat(actualValue)
+                    .as("Validation for field: " + fieldName)
+                    .isBetween(minRange, maxRange);
+
+    }
+
+    private  void validateValue(boolean allowNull, String fieldName){
+            if (allowNull) {
+                return; // Log a warning if necessary
+            } else {
+                throw new IllegalArgumentException("Expected field '" + fieldName + "' is missing in the response");
+            }
+
+
     }
 }
