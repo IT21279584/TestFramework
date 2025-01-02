@@ -206,8 +206,7 @@ public class RestAssuredCoreFramework implements CoreFramework {
             // Define patterns for extracting range and type
             final String RANGE_PATTERN = "range\\((\\d+),\\s*(\\d+)\\)";
             final String TYPE_PATTERN = "type\\((\\w+)\\)";
-            final String ALLOW_NULL_PATTERN = "allowNull\\((true|false)\\)";
-
+            final String ALLOW_NULL_PATTERN = "allowNull\\(([^)]+)\\)";
             // Variables to hold extracted values
             Integer minRange = null;
             Integer maxRange = null;
@@ -218,6 +217,12 @@ public class RestAssuredCoreFramework implements CoreFramework {
             Matcher allowNullMatcher = Pattern.compile(ALLOW_NULL_PATTERN).matcher(assertJExpression);
 
             if (allowNullMatcher.find()) {
+                String allowNullValue = allowNullMatcher.group(1);
+                System.out.println("My null value " +  allowNullValue);
+                if (!"true".equalsIgnoreCase(allowNullValue) && !"false".equalsIgnoreCase(allowNullValue)) {
+                    throw new IllegalArgumentException(
+                            "Invalid value for allowNull: '" + allowNullValue + "'. Only 'true' or 'false' are allowed.");
+                }
                 boolean allowNull = false;
                 allowNull = Boolean.parseBoolean(allowNullMatcher.group(1));
                 validateValue(allowNull, fieldName);
