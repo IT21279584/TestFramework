@@ -74,7 +74,4 @@ public class CaptureReplacer {
             throw new RuntimeException("Error while replacing placeholders in TestCase", e);
         }
     }
-
-
-
 }

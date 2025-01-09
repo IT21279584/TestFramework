@@ -21,11 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.Arrays;
+import java.util.*;
 
 import static com.mdscem.apitestframework.constants.Constant.REPORT_GENERATION_PATH;
 import static com.mdscem.apitestframework.constants.Constant.REPORT_NAME;
@@ -38,10 +34,8 @@ class TestExecutor {
     private FlowProcessor flowProcessor;
     @Autowired
     private RestAssuredCoreFramework restAssuredCoreFramework;
-
     @Autowired
     private CaptureContext captureContext;
-
     private static ExtentReports extent;
     public static ExtentTest test;
 
@@ -54,77 +48,81 @@ class TestExecutor {
     }
 
     @TestFactory
-    public Iterable<DynamicTest> testExecutor() {
+    public List<DynamicTest> testExecutor() {
+        List<DynamicTest> dynamicTests = new ArrayList<>();
+
         try {
-            // Process flows and retrieve test cases.
             FlowContext flowContext = flowProcessor.flowProcess();
 
-            // Create a list to store all dynamic tests
-            List<DynamicTest> dynamicTests = new ArrayList<>();
-
-            // Iterate through each flow and extract its test cases
             for (Map.Entry<String, Flow> flowEntry : flowContext.getFlowMap().entrySet()) {
+                String flowName = flowEntry.getKey();
                 Flow flow = flowEntry.getValue();
 
-                // Iterate through the test cases in the current flow
+                logger.info("Starting execution for flow: " + flowName);
+
                 for (TestCase testCase : flow.getTestCaseArrayList()) {
-                    // Create a dynamic test for each test case
-                    DynamicTest dynamicTest = DynamicTest.dynamicTest(testCase.getTestCaseName(), () -> {
-
-                        test = extent.createTest(testCase.getTestCaseName());
-                        test.log(Status.INFO, "Request Method: " +testCase.getRequest().getMethod());
-                        test.log(Status.INFO, "Request Url: " + testCase.getBaseUri() + testCase.getRequest().getPath());
-                        test.log(Status.INFO, "Captures: " + testCase.getCapture());
-                        test.assignCategory(testCase.getRequest().getMethod());
-
-                        executeTestCase(testCase); // Execute the test case
-
-                    });
-
-                    // Add the created dynamic test to the list
-                    dynamicTests.add(dynamicTest);
+                    dynamicTests.add(DynamicTest.dynamicTest(
+                            testCase.getTestCaseName(),
+                            () -> executeTestCase(testCase, flowName)
+                    ));
                 }
+
+                // create capture context
+                dynamicTests.add(DynamicTest.dynamicTest(
+                        "Flow: " + flowName + " | Created CaptureContext (Internal)",
+                        () -> {
+                            createNewCaptureContext(flowName);
+                        }
+                ));
             }
-
-            // Return the list of dynamic tests
-            return dynamicTests;
-
         } catch (IOException e) {
             logger.error("Unexpected error while processing flows: " + e.getMessage(), e);
-            e.printStackTrace();
-
-            // Return an empty list in case of error
-            return new ArrayList<>();
         }
+
+        return dynamicTests;
     }
 
+
     /**
-     * Executes a single test case.
+     * Executes a single test case and logs it under the corresponding flow.
      *
      * @param testCase The test case to execute.
+     * @param flowName The name of the flow the test case belongs to.
      */
-    private void executeTestCase(TestCase testCase) throws JsonProcessingException {
+    private void executeTestCase(TestCase testCase, String flowName) throws JsonProcessingException {
         try {
-            logger.info("Executing test case: " + testCase.getTestCaseName());
-            captureContext = new CaptureContext();
+            logger.info("Executing test case: " + testCase.getTestCaseName() + " in flow: " + flowName);
+            test = extent.createTest(testCase.getTestCaseName());
+            test.log(Status.INFO, "Request Method: " + testCase.getRequest().getMethod());
+            test.log(Status.INFO, "Request URL: " + testCase.getBaseUri() + testCase.getRequest().getPath());
+            test.log(Status.INFO, "Captures: " + testCase.getCapture());
+            test.assignCategory(testCase.getRequest().getMethod());
 
-            // Call the restAssuredCoreFramework to initialize the test case
+            // Initialize and execute the test case using RestAssuredCoreFramework
             restAssuredCoreFramework.testcaseInitializer(Arrays.asList(testCase));
 
             logger.info("Test case executed successfully: " + testCase.getTestCaseName());
             test.pass("Test passed successfully");
-
-        } catch (Exception e) {
-            test.fail("Test failed: " + e.getMessage());
-            throw e;
-        } catch (AssertionError e) {
-            test.fail("Test failed: " + e.getMessage());
+        } catch (AssertionError | Exception e) {
+            logger.error("Test case execution failed: " + testCase.getTestCaseName(), e);
+            test.fail("Test case failed: " + e.getMessage());
             throw e;
         }
     }
+
+    //Create  capture context for each flow
+    private void createNewCaptureContext(String flowName) {
+        try {
+            // Create a new capture map
+            captureContext.setCaptureMap(new HashMap<String, Map<String, Object>>());
+        } catch (Exception e) {
+            logger.error("Failed to create capture context for flow: " + flowName, e);
+            throw e;
+        }
+    }
+
     @AfterAll
     public static void afterAll() {
         extent.flush();
     }
-
 }

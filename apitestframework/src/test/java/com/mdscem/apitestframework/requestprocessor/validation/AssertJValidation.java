@@ -1,37 +1,36 @@
-package com.mdscem.apitestframework;
+package com.mdscem.apitestframework.requestprocessor.validation;
 
-import org.assertj.core.api.StringAssert;
 import org.assertj.core.api.AbstractAssert;
-
-import org.assertj.core.api.Assertions;
-
 import java.lang.reflect.Array;
 import java.lang.reflect.Method;
 import java.util.*;
 
-public class MethodInvoker {
+public class AssertJValidation {
 
+    //Dynamically executes a chain of assertion methods on an AssertJ assertion object.
     public static <A extends AbstractAssert<?, ?>> void executeAssertions(
             A assertObject, String... methodChain) throws Exception {
         for (String methodCall : methodChain) {
             String methodName = extractMethodName(methodCall);
             Object[] parsedArgs = extractMethodArguments(methodCall);
-            System.out.println("Parsed arguments: " + Arrays.toString(parsedArgs));
+
             // Find and invoke the method dynamically
             Method method = findCompatibleMethod(assertObject.getClass(), methodName, parsedArgs);
             Object[] preparedArgs = prepareArguments(method, parsedArgs);
-            System.out.println("Prepared arguments for " + methodName + ": " + Arrays.toString(preparedArgs));
+
             // Execute method and continue method chaining
             assertObject = (A) method.invoke(assertObject, preparedArgs);
         }
     }
 
+    //Extracts the method name from a method call string.
     private static String extractMethodName(String methodCall) {
         return methodCall.contains("(")
                 ? methodCall.substring(0, methodCall.indexOf("("))
                 : methodCall;
     }
 
+    //Extracts method arguments from a method call string.
     private static Object[] extractMethodArguments(String methodCall) {
         if (!methodCall.contains("(")) {
             return new Object[0];
@@ -43,6 +42,7 @@ public class MethodInvoker {
         return parseArguments(argsString.split(","));
     }
 
+    //Converts a list of argument strings into actual Java objects.
     private static Object[] parseArguments(String[] args) {
         List<Object> parsedArgs = new ArrayList<>();
         for (String arg : args) {
@@ -51,6 +51,7 @@ public class MethodInvoker {
         return parsedArgs.toArray();
     }
 
+    //Converts a single argument string into an appropriate Java object.
     private static Object parseArgument(String arg) {
         try {
             if (arg.startsWith("[") && arg.endsWith("]")) {
@@ -85,92 +86,90 @@ public class MethodInvoker {
                     }
                 }
             }
-            // Default: assume other types
             return arg;
         } catch (Exception e) {
             throw new IllegalArgumentException("Error parsing argument: " + arg, e);
         }
     }
 
-
+    /** responsible for locating the correct method in the AssertJ class (or its subclasses)
+     * that matches the name and arguments extracted from the assertion chain.
+     */
     private static Method findCompatibleMethod(Class<?> clazz, String methodName, Object[] args) throws NoSuchMethodException {
         for (Method method : clazz.getMethods()) {
             if (method.getName().equals(methodName)) {
 
-                System.out.println("Checking method: " + method.getName());
-                System.out.println("Method parameter types: " + Arrays.toString(method.getParameterTypes()));
-                System.out.println("Provided arguments: " + Arrays.toString(args));
-                System.out.println("Provided argument types: " + Arrays.toString(
-                        Arrays.stream(args).map(arg -> arg != null ? arg.getClass().getName() : "null").toArray()
-                ));
+                // Handle exact match for parameter count
+                if (method.getParameterCount() == args.length && isCompatibleMethod(method, args)) {
+                    return method;
+                }
 
-                // Handle case for methods that accept a single CharSequence or Iterable
-                if (args.length == 1 && args[0] instanceof CharSequence) {
-                    if (method.getParameterCount() == 1) {
-                        Class<?> paramType = method.getParameterTypes()[0];
-                        if (paramType.equals(CharSequence.class) || paramType.equals(Iterable.class) || CharSequence.class.isAssignableFrom(paramType)) {
-                            return method;
+                // Handle varargs method
+                if (method.isVarArgs()) {
+                    Class<?>[] paramTypes = method.getParameterTypes();
+                    if (args.length >= paramTypes.length - 1) {
+                        // Check if non-varargs parameters are compatible
+                        boolean nonVarArgsCompatible = isCompatibleMethod(method, Arrays.copyOf(args, paramTypes.length - 1));
+                        if (nonVarArgsCompatible) {
+                            // Check if remaining arguments are compatible with varargs type
+                            Class<?> varArgType = paramTypes[paramTypes.length - 1].getComponentType();
+                            boolean varArgsCompatible = true;
+                            for (int i = paramTypes.length - 1; i < args.length; i++) {
+                                if (!isCompatibleType(varArgType, args[i])) {
+                                    varArgsCompatible = false;
+                                    break;
+                                }
+                            }
+                            if (varArgsCompatible) {
+                                return method;
+                            }
                         }
                     }
                 }
 
-                // Handle varargs or exact parameter count matching
-                if (method.isVarArgs() || method.getParameterCount() == args.length) {
-                    if (isCompatibleMethod(method, args)) {
-                        return method;
-                    }
-                }
-
-                // Handle methods expecting an Iterable with multiple arguments
+                // Handle methods with an `Iterable` as the first parameter and multiple arguments
                 if (args.length > 1 && Iterable.class.isAssignableFrom(method.getParameterTypes()[0])) {
-                    // Check if method can handle multiple arguments as an Iterable (e.g., List, Set)
-                    Class<?> paramType = method.getParameterTypes()[0];
-                    if (paramType.isAssignableFrom(Collection.class)) {
-                        return method;
-                    }
+                    return method;
                 }
             }
         }
-        throw new NoSuchMethodException("No method found for: " + methodName);
+        throw new NoSuchMethodException("No method found for " + methodName + " or argument mismatch");
     }
 
 
-
-
+    //Checks if a method is compatible with the given arguments.
     private static boolean isCompatibleMethod(Method method, Object[] args) {
         Class<?>[] paramTypes = method.getParameterTypes();
         for (int i = 0; i < args.length; i++) {
-            if (args[i] != null) {
-                if (paramTypes[i].isPrimitive()) {
-                    if (!isPrimitiveCompatible(paramTypes[i], args[i])) {
-                        return false;
-                    }
-                } else if (!paramTypes[i].isAssignableFrom(args[i].getClass())) {
-                    if (!isWrapperCompatible(paramTypes[i], args[i].getClass())) {
-                        return false;
-                    }
-                }
+            if (!isCompatibleType(paramTypes[i], args[i])) {
+                return false;
             }
         }
         return true;
     }
 
-    private static boolean isPrimitiveCompatible(Class<?> paramType, Object arg) {
-        if (paramType == int.class && arg instanceof Integer) return true;
-        if (paramType == long.class && arg instanceof Long) return true;
-        if (paramType == double.class && arg instanceof Double) return true;
-        if (paramType == boolean.class && arg instanceof Boolean) return true;
+    private static boolean isCompatibleType(Class<?> paramType, Object arg) {
+        if (arg == null) {
+            return !paramType.isPrimitive(); // Null can be assigned to non-primitive types
+        }
+        if (paramType.isAssignableFrom(arg.getClass())) {
+            return true; // Exact match or superclass
+        }
+        // Handle primitive types
+        if (paramType.isPrimitive()) {
+            return (paramType == int.class && arg instanceof Integer)
+                    || (paramType == long.class && arg instanceof Long)
+                    || (paramType == double.class && arg instanceof Double)
+                    || (paramType == boolean.class && arg instanceof Boolean)
+                    || (paramType == char.class && arg instanceof Character)
+                    || (paramType == float.class && arg instanceof Float)
+                    || (paramType == byte.class && arg instanceof Byte)
+                    || (paramType == short.class && arg instanceof Short);
+        }
         return false;
     }
 
-    private static boolean isWrapperCompatible(Class<?> paramType, Class<?> argClass) {
-        if (paramType.isAssignableFrom(argClass)) return true;
-        if (paramType == Integer.class && argClass == int.class) return true;
-        if (paramType == Double.class && argClass == double.class) return true;
-        if (paramType == Boolean.class && argClass == boolean.class) return true;
-        return false;
-    }
-
+    //Prepares arguments for method invocation.
     private static Object[] prepareArguments(Method method, Object[] args) {
         if (method.isVarArgs()) {
             // If the method expects varargs, ensure we create an array for the varargs
@@ -203,60 +202,5 @@ public class MethodInvoker {
 
         // Default return of arguments as they are
         return args;
-    }
-
-
-
-
-
-    public static void main(String[] args) {
-        try {
-            // Example: Integer Assertions
-            int actualValue = 42;
-            executeAssertions(
-                    Assertions.assertThat(actualValue),
-                    "isNotNull()",
-                    "isGreaterThan(10)",
-                    "isLessThanOrEqualTo(50)",
-                    "isInstanceOf(Integer.class)",
-                    "isEqualTo(42)"
-            );
-
-            // Example: String Assertions
-            String actualString = "AssertJ is powerful!";
-            executeAssertions(
-                    Assertions.assertThat(actualString),
-                    "isNotNull()",
-                    "isMixedCase()",
-                    "startsWith(\"AssertJ\")",
-                    "endsWith(\"powerful!\")",
-                    "isNotEqualToIgnoringCase(\"assertj ggis powerful!\")"
-            );
-
-            String result= "The quick brown fox jumps over the lazy dog";
-
-            // Execute assertions dynamically
-            executeAssertions(
-                    Assertions.assertThat(result),
-                    "isNotNull()",
-                    "contains(\"quick\", \"fox\", \"lazy\")",
-                    "containsIgnoringCase(\"THE\")",
-                    "doesNotContain(\"cat\", \"foxes\")",
-                    "startsWith(\"The\")",
-                    "endsWith(\"dog\")"
-            );
-
-                        executeAssertions(
-                    Assertions.assertThat(Arrays.asList(1, 2, 3)),
-                    "isNotEmpty()",
-                    "hasSize(3)"
-            );
-
-
-
-            System.out.println("All assertions passed!");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 }

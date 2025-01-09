@@ -11,7 +11,7 @@ request:
   body:
     project:
       projectName: "Project KPM"
-      projectCode: "17555555555555555"
+      projectCode: "1755555555555555555555555"
     userID: 3
 
 response:
@@ -20,9 +20,9 @@ response:
     Content-Type: "application/json"
   cookie: { }
   body:
-    projectID: 157
+    projectID: 164
     projectName: "Project KPM"
-    projectCode: "17555555555555555"
+    projectCode: "1755555555555555555555555"
     users:
       id: 3
       firstName: "Kavinda"

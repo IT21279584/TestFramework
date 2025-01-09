@@ -25,4 +25,8 @@ public class CaptureContext {
     public void addCapturesForTestCase(String testCaseName, Map<String, Object> captures) {
         captureMap.put(testCaseName, captures);
     }
+
+    public void setCaptureMap(Map<String, Map<String, Object>> captureMap) {
+        this.captureMap = captureMap;
+    }
 }
