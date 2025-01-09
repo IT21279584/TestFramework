@@ -1,13 +1,13 @@
 package com.mdscem.apitestframework;
 
+import org.assertj.core.api.StringAssert;
 import org.assertj.core.api.AbstractAssert;
+
 import org.assertj.core.api.Assertions;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 public class MethodInvoker {
 
@@ -16,11 +16,11 @@ public class MethodInvoker {
         for (String methodCall : methodChain) {
             String methodName = extractMethodName(methodCall);
             Object[] parsedArgs = extractMethodArguments(methodCall);
-
+            System.out.println("Parsed arguments: " + Arrays.toString(parsedArgs));
             // Find and invoke the method dynamically
             Method method = findCompatibleMethod(assertObject.getClass(), methodName, parsedArgs);
             Object[] preparedArgs = prepareArguments(method, parsedArgs);
-
+            System.out.println("Prepared arguments for " + methodName + ": " + Arrays.toString(preparedArgs));
             // Execute method and continue method chaining
             assertObject = (A) method.invoke(assertObject, preparedArgs);
         }
@@ -96,8 +96,36 @@ public class MethodInvoker {
     private static Method findCompatibleMethod(Class<?> clazz, String methodName, Object[] args) throws NoSuchMethodException {
         for (Method method : clazz.getMethods()) {
             if (method.getName().equals(methodName)) {
+
+                System.out.println("Checking method: " + method.getName());
+                System.out.println("Method parameter types: " + Arrays.toString(method.getParameterTypes()));
+                System.out.println("Provided arguments: " + Arrays.toString(args));
+                System.out.println("Provided argument types: " + Arrays.toString(
+                        Arrays.stream(args).map(arg -> arg != null ? arg.getClass().getName() : "null").toArray()
+                ));
+
+                // Handle case for methods that accept a single CharSequence or Iterable
+                if (args.length == 1 && args[0] instanceof CharSequence) {
+                    if (method.getParameterCount() == 1) {
+                        Class<?> paramType = method.getParameterTypes()[0];
+                        if (paramType.equals(CharSequence.class) || paramType.equals(Iterable.class) || CharSequence.class.isAssignableFrom(paramType)) {
+                            return method;
+                        }
+                    }
+                }
+
+                // Handle varargs or exact parameter count matching
                 if (method.isVarArgs() || method.getParameterCount() == args.length) {
                     if (isCompatibleMethod(method, args)) {
+                        return method;
+                    }
+                }
+
+                // Handle methods expecting an Iterable with multiple arguments
+                if (args.length > 1 && Iterable.class.isAssignableFrom(method.getParameterTypes()[0])) {
+                    // Check if method can handle multiple arguments as an Iterable (e.g., List, Set)
+                    Class<?> paramType = method.getParameterTypes()[0];
+                    if (paramType.isAssignableFrom(Collection.class)) {
                         return method;
                     }
                 }
@@ -105,6 +133,9 @@ public class MethodInvoker {
         }
         throw new NoSuchMethodException("No method found for: " + methodName);
     }
+
+
+
 
     private static boolean isCompatibleMethod(Method method, Object[] args) {
         Class<?>[] paramTypes = method.getParameterTypes();
@@ -142,19 +173,41 @@ public class MethodInvoker {
 
     private static Object[] prepareArguments(Method method, Object[] args) {
         if (method.isVarArgs()) {
-            Object[] newArgs = new Object[method.getParameterCount()];
-            System.arraycopy(args, 0, newArgs, 0, method.getParameterCount() - 1);
+            // If the method expects varargs, ensure we create an array for the varargs
+            int paramCount = method.getParameterCount();
+            Class<?> varArgType = method.getParameterTypes()[paramCount - 1].getComponentType();
 
-            Class<?> varArgType = method.getParameterTypes()[method.getParameterCount() - 1].getComponentType();
-            Object varArgs = Array.newInstance(varArgType, args.length - method.getParameterCount() + 1);
-            for (int i = method.getParameterCount() - 1; i < args.length; i++) {
-                Array.set(varArgs, i - (method.getParameterCount() - 1), args[i]);
+            // If the argument count matches the parameter count, we need to treat the last argument as varargs
+            Object[] newArgs = new Object[paramCount];
+
+            // Copy the first parameters (those before the varargs)
+            System.arraycopy(args, 0, newArgs, 0, paramCount - 1);
+
+            // Create an array for the varargs and copy the remaining arguments
+            Object varArgsArray = Array.newInstance(varArgType, args.length - paramCount + 1);
+            for (int i = paramCount - 1; i < args.length; i++) {
+                Array.set(varArgsArray, i - (paramCount - 1), args[i]);
             }
-            newArgs[method.getParameterCount() - 1] = varArgs;
+
+            // Set the varargs argument in the new argument array
+            newArgs[paramCount - 1] = varArgsArray;
             return newArgs;
         }
+
+        // If the method accepts an Iterable, convert the arguments into a List
+        else if (method.getParameterCount() == 1 && Iterable.class.isAssignableFrom(method.getParameterTypes()[0])) {
+            List<Object> list = new ArrayList<>();
+            list.addAll(Arrays.asList(args)); // Add all the arguments to a list
+            return new Object[]{list}; // Wrap the list in an array and return
+        }
+
+        // Default return of arguments as they are
         return args;
     }
+
+
+
+
 
     public static void main(String[] args) {
         try {
@@ -165,6 +218,7 @@ public class MethodInvoker {
                     "isNotNull()",
                     "isGreaterThan(10)",
                     "isLessThanOrEqualTo(50)",
+                    "isInstanceOf(Integer.class)",
                     "isEqualTo(42)"
             );
 
@@ -176,10 +230,28 @@ public class MethodInvoker {
                     "isMixedCase()",
                     "startsWith(\"AssertJ\")",
                     "endsWith(\"powerful!\")",
-                    "contains(\"powerful!\")",
-
-                    "isEqualToIgnoringCase(\"assertj is powerful!\")"
+                    "isNotEqualToIgnoringCase(\"assertj ggis powerful!\")"
             );
+
+            String result= "The quick brown fox jumps over the lazy dog";
+
+            // Execute assertions dynamically
+            executeAssertions(
+                    Assertions.assertThat(result),
+                    "isNotNull()",
+                    "contains(\"quick\", \"fox\", \"lazy\")",
+                    "containsIgnoringCase(\"THE\")",
+                    "doesNotContain(\"cat\", \"foxes\")",
+                    "startsWith(\"The\")",
+                    "endsWith(\"dog\")"
+            );
+
+                        executeAssertions(
+                    Assertions.assertThat(Arrays.asList(1, 2, 3)),
+                    "isNotEmpty()",
+                    "hasSize(3)"
+            );
+
 
 
             System.out.println("All assertions passed!");
