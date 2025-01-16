@@ -15,6 +15,7 @@ response:
   headers:
     Content-Type: "application/json"
   cookie: {}
+  log: "all"
   body:
     id: "7"
     name: "Apple MacBook Pro 16"

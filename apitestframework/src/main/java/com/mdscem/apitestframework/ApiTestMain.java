@@ -1,7 +1,5 @@
 package com.mdscem.apitestframework;
 
-//5import com.mdscem.apitestframework.requestprocessor.capturehandling.CaptureValidation;
-
 import com.mdscem.apitestframework.fileprocessor.flowprocessor.FlowProcessor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -15,12 +13,6 @@ public class ApiTestMain implements CommandLineRunner {
     private static final Logger logger = LogManager.getLogger(ApiTestMain.class);
     @Autowired
     private FlowProcessor flowProcessor;
-//
-//    @Autowired
-//    private  CaptureValidation captureValidation;
-//
-//    @Autowired
-//    private CaptureReplacer captureReplacer;
 
     @Override
     public void run(String... args) {

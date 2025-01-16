@@ -9,6 +9,8 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
+import static com.mdscem.apitestframework.constants.Constant.RESTASSURED;
+
 @Component
 public class FrameworkLoader {
     private static final Logger logger = LogManager.getLogger(FrameworkLoader.class);
@@ -18,7 +20,7 @@ public class FrameworkLoader {
         logger.info("Framework loaded from config: " + frameworkType);
 
         switch (frameworkType.toLowerCase()) {
-            case "restassured":
+            case RESTASSURED:
                 return new RestAssuredCoreFramework();
             default:
                 throw new IllegalArgumentException("Unsupported framework type: " + frameworkType);

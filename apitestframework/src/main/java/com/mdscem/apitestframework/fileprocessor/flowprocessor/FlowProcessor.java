@@ -16,10 +16,9 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
+import static com.mdscem.apitestframework.constants.Constant.TESTCASE;
 import static com.mdscem.apitestframework.constants.Constant.TESTCASE_NAME;
 
 /**
@@ -41,10 +40,6 @@ public class FlowProcessor {
     @Autowired
     private TestCaseRepository testCaseRepository;
 
-//    @Autowired
-//    private CaptureValidation captureValidation;
-
-
     private static final ObjectMapper objectMapper = new ObjectMapper(); // Jackson ObjectMapper
 
     /**
@@ -63,30 +58,29 @@ public class FlowProcessor {
                 Flow flow = new Flow();
                 String flowFileName;
                 ArrayList<TestCase> flowContentTestCaseList = new ArrayList<>();
+                Set<String> uniqueTestCaseNames = new HashSet<>();
+
 
                 // Get the file name of the current flow file
                 flowFileName = String.valueOf(flowPath.getFileName());
-
                 // Read the flow content into a list of JsonNodes
                 List<JsonNode> flowContentList = flowContentReader.getFlowContentAsJsonNodes(flowPath);
 
                 for (JsonNode flowTestCase : flowContentList) {
+
                     // Extract the test case name
-                    String testCaseName = flowTestCase.get("testCase").get(TESTCASE_NAME).asText();
-
-                    // If the test case is already in the context map, retrieve and update it
-                    if (flowContext.getTestCaseMap().containsKey(testCaseName)) {
-                        TestCase testCase = (TestCase) testCaseRepository.findByName(testCaseName);
-                        TestCase completeTestCase = testCaseReplacer.replaceTestCaseWithFlowData(testCase, flowTestCase);
-
-                        flowContentTestCaseList.add(completeTestCase);
-                    } else {
-                        // Otherwise, read a new test case, add it to the map, and update it
-                        TestCase newTestCase = flowContentReader.readNewTestCase(testCaseName);
-                        testCaseRepository.save(testCaseName, newTestCase);
-                        TestCase completeTestCase = testCaseReplacer.replaceTestCaseWithFlowData(newTestCase, flowTestCase);
-                        flowContentTestCaseList.add(completeTestCase);
+                    String testCaseName = flowTestCase.get(TESTCASE).get(TESTCASE_NAME).asText();
+                    // Check for duplicate test case names
+                    if (!uniqueTestCaseNames.add(testCaseName)) {
+                        throw new IllegalArgumentException("Duplicate test case name '" + testCaseName
+                                + "' found in flow file: " + flowFileName);
                     }
+
+                    TestCase testCase = flowContentReader.readTestCase(testCaseName);
+                    testCaseRepository.save(testCaseName, testCase);
+                    TestCase completeTestCase = testCaseReplacer.replaceTestCaseWithFlowData(testCase, flowTestCase);
+                    flowContentTestCaseList.add(completeTestCase);
+
                 }
 
                 // Update the flow object with content and test cases

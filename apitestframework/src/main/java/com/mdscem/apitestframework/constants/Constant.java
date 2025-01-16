@@ -20,4 +20,13 @@ public interface Constant {
     String REPORT_GENERATION_PATH = "build/Extent.html";
     String REPORT_NAME = "API Test Report";
     String CHECK = "check";
+    String TYPE = "type";
+    String ALL = "ALL";
+    String TESTCASE = "testCase";
+    String RESTASSURED = "restassured";
+    String TOKEN = "token";
+    String BASIC = "Basic";
+    String USERNAME  = "username";
+    String PASSWORD = "password";
+
 }

@@ -32,7 +32,7 @@
       employeeId: 6
     capture: [name, address]
 
-- testCase:
-    name: GetUser
-    pathParam:
-      userId: 2
+#- testCase:
+#    name: GetUser
+#    pathParam:
+#      userId: 2

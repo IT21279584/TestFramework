@@ -60,4 +60,7 @@ dependencies {
 tasks.named('test') {
 	useJUnitPlatform()
 }
-
+bootJar {
+	archiveBaseName = 'apitestframework'  // Change the base name to match your application
+	version = '1.0.0'
+}

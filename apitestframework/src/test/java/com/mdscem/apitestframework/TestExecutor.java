@@ -4,13 +4,13 @@ import com.aventstack.extentreports.ExtentReports;
 import com.aventstack.extentreports.ExtentTest;
 import com.aventstack.extentreports.Status;
 import com.aventstack.extentreports.reporter.ExtentSparkReporter;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.mdscem.apitestframework.context.Flow;
 import com.mdscem.apitestframework.context.FlowContext;
 import com.mdscem.apitestframework.fileprocessor.filereader.model.TestCase;
 import com.mdscem.apitestframework.fileprocessor.flowprocessor.FlowProcessor;
-import com.mdscem.apitestframework.frameworkImplementation.RestAssuredCoreFramework;
 import com.mdscem.apitestframework.requestprocessor.CaptureContext;
+import com.mdscem.apitestframework.requestprocessor.CaptureReplacer;
+import com.mdscem.apitestframework.requestprocessor.CaptureValidation;
 import com.mdscem.apitestframework.requestprocessor.CoreFramework;
 import com.mdscem.apitestframework.requestprocessor.frameworkconfig.FrameworkLoader;
 import org.apache.logging.log4j.LogManager;
@@ -35,13 +35,19 @@ class TestExecutor {
     @Autowired
     private FlowProcessor flowProcessor;
     @Autowired
-    private RestAssuredCoreFramework restAssuredCoreFramework;
-    @Autowired
     private CaptureContext captureContext;
     @Autowired
     private FrameworkLoader frameworkLoader;
+    @Autowired
+    private CaptureValidation captureValidation;
+    @Autowired
+    private CaptureReplacer captureReplacer;
+    @Autowired
+    CoreFramework coreFramework;
+
     private static ExtentReports extent;
     public static ExtentTest test;
+
 
     @BeforeAll
     public static void beforeAll() throws Exception {
@@ -119,8 +125,8 @@ class TestExecutor {
             test.log(Status.INFO, "Captures: " + testCase.getCapture());
             test.assignCategory(testCase.getRequest().getMethod());
 
-            // Initialize and execute the test case using RestAssuredCoreFramework
-            restAssuredCoreFramework.testcaseInitializer(Arrays.asList(testCase));
+            //execute core framework
+            executeCoreFramework(testCase);
 
             logger.info("Test case executed successfully: " + testCase.getTestCaseName());
             test.pass("Test passed successfully");
@@ -130,6 +136,15 @@ class TestExecutor {
             throw e;
         }
     }
+
+    private void executeCoreFramework(TestCase testCase) throws IOException {
+        coreFramework = frameworkLoader.loadFrameworkFromConfig();
+        captureValidation.processCaptures(testCase);
+        TestCase replacedTestCase = captureReplacer.replaceParameterPlaceholders(testCase);
+        String res = coreFramework.createFrameworkTypeTestFileAndexecute(replacedTestCase);
+        captureReplacer.updateCapturesFromResponse(res);
+    }
+
 
     //Create  capture context for each flow
     private void createNewCaptureContext(String flowName) {

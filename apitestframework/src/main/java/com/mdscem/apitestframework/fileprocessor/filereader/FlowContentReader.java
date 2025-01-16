@@ -69,7 +69,7 @@ public class FlowContentReader {
     }
 
     //read the testcases, when the testcase map not inside the testcases(flow process)
-    public TestCase readNewTestCase(String testCaseName) throws IOException {
+    public TestCase readTestCase(String testCaseName) throws IOException {
 
         // Load include files and combine them into one node
         List<JsonNode> includeNodes = testCasesReader.loadFilesFromDirectory();
