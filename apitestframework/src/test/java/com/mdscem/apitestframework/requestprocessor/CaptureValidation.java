@@ -29,14 +29,14 @@ public class CaptureValidation {
 
             // Store the captures in the context map using the test case name
             captureContext.addCapturesForTestCase(testCaseName, capture);
-            printAllCaptures();
+            logger.debug("{}", logger.isDebugEnabled() ? printAllCaptures() : "");
         }catch (Exception e){
             e.printStackTrace();
         }
     }
 
     // Print all captures for all test cases
-    public void printAllCaptures() {
+    public Object printAllCaptures() {
 
         captureContext.getCaptureMap().forEach((testCaseName, captures) -> {
             logger.info("Test Case: " + testCaseName);
@@ -44,5 +44,6 @@ public class CaptureValidation {
                 logger.info("  Key: " + key + ", Value: " + value);
             });
         });
+        return null;
     }
 }

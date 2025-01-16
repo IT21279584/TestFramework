@@ -25,5 +25,5 @@ response:
     dateOfBirth: "2001-05-15T00:00:00.000+00:00"
     gender: "Male"
     name: "Kavinda Medagoda"
-    age: {{assertJ isGreaterThan(30)}}
+    age: {{check isGreaterThan(30)}}
 

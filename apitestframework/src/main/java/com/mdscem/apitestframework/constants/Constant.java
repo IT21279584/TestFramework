@@ -19,4 +19,5 @@ public interface Constant {
     String FRAMEWORK = "framework";
     String REPORT_GENERATION_PATH = "build/Extent.html";
     String REPORT_NAME = "API Test Report";
+    String CHECK = "check";
 }

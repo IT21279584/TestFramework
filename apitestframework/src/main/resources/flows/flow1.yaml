@@ -12,7 +12,6 @@
     name: GetUser
     pathParam:
       userId: 2
-    delay: 1000
 
 - testCase:
     name: UpdateUser
@@ -32,3 +31,8 @@
     pathParam:
       employeeId: 6
     capture: [name, address]
+
+- testCase:
+    name: GetUser
+    pathParam:
+      userId: 2

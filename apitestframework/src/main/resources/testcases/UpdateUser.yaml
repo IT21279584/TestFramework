@@ -9,10 +9,9 @@ request:
   method: "PUT"
   path: "api/users/{{param userId}}"
   body:
-    {
-      "name": "morpheus",
-      "job": "zion resident"
-    }
+    name: "morpheus"
+    job: "zion resident"
+
 
 response:
   statusCode: 200
@@ -20,8 +19,5 @@ response:
     Content-Type: "application/json"
   cookie: {}
   body:
-    {
-      "name": "morpheus",
-      "job": "zion resident",
-      "updatedAt": "2024-12-11T06:31:16.710Z"
-    }
+    name: "morpheus"
+    job: "zion resident"

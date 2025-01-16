@@ -19,11 +19,9 @@ public class FrameworkAdapter {
         if (!configFile.exists()) {
             throw new IOException("Configuration file not found: " + configFile.getAbsolutePath());
         }
-
         // Parse the JSON and extract the framework type
         JsonNode configNode = objectMapper.readTree(configFile);
         String frameworkType = configNode.get(FRAMEWORK).asText();
-
         return frameworkType;
     }
 }

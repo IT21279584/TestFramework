@@ -3,7 +3,7 @@ package com.mdscem.apitestframework.frameworkImplementation;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.mdscem.apitestframework.requestprocessor.frameworkconfig.FrameworkLoader;
 import com.mdscem.apitestframework.requestprocessor.validation.AssertJValidation;
 import com.mdscem.apitestframework.fileprocessor.filereader.model.TestCase;
 import com.mdscem.apitestframework.fileprocessor.filereader.model.Request;
@@ -18,17 +18,24 @@ import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 
+import io.restassured.specification.ResponseSpecification;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.assertj.core.api.Assertions;
 import org.junit.Assert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import static com.mdscem.apitestframework.constants.Constant.CHECK;
+
 @Component
 public class RestAssuredCoreFramework implements CoreFramework {
+    private static final Logger logger = LogManager.getLogger(RestAssuredCoreFramework.class);
 
     private List<TestCase> testcaseList;
     private ObjectMapper objectMapper = new ObjectMapper();
@@ -38,27 +45,27 @@ public class RestAssuredCoreFramework implements CoreFramework {
     private CaptureValidation captureValidation;
     @Autowired
     private CaptureReplacer captureReplacer;
+    @Autowired
+    private FrameworkLoader frameworkLoader;
 
-    public void testcaseInitializer(List<TestCase> testcaseList) throws JsonProcessingException {
+
+    public void testcaseInitializer(List<TestCase> testcaseList) throws IOException {
         this.testcaseList = testcaseList;
-        captureContext.getCaptureMap();
 
         for (TestCase testCase : testcaseList) {
             // Validate captured data or prerequisites if needed
             captureValidation.processCaptures(testCase);
-            TestCase replcaedTestCase = captureReplacer.replaceParameterPlaceholders(testCase);
+            TestCase replacedTestCase = captureReplacer.replaceParameterPlaceholders(testCase);
+//            coreFramework = frameworkLoader.loadFrameworkFromConfig();
             // Authenticate if necessary
-            String result = createFrameworkTypeTestFileAndexecute(replcaedTestCase);
-
-
+            createFrameworkTypeTestFileAndexecute(replacedTestCase);
         }
     }
 
     @Override
     public String createFrameworkTypeTestFileAndexecute(TestCase testCase) throws JsonProcessingException {
         RequestSpecification requestSpec = buildRequestSpecification(testCase);
-
-        System.out.println("My URL " + testCase.getBaseUri() + testCase.getRequest().getPath());
+        logger.info("URL " + testCase.getBaseUri() + testCase.getRequest().getPath());
         // Execute the HTTP method
         Response response = executeHttpMethod(
                 testCase.getRequest().getMethod(),
@@ -66,7 +73,7 @@ public class RestAssuredCoreFramework implements CoreFramework {
                 testCase.getBaseUri() + testCase.getRequest().getPath()
         );
 
-        System.out.println("My Response : " + response.prettyPrint());
+        logger.info("Response : " + response.prettyPrint());
 
         // Validate the response
         validateResponse(testCase, response);
@@ -127,7 +134,6 @@ public class RestAssuredCoreFramework implements CoreFramework {
     }
 
     private void validateResponse(TestCase testCase, Response response) throws JsonProcessingException {
-
         // Validate the response status code
         Assert.assertEquals(
                 "Status code mismatch",
@@ -135,15 +141,33 @@ public class RestAssuredCoreFramework implements CoreFramework {
                 response.getStatusCode()
         );
 
+//        if (testCase.getResponse().getHeaders() != null) {
+//            for (Map.Entry<String, String> entry : testCase.getResponse().getHeaders().entrySet()) {
+//                String expectedHeader = entry.getValue();
+//                String actualHeader = response.getHeader(entry.getKey());
+//                Assert.assertEquals("Header " + entry.getKey() + " mismatch", expectedHeader, actualHeader);
+//            }
+//        }
+//
+//        // Validate response cookies
+//        if (testCase.getResponse().getCookie() != null) {
+//            for (Map.Entry<String, String> entry : testCase.getResponse().getCookie().entrySet()) {
+//                String expectedCookie = entry.getValue();
+//                String actualCookie = response.getCookie(entry.getKey());
+//                Assert.assertEquals("Cookie " + entry.getKey() + " mismatch", expectedCookie, actualCookie);
+//            }
+//        }
+
         // Validate response body using JsonAssert if expected body is provided
         if (testCase.getResponse().getBody() != null) {
             validateResponseBody(testCase, response);
         }
 
+
         String res = response.asString();
         // Capture data if specified
         captureReplacer.updateCapturesFromResponse(res);
-        System.out.println("My after captureMap " + captureContext.getCaptureMap());
+        logger.info("After captureMap " + captureContext.getCaptureMap());
     }
 
     // Helper method to validate the response body
@@ -156,72 +180,58 @@ public class RestAssuredCoreFramework implements CoreFramework {
             JsonNode expectedJsonNode = objectMapper.readTree(expectedBody);
             JsonNode actualJsonNode = objectMapper.readTree(response.getBody().asString());
 
-            // Remove unwanted fields from both JSON objects
-            removeUnwantedFields((ObjectNode) expectedJsonNode);
-            removeUnwantedFields((ObjectNode) actualJsonNode);
 
-
+            // Validate only the fields mentioned in the TestCase response
             expectedJsonNode.fields().forEachRemaining(entry -> {
                 String fieldName = entry.getKey();
                 JsonNode expectedValue = entry.getValue();
 
                 // Handle `assertJ` keyword for dynamic validation
-                if (expectedValue.isTextual() && expectedValue.asText().startsWith("{{assertJ")) {
+                if (expectedValue.isTextual() && expectedValue.asText().startsWith("{{"+CHECK)) {
                     // Extract the method chain for AssertJ
                     String assertJExpression = expectedValue.asText();
-                    String methodChain = assertJExpression.substring(assertJExpression.indexOf("assertJ") + 7, assertJExpression.lastIndexOf("}")).trim();
+                    String methodChain = assertJExpression.substring(assertJExpression.indexOf(CHECK) + 5, assertJExpression.lastIndexOf("}")).trim();
 
                     // Prepare the object to assert
                     JsonNode actualFieldValueNode = actualJsonNode.get(fieldName);
                     try {
-                        if (actualFieldValueNode.isInt()) {
-                            Integer actualValue = actualFieldValueNode.asInt();
-                            AssertJValidation.executeAssertions(Assertions.assertThat(actualValue), methodChain.split("\\."));
-                        } else if (actualFieldValueNode.isLong()) {
-                            Long actualValue = actualFieldValueNode.asLong();
-                            AssertJValidation.executeAssertions(Assertions.assertThat(actualValue), methodChain.split("\\."));
-                        } else if (actualFieldValueNode.isTextual()) {
-                            String actualValue = actualFieldValueNode.asText();
-                            AssertJValidation.executeAssertions(Assertions.assertThat(actualValue), methodChain.split("\\."));
-                        } else if (actualFieldValueNode.isBoolean()) {
-                            Boolean actualValue = actualFieldValueNode.asBoolean();
-                            AssertJValidation.executeAssertions(Assertions.assertThat(actualValue), methodChain.split("\\."));
-                        } else if (actualFieldValueNode.isDouble()) {
-                            Double actualValue = actualFieldValueNode.asDouble();
-                            AssertJValidation.executeAssertions(Assertions.assertThat(actualValue), methodChain.split("\\."));
-                        } else if (actualFieldValueNode.isFloat()) {
-                            Float actualValue = actualFieldValueNode.floatValue();
-                            AssertJValidation.executeAssertions(Assertions.assertThat(actualValue), methodChain.split("\\."));
-                        } else if (actualFieldValueNode.isArray()) {
-                            // Handle arrays as JsonNode arrays
-                            List<JsonNode> actualValue = new ArrayList<>();
-                            actualFieldValueNode.forEach(actualValue::add);
-                            AssertJValidation.executeAssertions(Assertions.assertThat(actualValue), methodChain.split("\\."));
-                        } else if (actualFieldValueNode.isShort()) {
-                            Short actualValue = (short) actualFieldValueNode.asInt(); // Casting Int to Short
-                            AssertJValidation.executeAssertions(Assertions.assertThat(actualValue), methodChain.split("\\."));
-                        } else {
-                            throw new IllegalArgumentException("Unsupported type for field: " + fieldName);
-                        }
+                        validateWithAssertJ(actualFieldValueNode, methodChain);
                     } catch (Exception e) {
-                        throw new RuntimeException(e);
+                        throw new RuntimeException("Validation failed for field: " + fieldName, e);
                     }
-
                 } else {
+                    // Regular field validation
                     JsonNode actualValue = actualJsonNode.get(fieldName);
-                    Assert.assertEquals(expectedValue, actualValue);
+                    Assert.assertEquals("Field " + fieldName + " does not match.", expectedValue, actualValue);
                 }
             });
-
         } catch (Exception e) {
-            throw e;
+            throw new RuntimeException("Error during response validation.", e);
         }
     }
 
-    // Helper method to remove unwanted fields from JSON
-    private void removeUnwantedFields(ObjectNode jsonNode) {
-        jsonNode.remove("createdAt");
-        jsonNode.remove("updatedAt");
-        jsonNode.remove("token");
+    private void validateWithAssertJ(JsonNode actualFieldValueNode, String methodChain) throws Exception {
+        if (actualFieldValueNode.isInt()) {
+            Integer actualValue = actualFieldValueNode.asInt();
+            AssertJValidation.executeAssertions(Assertions.assertThat(actualValue), methodChain.split("\\."));
+        } else if (actualFieldValueNode.isLong()) {
+            Long actualValue = actualFieldValueNode.asLong();
+            AssertJValidation.executeAssertions(Assertions.assertThat(actualValue), methodChain.split("\\."));
+        } else if (actualFieldValueNode.isTextual()) {
+            String actualValue = actualFieldValueNode.asText();
+            AssertJValidation.executeAssertions(Assertions.assertThat(actualValue), methodChain.split("\\."));
+        } else if (actualFieldValueNode.isBoolean()) {
+            Boolean actualValue = actualFieldValueNode.asBoolean();
+            AssertJValidation.executeAssertions(Assertions.assertThat(actualValue), methodChain.split("\\."));
+        } else if (actualFieldValueNode.isDouble()) {
+            Double actualValue = actualFieldValueNode.asDouble();
+            AssertJValidation.executeAssertions(Assertions.assertThat(actualValue), methodChain.split("\\."));
+        } else if (actualFieldValueNode.isArray()) {
+            List<JsonNode> actualValue = new ArrayList<>();
+            actualFieldValueNode.forEach(actualValue::add);
+            AssertJValidation.executeAssertions(Assertions.assertThat(actualValue), methodChain.split("\\."));
+        } else {
+            throw new IllegalArgumentException("Unsupported type for dynamic validation.");
+        }
     }
 }
