@@ -45,7 +45,7 @@ dependencies {
 	implementation 'com.networknt:json-schema-validator:1.0.82'
 	testImplementation 'junit:junit:4.13.2'
 
-
+	implementation 'org.springframework:spring-web:5.3.30'
 
 	// https://mvnrepository.com/artifact/io.rest-assured/rest-assured
 	testImplementation group: 'io.rest-assured', name: 'rest-assured', version: '4.3.3'

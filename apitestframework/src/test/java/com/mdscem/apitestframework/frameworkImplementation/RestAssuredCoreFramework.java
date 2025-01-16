@@ -18,6 +18,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.assertj.core.api.Assertions;
 import org.junit.Assert;
+import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -37,10 +38,11 @@ public class RestAssuredCoreFramework implements CoreFramework {
         logger.info("URL " + testCase.getBaseUri() + testCase.getRequest().getPath());
         // Execute the HTTP method
         Response response = executeHttpMethod(
-                testCase.getRequest().getMethod(),
+                HttpMethod.valueOf(testCase.getRequest().getMethod().toUpperCase()), // Convert string to HttpMethod
                 requestSpec,
                 testCase.getBaseUri() + testCase.getRequest().getPath()
         );
+
 
         logger.info("Response : " + response.prettyPrint());
 
@@ -83,17 +85,17 @@ public class RestAssuredCoreFramework implements CoreFramework {
     }
 
 
-    private Response executeHttpMethod(String method, RequestSpecification requestSpec, String url) {
-        switch (method.toUpperCase()) {
-            case "GET":
+    private Response executeHttpMethod(HttpMethod method, RequestSpecification requestSpec, String url) {
+        switch (method) {
+            case GET:
                 return requestSpec.get(url);
-            case "POST":
+            case POST:
                 return requestSpec.post(url);
-            case "PUT":
+            case PUT:
                 return requestSpec.put(url);
-            case "DELETE":
+            case DELETE:
                 return requestSpec.delete(url);
-            case "PATCH":
+            case PATCH:
                 return requestSpec.patch(url);
             default:
                 throw new UnsupportedOperationException("Unsupported HTTP method: " + method);
