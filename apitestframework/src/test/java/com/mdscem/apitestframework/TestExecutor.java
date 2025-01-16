@@ -73,6 +73,12 @@ class TestExecutor {
 
                 // Log the start of execution for the current flow
                 logger.info("Starting execution for flow: " + flowName);
+                dynamicTests.add(DynamicTest.dynamicTest(
+                        "Flow: " + flowName + " | Created CaptureContext (Internal)", // Display name
+                        () -> {
+                            createNewCaptureContext(flowName);  // Setup logic for the capture context
+                        }
+                ));
 
                 // Iterate through all test cases associated with the current flow
                 for (TestCase testCase : flow.getTestCaseArrayList()) {
@@ -89,17 +95,12 @@ class TestExecutor {
                      *    (executeTestCase(testCase, flowName)).
                      */
                     dynamicTests.add(DynamicTest.dynamicTest(
-                            testCase.getTestCaseName(),  // Descriptive name of the test case for reporting
+                            flowName + " -> " + testCase.getTestCaseName(),  // Descriptive name of the test case for reporting
                             () -> executeTestCase(testCase, flowName) // Actual test logic
                     ));
                 }
 
-                dynamicTests.add(DynamicTest.dynamicTest(
-                        "Flow: " + flowName + " | Created CaptureContext (Internal)", // Display name
-                        () -> {
-                            createNewCaptureContext(flowName);  // Setup logic for the capture context
-                        }
-                ));
+
             }
         } catch (IOException e) {
             // Log and handle any unexpected errors that occur during flow processing
@@ -119,7 +120,7 @@ class TestExecutor {
     private void executeTestCase(TestCase testCase, String flowName) throws IOException {
         try {
             logger.info("Executing test case: " + testCase.getTestCaseName() + " in flow: " + flowName);
-            test = extent.createTest(testCase.getTestCaseName());
+            test = extent.createTest(flowName + " -> " + testCase.getTestCaseName());
             test.log(Status.INFO, "Request Method: " + testCase.getRequest().getMethod());
             test.log(Status.INFO, "Request URL: " + testCase.getBaseUri() + testCase.getRequest().getPath());
             test.assignCategory(testCase.getRequest().getMethod());
