@@ -122,7 +122,6 @@ class TestExecutor {
             test = extent.createTest(testCase.getTestCaseName());
             test.log(Status.INFO, "Request Method: " + testCase.getRequest().getMethod());
             test.log(Status.INFO, "Request URL: " + testCase.getBaseUri() + testCase.getRequest().getPath());
-            test.log(Status.INFO, "Captures: " + testCase.getCapture());
             test.assignCategory(testCase.getRequest().getMethod());
 
             //execute core framework

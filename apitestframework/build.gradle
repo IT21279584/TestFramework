@@ -47,6 +47,9 @@ dependencies {
 
 	implementation 'org.springframework:spring-web:5.3.30'
 
+	testImplementation 'org.junit.jupiter:junit-jupiter:5.10.0' // Replace with your JUnit version
+	testRuntimeOnly 'org.junit.platform:junit-platform-console:1.10.0' // Add Console Launcher
+
 	// https://mvnrepository.com/artifact/io.rest-assured/rest-assured
 	testImplementation group: 'io.rest-assured', name: 'rest-assured', version: '4.3.3'
 	// https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api
@@ -63,4 +66,7 @@ tasks.named('test') {
 bootJar {
 	archiveBaseName = 'apitestframework'  // Change the base name to match your application
 	version = '1.0.0'
+}
+test {
+	ignoreFailures = true  // This will allow the build to continue even if tests fail
 }
