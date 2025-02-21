@@ -6,7 +6,7 @@ request:
   headers:
     Content-Type: "application/json"
   log: "all"
-  method: "get"
+  method: "GET"
   path: "/employee/{{param employeeId}}"
   body: {}
 

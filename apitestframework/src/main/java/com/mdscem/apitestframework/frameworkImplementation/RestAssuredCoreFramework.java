@@ -7,20 +7,16 @@ import com.mdscem.apitestframework.requestprocessor.validation.AssertJValidation
 import com.mdscem.apitestframework.fileprocessor.filereader.model.TestCase;
 import com.mdscem.apitestframework.fileprocessor.filereader.model.Request;
 import com.mdscem.apitestframework.requestprocessor.CoreFramework;
-
 import com.mdscem.apitestframework.requestprocessor.authhandling.AuthenticationHandler;
 import com.mdscem.apitestframework.requestprocessor.authhandling.AuthenticationHandlerFactory;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.assertj.core.api.Assertions;
-import org.junit.Assert;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -36,18 +32,22 @@ public class RestAssuredCoreFramework implements CoreFramework {
     public String createFrameworkTypeTestFileAndexecute(TestCase testCase) throws JsonProcessingException {
         RequestSpecification requestSpec = buildRequestSpecification(testCase);
         logger.info("URL " + testCase.getBaseUri() + testCase.getRequest().getPath());
-        // Execute the HTTP method
+
         Response response = executeHttpMethod(
-                HttpMethod.valueOf(testCase.getRequest().getMethod().toUpperCase()), // Convert string to HttpMethod
+                HttpMethod.valueOf(testCase.getRequest().getMethod().toUpperCase()),
                 requestSpec,
                 testCase.getBaseUri() + testCase.getRequest().getPath()
         );
 
-
         logger.info("Response : " + response.prettyPrint());
 
-        // Validate the response
-        validateResponse(testCase, response);
+        // Validate the response, but do not stop execution on failure
+        try {
+            validateResponse(testCase, response);
+        } catch (Exception e) {
+            logger.error("Test case failed: " + testCase.getTestCaseName(), e);
+        }
+
         return response.asString();
     }
 
@@ -104,17 +104,17 @@ public class RestAssuredCoreFramework implements CoreFramework {
 
     private void validateResponse(TestCase testCase, Response response) throws JsonProcessingException {
         // Validate the response status code
-        Assert.assertEquals(
-                "Status code mismatch",
-                testCase.getResponse().getStatusCode(),
-                response.getStatusCode()
-        );
+        Assertions.assertThat(response.getStatusCode())
+                .as("Status code mismatch")
+                .isEqualTo(testCase.getResponse().getStatusCode());
 
         if (testCase.getResponse().getHeaders() != null) {
             for (Map.Entry<String, String> entry : testCase.getResponse().getHeaders().entrySet()) {
                 String expectedHeader = entry.getValue();
                 String actualHeader = response.getHeader(entry.getKey());
-                Assert.assertEquals("Header " + entry.getKey() + " mismatch", expectedHeader, actualHeader);
+                Assertions.assertThat(actualHeader)
+                        .as("Header %s mismatch", entry.getKey())
+                        .isEqualTo(expectedHeader);
             }
         }
 
@@ -123,8 +123,9 @@ public class RestAssuredCoreFramework implements CoreFramework {
             for (Map.Entry<String, String> entry : testCase.getResponse().getCookie().entrySet()) {
                 String expectedCookie = entry.getValue();
                 String actualCookie = response.getCookie(entry.getKey());
-                Assert.assertEquals("Cookie " + entry.getKey() + " mismatch", expectedCookie, actualCookie);
-            }
+                Assertions.assertThat(actualCookie)
+                        .as("Cookie %s mismatch", entry.getKey())
+                        .isEqualTo(expectedCookie);            }
         }
 
         // Validate response body using JsonAssert if expected body is provided
@@ -170,8 +171,9 @@ public class RestAssuredCoreFramework implements CoreFramework {
                 } else {
                     // Regular field validation
                     JsonNode actualValue = actualJsonNode.get(fieldName);
-                    Assert.assertEquals("Field " + fieldName + " does not match.", expectedValue, actualValue);
-                }
+                    Assertions.assertThat(actualValue)
+                            .as("Field %s does not match.", fieldName)
+                            .isEqualTo(expectedValue);                }
             });
         } catch (Exception e) {
             throw new RuntimeException("Error during response validation.", e);

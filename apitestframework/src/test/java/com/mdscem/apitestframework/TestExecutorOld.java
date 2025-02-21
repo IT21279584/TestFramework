@@ -4,6 +4,7 @@ import com.aventstack.extentreports.ExtentReports;
 import com.aventstack.extentreports.ExtentTest;
 import com.aventstack.extentreports.Status;
 import com.aventstack.extentreports.reporter.ExtentSparkReporter;
+import com.mdscem.apitestframework.constants.Constant;
 import com.mdscem.apitestframework.context.Flow;
 import com.mdscem.apitestframework.context.FlowContext;
 import com.mdscem.apitestframework.fileprocessor.filereader.model.TestCase;
@@ -15,22 +16,21 @@ import com.mdscem.apitestframework.requestprocessor.CoreFramework;
 import com.mdscem.apitestframework.requestprocessor.frameworkconfig.FrameworkLoader;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.DynamicTest;
-import org.junit.jupiter.api.TestFactory;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Stream;
 
-import static com.mdscem.apitestframework.constants.Constant.REPORT_GENERATION_PATH;
-import static com.mdscem.apitestframework.constants.Constant.REPORT_NAME;
+
 
 @SpringBootTest
-class TestExecutor {
-    private static final Logger logger = LogManager.getLogger(TestExecutor.class);
+public class TestExecutorOld {
+    private static final Logger logger = LogManager.getLogger(TestExecutorOld.class);
 
     @Autowired
     private FlowProcessor flowProcessor;
@@ -48,67 +48,50 @@ class TestExecutor {
     private static ExtentReports extent;
     public static ExtentTest test;
 
-
     @BeforeAll
-    public static void beforeAll() throws Exception {
-        ExtentSparkReporter spark = new ExtentSparkReporter(REPORT_GENERATION_PATH);
-        spark.config().setReportName(REPORT_NAME);
-        extent = new ExtentReports();
-        extent.attachReporter(spark);
+    public static void beforeAll() {
+        try {
+            String baseDirectoryPath = System.getProperty("base.directory.path");
+            System.out.println("Base Directory Path: " + baseDirectoryPath);
+            System.out.println("Report Directory Path: " + Constant.REPORT_PATH);
+            extent = new ExtentReports();
+            ExtentSparkReporter spark = new ExtentSparkReporter(Constant.REPORT_PATH);
+            spark.config().setReportName("API TestFramework Report");
+            extent.attachReporter(spark);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("Failed to initialize ExtentReports", e);
+        }
     }
 
     @TestFactory
-    public List<DynamicTest> testExecutor() {
-        // A list to hold dynamically generated test cases
+    public Stream<DynamicTest> testExecutor() {
+        System.out.println("Starting JUnit test execution from test executor method...");
         List<DynamicTest> dynamicTests = new ArrayList<>();
 
         try {
-            // Retrieve the FlowContext which contains all flows to be executed
             FlowContext flowContext = flowProcessor.flowProcess();
-
-            // Iterate through each flow defined in the FlowContext
             for (Map.Entry<String, Flow> flowEntry : flowContext.getFlowMap().entrySet()) {
-                String flowName = flowEntry.getKey(); // Name of the flow
-                Flow flow = flowEntry.getValue();    // The flow object containing test cases
+                String flowName = flowEntry.getKey();
+                Flow flow = flowEntry.getValue();
 
-                // Log the start of execution for the current flow
-                logger.info("Starting execution for flow: " + flowName);
                 dynamicTests.add(DynamicTest.dynamicTest(
-                        "Flow: " + flowName + " | Created CaptureContext (Internal)", // Display name
-                        () -> {
-                            createNewCaptureContext(flowName);  // Setup logic for the capture context
-                        }
+                        "Flow: " + flowName + " | Created CaptureContext (Internal)",
+                        () -> createNewCaptureContext(flowName)
                 ));
 
-                // Iterate through all test cases associated with the current flow
                 for (TestCase testCase : flow.getTestCaseArrayList()) {
-                    /*
-                     * Create a dynamic test for the current test case.
-                     * Dynamic tests are useful for scenarios where the number or nature of tests
-                     * isn't known beforehand, such as when tests are derived from external data
-                     * (files, databases, or flows, in this case).
-                     *
-                     * dynamicTest() is a factory method that creates an instance of a dynamic test.
-                     * It takes two arguments:
-                     * 1. displayName: A descriptive name for the test (testCase.getTestCaseName()).
-                     * 2. Executable: A lambda or method reference representing the test logic
-                     *    (executeTestCase(testCase, flowName)).
-                     */
                     dynamicTests.add(DynamicTest.dynamicTest(
-                            flowName + " -> " + testCase.getTestCaseName(),  // Descriptive name of the test case for reporting
-                            () -> executeTestCase(testCase, flowName) // Actual test logic
+                            flowName + " -> " + testCase.getTestCaseName(),
+                            () -> executeTestCase(testCase, flowName)
                     ));
                 }
-
-
             }
         } catch (IOException e) {
-            // Log and handle any unexpected errors that occur during flow processing
-            logger.error("Unexpected error while processing flows: " + e.getMessage(), e);
+            throw new RuntimeException("Failed to execute flow-processor", e);
         }
 
-        // Return the list of dynamically created test cases to JUnit
-        return dynamicTests;
+        return dynamicTests.stream();
     }
 
     /**
@@ -119,23 +102,24 @@ class TestExecutor {
      */
     private void executeTestCase(TestCase testCase, String flowName) throws IOException {
         try {
-            logger.info("Executing test case: " + testCase.getTestCaseName() + " in flow: " + flowName);
             test = extent.createTest(flowName + " -> " + testCase.getTestCaseName());
             test.log(Status.INFO, "Request Method: " + testCase.getRequest().getMethod());
             test.log(Status.INFO, "Request URL: " + testCase.getBaseUri() + testCase.getRequest().getPath());
             test.assignCategory(testCase.getRequest().getMethod());
 
-            //execute core framework
+            // Execute the core framework
             executeCoreFramework(testCase);
 
-            logger.info("Test case executed successfully: " + testCase.getTestCaseName());
+            // Log the test case status
             test.pass("Test passed successfully");
+            logger.info("✅ Test Passed: " + flowName + " -> " + testCase.getTestCaseName());
         } catch (AssertionError | Exception e) {
-            logger.error("Test case execution failed: " + testCase.getTestCaseName(), e);
             test.fail("Test case failed: " + e.getMessage());
+            logger.error("❌ Test Failed: " + flowName + " -> " + testCase.getTestCaseName() + " | Error: " + e.getMessage());
             throw e;
         }
     }
+
 
     private void executeCoreFramework(TestCase testCase) throws IOException {
         coreFramework = frameworkLoader.loadFrameworkFromConfig();
@@ -152,13 +136,17 @@ class TestExecutor {
             // Create a new capture map
             captureContext.setCaptureMap(new HashMap<String, Map<String, Object>>());
         } catch (Exception e) {
-            logger.error("Failed to create capture context for flow: " + flowName, e);
             throw e;
         }
     }
 
     @AfterAll
     public static void afterAll() {
-        extent.flush();
+        if (extent != null) {
+            extent.flush();
+        } else {
+            System.err.println("ExtentReports not initialized.");
+        }
     }
+
 }

@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.mdscem.apitestframework.fileprocessor.filereader.model.TestCase;
 import org.springframework.stereotype.Component;
-
 import java.util.List;
 
 @Component

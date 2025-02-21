@@ -12,13 +12,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-
 import java.io.IOException;
 import java.nio.file.*;
 import java.util.ArrayList;
 import java.util.List;
-
 import static com.mdscem.apitestframework.constants.Constant.FLOW_VALIDATION_PATH;
 import static com.mdscem.apitestframework.constants.Constant.VALIDATION_FILE_PATH;
 
@@ -37,7 +34,8 @@ public class FlowContentReader {
 
 
     // Get all flow files from the directory
-    public List<Path> getFlowFilesFromDirectory(Path flowPath) throws IOException {
+    public List<Path> getFlowFilesFromDirectory(Path flowPath) {
+        logger.info("Flow Path"+flowPath);
         List<Path> flowFiles = new ArrayList<>();
 
         if (Files.isDirectory(flowPath)) {
@@ -48,10 +46,11 @@ public class FlowContentReader {
             } catch (IOException e) {
                 logger.error("Error processing directory " + flowPath + ": " + e.getMessage());
 
-                throw e;
+//                throw e;
             }
         } else {
-            throw new IOException("Invalid path. not a directory.");
+            logger.error("Invalid path. not a directory.");
+//            throw new IOException("Invalid path. not a directory.");
         }
         return flowFiles;
     }

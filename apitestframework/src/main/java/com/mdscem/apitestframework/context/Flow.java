@@ -5,7 +5,6 @@ import com.mdscem.apitestframework.fileprocessor.filereader.model.TestCase;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 @Component

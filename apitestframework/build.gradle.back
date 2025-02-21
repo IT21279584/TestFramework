@@ -2,6 +2,8 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '2.7.0'
 	id 'io.spring.dependency-management' version '1.1.6'
+	id 'application' // Add this line to apply the application plugin
+
 }
 
 group = 'com.mdscem'
@@ -20,9 +22,6 @@ repositories {
 dependencies {
 	// Spring Boot and Web
 	implementation 'org.springframework.boot:spring-boot-starter'
-	implementation('org.springframework.boot:spring-boot-starter-logging') {
-		exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
-	}
 	implementation 'org.springframework:spring-web:5.3.30'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-mustache'
@@ -64,7 +63,7 @@ dependencies {
 
 	//Spring
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	implementation 'org.springframework.boot:spring-boot-starter-test'
+//	implementation 'org.springframework.boot:spring-boot-starter-test'
 
 
 	// JUnit 5 (Jupiter)
@@ -79,13 +78,12 @@ dependencies {
 //	implementation 'org.junit.platform:junit-platform-console-standalone:1.8.2'
 
 	// JUnit Platform Console
-	testImplementation 'org.junit.platform:junit-platform-console:1.8.2'
-	testRuntimeOnly 'org.junit.platform:junit-platform-console:1.8.2'
+//	implementation 'org.junit.platform:junit-platform-console:1.8.2'
+	testRuntimeOnly 'org.junit.platform:junit-platform-console-standalone:1.10.0'
 
-
+ 
 	// AssertJ for Fluent Assertions
 	testImplementation 'org.assertj:assertj-core:3.24.2'
-
 
 
 }
@@ -99,48 +97,16 @@ test {
 	ignoreFailures = true
 }
 
-
-jar {
-	enabled = true
-	from sourceSets.main.output
-	from sourceSets.test.output
-	from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
-	duplicatesStrategy = DuplicatesStrategy.EXCLUDE  // Exclude duplicate files
-}
-
-task fatJar(type: Jar) {
-	group = 'build'
-	description = 'Assembles a jar archive containing both main and test classes and dependencies.'
-	archiveClassifier = 'all'
-	from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
-	from sourceSets.main.output
-	manifest {
-		attributes 'Main-Class': 'com.mdscem.apitestframework.ApitestframeworkApplication'
-	}
-//	from sourceSets.test.output
-	duplicatesStrategy = DuplicatesStrategy.EXCLUDE // Exclude duplicate files
-//	exclude 'flows/**'
-//	exclude 'includes/**'
-//	exclude 'testcases/**'
-//	dependsOn testClasses
-}
-
-bootJar {
-	enabled = true
-	from sourceSets.main.output
-	from sourceSets.test.output
-	manifest {
-		attributes 'Main-Class': 'com.mdscem.apitestframework.ApitestframeworkApplication'
-	}
-	from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
-	duplicatesStrategy = DuplicatesStrategy.EXCLUDE  // Exclude duplicate files
-
-}
-
 task testJar(type: Jar) {
-	archiveClassifier = 'tests'
+	archiveClassifier= 'tests'
 	from sourceSets.test.output
-	dependsOn testClasses
+
+}
+artifacts {
+	archives testJar
+}
+application {
+	mainClass = 'org.junit.platform.console.ConsoleLauncher'
 }
 
 task runTests(type: JavaExec) {
@@ -148,4 +114,3 @@ task runTests(type: JavaExec) {
 	classpath = sourceSets.test.runtimeClasspath
 	args = ['--scan-classpath']
 }
-
