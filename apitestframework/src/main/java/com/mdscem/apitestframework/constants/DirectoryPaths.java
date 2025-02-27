@@ -19,6 +19,7 @@ public class DirectoryPaths {
 
     @Autowired
     private ResourceLoader resourceLoader;
+
     @Autowired
     private Environment environment;
 
@@ -29,11 +30,13 @@ public class DirectoryPaths {
     public static String FLOW_VALIDATION_PATH;
     public static String CORE_FRAMEWORK_PATH;
     public static String REPORT_DIRECTORY;
+    public static String LOG_DIRECTORY;
 
     @PostConstruct
     public void initPaths() {
         String BASE_PATH = loadPath("base.directory.path", "./resources/");
         String REPORT_PATH = loadPath("report.directory.path", "./reports/");
+        String LOG_PATH = loadPath("log.path", "");
 
         TEST_CASES_DIRECTORY = BASE_PATH + "testcases/";
         INCLUDES_DIRECTORY = BASE_PATH + "includes/";
@@ -42,13 +45,23 @@ public class DirectoryPaths {
         FLOW_VALIDATION_PATH = BASE_PATH + "flow-validation.json";
         CORE_FRAMEWORK_PATH = BASE_PATH + "framework-config.json";
         REPORT_DIRECTORY = REPORT_PATH;
+        LOG_DIRECTORY = LOG_PATH;
 
         logger.info("Directory paths initialized successfully.");
+        logger.info("Base Directory Path: {}", BASE_PATH);
+        logger.info("Report Directory Path: {}", REPORT_PATH);
+        logger.info("Log Directory Path: {}", LOG_DIRECTORY);
     }
 
     private String loadPath(String propertyName, String defaultPath) {
+        String pathFromSystem = System.getProperty(propertyName);
+        if (pathFromSystem != null && !pathFromSystem.isEmpty()) {
+            logger.info("Loaded '{}' from system property: {}", propertyName, pathFromSystem);
+            return pathFromSystem;
+        }
+
         String pathFromEnv = environment.getProperty(propertyName);
-        if (pathFromEnv != null) {
+        if (pathFromEnv != null && !pathFromEnv.isEmpty()) {
             logger.info("Loaded '{}' from environment: {}", propertyName, pathFromEnv);
             return pathFromEnv;
         }
@@ -58,7 +71,7 @@ public class DirectoryPaths {
             Resource resource = resourceLoader.getResource("classpath:application.properties");
             properties.load(resource.getInputStream());
             String pathFromFile = properties.getProperty(propertyName);
-            if (pathFromFile != null) {
+            if (pathFromFile != null && !pathFromFile.isEmpty()) {
                 logger.info("Loaded '{}' from properties file: {}", propertyName, pathFromFile);
                 return pathFromFile;
             }

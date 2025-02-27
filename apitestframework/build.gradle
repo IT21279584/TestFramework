@@ -20,16 +20,9 @@ repositories {
 dependencies {
 	// Spring Boot and Web
 	implementation 'org.springframework.boot:spring-boot-starter'
-	implementation('org.springframework.boot:spring-boot-starter-logging') {
-		exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
-	}
 	implementation 'org.springframework:spring-web:5.3.30'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	implementation 'org.springframework.boot:spring-boot-starter-mustache'
 
-	// Lombok
-	compileOnly 'org.projectlombok:lombok'
-	annotationProcessor 'org.projectlombok:lombok'
 
 	// Jackson for JSON and YAML processing
 	implementation 'com.fasterxml.jackson.core:jackson-core:2.15.0'
@@ -55,44 +48,14 @@ dependencies {
 
 	// Assertion Library
 	implementation 'org.assertj:assertj-core:3.24.2'
-//	implementation 'org.junit.platform:junit-platform-console-standalone:1.8.2'
 
 
 	// REST-Assured for API Testing
 	implementation 'io.rest-assured:rest-assured:4.3.3'
-	testImplementation 'io.rest-assured:rest-assured:4.3.3'
 
 	//Spring
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	implementation 'org.springframework.boot:spring-boot-starter-test'
-
-
-	// JUnit 5 (Jupiter)
-//	implementation 'org.junit.platform:junit-platform-launcher:1.8.2'
-//	testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
-//	implementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
-//	testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
-//	implementation 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
-
-
-//	testRuntimeOnly 'org.junit.platform:junit-platform-console-standalone:1.8.2'
-//	implementation 'org.junit.platform:junit-platform-console-standalone:1.8.2'
-
-	// JUnit Platform Console
-	testImplementation 'org.junit.platform:junit-platform-console:1.8.2'
-	testRuntimeOnly 'org.junit.platform:junit-platform-console:1.8.2'
-
-
-	// AssertJ for Fluent Assertions
-	testImplementation 'org.assertj:assertj-core:3.24.2'
-
-
-
 }
-
-//tasks.named('test') {
-//	useJUnitPlatform()
-//}
 
 test {
 	useJUnitPlatform()
@@ -100,52 +63,16 @@ test {
 }
 
 
-jar {
-	enabled = true
-	from sourceSets.main.output
-	from sourceSets.test.output
-	from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
-	duplicatesStrategy = DuplicatesStrategy.EXCLUDE  // Exclude duplicate files
-}
-
-task fatJar(type: Jar) {
-	group = 'build'
-	description = 'Assembles a jar archive containing both main and test classes and dependencies.'
-	archiveClassifier = 'all'
-	from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
-	from sourceSets.main.output
-	manifest {
-		attributes 'Main-Class': 'com.mdscem.apitestframework.ApitestframeworkApplication'
-	}
-//	from sourceSets.test.output
-	duplicatesStrategy = DuplicatesStrategy.EXCLUDE // Exclude duplicate files
-//	exclude 'flows/**'
-//	exclude 'includes/**'
-//	exclude 'testcases/**'
-//	dependsOn testClasses
-}
-
 bootJar {
 	enabled = true
 	from sourceSets.main.output
 	from sourceSets.test.output
 	manifest {
-		attributes 'Main-Class': 'com.mdscem.apitestframework.ApitestframeworkApplication'
+		attributes 'Main-Class': 'com.mdscem.apitestframework.ApiTestFrameworkApplication'
 	}
 	from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
 	duplicatesStrategy = DuplicatesStrategy.EXCLUDE  // Exclude duplicate files
 
 }
 
-task testJar(type: Jar) {
-	archiveClassifier = 'tests'
-	from sourceSets.test.output
-	dependsOn testClasses
-}
-
-task runTests(type: JavaExec) {
-	mainClass = 'org.junit.platform.console.ConsoleLauncher'
-	classpath = sourceSets.test.runtimeClasspath
-	args = ['--scan-classpath']
-}
 

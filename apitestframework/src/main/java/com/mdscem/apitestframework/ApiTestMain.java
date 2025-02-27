@@ -18,8 +18,7 @@ public class ApiTestMain implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws IOException {
-        System.out.println("Initializing API Test Executor...");
-
+        logger.info("Initializing API Test Executor...");
         executor.initializeReports();
         executor.executeTests();
         executor.finalizeReports();

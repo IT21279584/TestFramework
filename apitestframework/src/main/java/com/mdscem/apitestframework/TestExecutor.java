@@ -43,22 +43,23 @@ public class TestExecutor {
     private static ExtentReports extent;
     public static ExtentTest test;
 
-
     public static void initializeReports() {
         try {
             extent = new ExtentReports();
             ExtentSparkReporter spark = new ExtentSparkReporter(Constant.REPORT_PATH);
             spark.config().setReportName("API TestFramework Report");
             extent.attachReporter(spark);
+            logger.info("Extent report initialized.");
+            logger.debug("Log file creation initialized.");
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("❌ Error initializing Report : " + e.getMessage(), e);
             throw new RuntimeException("Failed to initialize ExtentReports", e);
         }
     }
 
-    public void executeTests() {
-        System.out.println("Starting test execution...");
 
+    public void executeTests() {
+        logger.info("Starting test execution...");
         try {
             FlowContext flowContext = flowProcessor.flowProcess();
 
@@ -109,7 +110,9 @@ public class TestExecutor {
     public void createNewCaptureContext(String flowName) {
         try {
             captureContext.setCaptureMap(new HashMap<>());
+            logger.info("Capture context created for flow: " + flowName);
         } catch (Exception e) {
+            logger.error("❌ Error creating capture context for " + flowName, e);
             throw new RuntimeException("Failed to create capture context for " + flowName, e);
         }
     }
@@ -118,8 +121,7 @@ public class TestExecutor {
         if (extent != null) {
             extent.flush();
             logger.info("Test execution completed.");
-            logger.info("Report generated." + Constant.REPORT_PATH);
-
+            logger.info("Report generated at: " + Constant.REPORT_PATH);
         } else {
             logger.error("Report is not initialized.");
         }

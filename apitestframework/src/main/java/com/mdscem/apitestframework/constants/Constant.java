@@ -8,6 +8,7 @@ public interface Constant {
     String FLOW_VALIDATION_PATH = DirectoryPaths.FLOW_VALIDATION_PATH;
     String CORE_FRAMEWORK_PATH = DirectoryPaths.CORE_FRAMEWORK_PATH;
     String REPORT_PATH = DirectoryPaths.REPORT_DIRECTORY;
+    String LOG_DIRECTORY = DirectoryPaths.LOG_DIRECTORY;
 
     // Other static constants
     String PATH_PARAM = "pathParam";
