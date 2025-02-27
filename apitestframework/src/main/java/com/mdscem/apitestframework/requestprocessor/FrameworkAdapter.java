@@ -4,13 +4,15 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mdscem.apitestframework.constants.Constant;
 import com.mdscem.apitestframework.constants.DirectoryPaths;
+import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.io.IOException;
 
+@Component
 public class FrameworkAdapter {
 
-    public static String loadFrameworkTypeFromConfig() throws IOException {
+    public String loadFrameworkTypeFromConfig() throws IOException {
         // Load the JSON configuration file
         ObjectMapper objectMapper = new ObjectMapper();
         File configFile = new File(DirectoryPaths.CORE_FRAMEWORK_PATH);

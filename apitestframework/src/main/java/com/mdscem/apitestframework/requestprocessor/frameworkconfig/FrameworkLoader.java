@@ -5,6 +5,7 @@ import com.mdscem.apitestframework.requestprocessor.CoreFramework;
 import com.mdscem.apitestframework.requestprocessor.FrameworkAdapter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -13,9 +14,11 @@ import static com.mdscem.apitestframework.constants.Constant.RESTASSURED;
 @Component
 public class FrameworkLoader {
     private static final Logger logger = LogManager.getLogger(FrameworkLoader.class);
+    @Autowired
+    private FrameworkAdapter frameworkAdapter;
 
     public CoreFramework loadFrameworkFromConfig() throws IOException {
-        String frameworkType = FrameworkAdapter.loadFrameworkTypeFromConfig();
+        String frameworkType = frameworkAdapter.loadFrameworkTypeFromConfig();
         logger.info("Framework loaded from config: " + frameworkType);
 
         switch (frameworkType.toLowerCase()) {

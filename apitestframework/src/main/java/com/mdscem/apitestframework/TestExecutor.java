@@ -38,10 +38,10 @@ public class TestExecutor {
     @Autowired
     private CaptureReplacer captureReplacer;
     @Autowired
-    CoreFramework coreFramework;
+    private CoreFramework coreFramework;
 
     private static ExtentReports extent;
-    public static ExtentTest test;
+    private static ExtentTest test;
 
     public static void initializeReports() {
         try {
