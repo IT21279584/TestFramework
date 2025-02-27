@@ -14,7 +14,8 @@ import java.util.regex.Pattern;
 @Component
 public class CaptureReplacer {
     private static final Logger logger = LogManager.getLogger(CaptureReplacer.class);
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    @Autowired
+    private ObjectMapper objectMapper;
     @Autowired
     private CaptureContext captureContext;
 

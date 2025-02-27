@@ -20,7 +20,8 @@
         <file>${LOG_FILE_PATH}</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!-- Create new log files daily inside year/month subdirectories with date in the file name -->
-            <fileNamePattern>${LOG_DIR}/%d{yyyy/MM}/%d{dd}/application-%d{yyyy-MM-dd-HH-mm-ss-%i.log</fileNamePattern>        </rollingPolicy>
+            <fileNamePattern>${LOG_DIR}/%d{yyyy/MM}/application-%d{yyyy-MM-dd}.log</fileNamePattern>
+        </rollingPolicy>
         <encoder>
             <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
         </encoder>

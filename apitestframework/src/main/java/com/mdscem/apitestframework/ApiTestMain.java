@@ -15,7 +15,6 @@ public class ApiTestMain implements CommandLineRunner {
     private TestExecutor executor;
     private static final Logger logger = LogManager.getLogger(ApiTestMain.class);
 
-
     @Override
     public void run(String... args) throws IOException {
         logger.info("Initializing API Test Executor...");

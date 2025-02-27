@@ -3,6 +3,7 @@ package com.mdscem.apitestframework.frameworkImplementation;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mdscem.apitestframework.constants.Constant;
 import com.mdscem.apitestframework.requestprocessor.validation.AssertJValidation;
 import com.mdscem.apitestframework.fileprocessor.filereader.model.TestCase;
 import com.mdscem.apitestframework.fileprocessor.filereader.model.Request;
@@ -15,21 +16,22 @@ import io.restassured.specification.RequestSpecification;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.assertj.core.api.Assertions;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static com.mdscem.apitestframework.constants.Constant.*;
 
 @Component
 public class RestAssuredCoreFramework implements CoreFramework {
     private static final Logger logger = LogManager.getLogger(RestAssuredCoreFramework.class);
-    private ObjectMapper objectMapper = new ObjectMapper();
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @Override
-    public String createFrameworkTypeTestFileAndexecute(TestCase testCase) throws JsonProcessingException {
+    public String createFrameworkTypeTestFileAndExecute(TestCase testCase) throws JsonProcessingException {
         RequestSpecification requestSpec = buildRequestSpecification(testCase);
         logger.info("URL " + testCase.getBaseUri() + testCase.getRequest().getPath());
 
@@ -40,7 +42,6 @@ public class RestAssuredCoreFramework implements CoreFramework {
         );
 
         logger.info("Response : " + response.prettyPrint());
-
         // Validate the response, but do not stop execution on failure
         try {
             validateResponse(testCase, response);
@@ -65,7 +66,7 @@ public class RestAssuredCoreFramework implements CoreFramework {
 
         // Apply authentication using the handler
         if (testCase.getAuth() != null && !testCase.getAuth().isEmpty()) {
-            String type = testCase.getAuth().get(TYPE);
+            String type = testCase.getAuth().get(Constant.TYPE);
             AuthenticationHandler authHandler = AuthenticationHandlerFactory.getAuthenticationHandler(type);
             authHandler.applyAuthentication(requestSpec, testCase.getAuth());
         }
@@ -77,7 +78,7 @@ public class RestAssuredCoreFramework implements CoreFramework {
         }
 
         // Log request if specified
-        if (ALL.equalsIgnoreCase(request.getLog())) {
+        if (Constant.ALL.equalsIgnoreCase(request.getLog())) {
             requestSpec.log().all();
         }
 
@@ -134,7 +135,7 @@ public class RestAssuredCoreFramework implements CoreFramework {
         }
 
         // Validate logging
-        if (ALL.equalsIgnoreCase(testCase.getResponse().getLog())) {
+        if (Constant.ALL.equalsIgnoreCase(testCase.getResponse().getLog())) {
             response.then().log().all();
         }
     }
@@ -149,17 +150,16 @@ public class RestAssuredCoreFramework implements CoreFramework {
             JsonNode expectedJsonNode = objectMapper.readTree(expectedBody);
             JsonNode actualJsonNode = objectMapper.readTree(response.getBody().asString());
 
-
             // Validate only the fields mentioned in the TestCase response
             expectedJsonNode.fields().forEachRemaining(entry -> {
                 String fieldName = entry.getKey();
                 JsonNode expectedValue = entry.getValue();
 
                 // Handle `assertJ` keyword for dynamic validation
-                if (expectedValue.isTextual() && expectedValue.asText().startsWith("{{"+CHECK)) {
+                if (expectedValue.isTextual() && expectedValue.asText().startsWith(Constant.START_CURLY_BRACKET + Constant.CHECK)) {
                     // Extract the method chain for AssertJ
                     String assertJExpression = expectedValue.asText();
-                    String methodChain = assertJExpression.substring(assertJExpression.indexOf(CHECK) + 5, assertJExpression.lastIndexOf("}")).trim();
+                    String methodChain = assertJExpression.substring(assertJExpression.indexOf(Constant.CHECK) + 5, assertJExpression.lastIndexOf("}")).trim();
 
                     // Prepare the object to assert
                     JsonNode actualFieldValueNode = actualJsonNode.get(fieldName);

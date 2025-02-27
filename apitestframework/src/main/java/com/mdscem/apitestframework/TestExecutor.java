@@ -5,6 +5,7 @@ import com.aventstack.extentreports.ExtentTest;
 import com.aventstack.extentreports.Status;
 import com.aventstack.extentreports.reporter.ExtentSparkReporter;
 import com.mdscem.apitestframework.constants.Constant;
+import com.mdscem.apitestframework.constants.DirectoryPaths;
 import com.mdscem.apitestframework.context.Flow;
 import com.mdscem.apitestframework.context.FlowContext;
 import com.mdscem.apitestframework.fileprocessor.filereader.model.TestCase;
@@ -46,17 +47,15 @@ public class TestExecutor {
     public static void initializeReports() {
         try {
             extent = new ExtentReports();
-            ExtentSparkReporter spark = new ExtentSparkReporter(Constant.REPORT_PATH);
-            spark.config().setReportName("API TestFramework Report");
+            ExtentSparkReporter spark = new ExtentSparkReporter(DirectoryPaths.REPORT_DIRECTORY);
+            spark.config().setReportName(Constant.REPORT_NAME);
             extent.attachReporter(spark);
             logger.info("Extent report initialized.");
-            logger.debug("Log file creation initialized.");
         } catch (Exception e) {
             logger.error("❌ Error initializing Report : " + e.getMessage(), e);
             throw new RuntimeException("Failed to initialize ExtentReports", e);
         }
     }
-
 
     public void executeTests() {
         logger.info("Starting test execution...");
@@ -103,7 +102,7 @@ public class TestExecutor {
         coreFramework = frameworkLoader.loadFrameworkFromConfig();
         captureValidation.processCaptures(testCase);
         TestCase replacedTestCase = captureReplacer.replaceParameterPlaceholders(testCase);
-        String res = coreFramework.createFrameworkTypeTestFileAndexecute(replacedTestCase);
+        String res = coreFramework.createFrameworkTypeTestFileAndExecute(replacedTestCase);
         captureReplacer.updateCapturesFromResponse(res);
     }
 
@@ -121,7 +120,7 @@ public class TestExecutor {
         if (extent != null) {
             extent.flush();
             logger.info("Test execution completed.");
-            logger.info("Report generated at: " + Constant.REPORT_PATH);
+            logger.info("Report generated at: " + DirectoryPaths.REPORT_DIRECTORY);
         } else {
             logger.error("Report is not initialized.");
         }

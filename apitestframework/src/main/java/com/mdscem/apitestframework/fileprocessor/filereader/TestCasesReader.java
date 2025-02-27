@@ -2,8 +2,9 @@ package com.mdscem.apitestframework.fileprocessor.filereader;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.mdscem.apitestframework.constants.Constant;
+import com.mdscem.apitestframework.constants.DirectoryPaths;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.nio.file.DirectoryStream;
@@ -15,9 +16,10 @@ import java.util.List;
 
 @Component
 public class TestCasesReader {
-    private final ObjectMapper jsonMapper = new ObjectMapper();
-    private final ObjectMapper yamlMapper = new ObjectMapper(new YAMLFactory());
-
+    @Autowired
+    private ObjectMapper jsonMapper;
+    @Autowired
+    private ObjectMapper yamlMapper;
 
     // Read the file
     public JsonNode readFile(String filePath) throws IOException {
@@ -32,20 +34,19 @@ public class TestCasesReader {
                 .replaceAll("\\}\\}", "}}'");
 
         // Determine the parser based on file extension
-        if (filePath.endsWith(".json")) {
+        if (filePath.endsWith(Constant.JSON_EXTENTION)) {
             return jsonMapper.readTree(content);
-        } else if (filePath.endsWith(".yaml") || filePath.endsWith(".yml")) {
+        } else if (filePath.endsWith(Constant.YAML_EXTENTION) || filePath.endsWith(Constant.YML_EXTENTION)) {
             return yamlMapper.readTree(content);
         } else {
             throw new IllegalArgumentException("Unsupported file format: " + filePath);
         }
     }
 
-
     //Load include files from directory and read and return them as JsonNode list
     public List<JsonNode> loadFilesFromDirectory() throws IOException {
         List<JsonNode> jsonNodeList = new ArrayList<>();
-        Path directory = Paths.get(Constant.INCLUDES_DIRECTORY);
+        Path directory = Paths.get(DirectoryPaths.INCLUDES_DIRECTORY);
 
         // Check if the directory exists
         if (!Files.isDirectory(directory)) {
@@ -57,7 +58,6 @@ public class TestCasesReader {
             for (Path file : stream) {
                     jsonNodeList.add(readFile(file.toString()));
                 }
-
         }
         return jsonNodeList;
     }

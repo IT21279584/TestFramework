@@ -4,16 +4,18 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.mdscem.apitestframework.fileprocessor.filereader.model.TestCase;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
 public class TestCaseProcessor {
 
-    private final static ObjectMapper objectMapper = new ObjectMapper();
+    @Autowired
+    private ObjectMapper objectMapper;
 
     //JsonNode to TestCase object
-    public static TestCase jsonNodeToTestCase(JsonNode jsonNode) {
+    public TestCase jsonNodeToTestCase(JsonNode jsonNode) {
         try {
             return objectMapper.treeToValue(jsonNode, TestCase.class);
         } catch (Exception e) {
@@ -30,25 +32,25 @@ public class TestCaseProcessor {
      * are handled.
      *
      * @param testCaseNode     the source JSON node containing fields to merge
-     * @param TestCase  the target JSON object node to which missing fields are added
+     * @param testCase  the target JSON object node to which missing fields are added
      * @return                 the updated JSON object node with fields merged
      */
-    public JsonNode mergeFlowNodeWithTestCaseNode(JsonNode testCaseNode, ObjectNode TestCase) {
+    public JsonNode mergeFlowNodeWithTestCaseNode(JsonNode testCaseNode, ObjectNode testCase) {
         testCaseNode.fields().forEachRemaining(entry -> {
             String fieldName = entry.getKey();
             JsonNode sourceField = entry.getValue();
 
-            if (TestCase.has(fieldName)) {
+            if (testCase.has(fieldName)) {
                 // If target already has the field, check if it's an object to merge recursively
-                if (sourceField.isObject() && TestCase.get(fieldName).isObject()) {
-                    mergeFlowNodeWithTestCaseNode(sourceField, (ObjectNode) TestCase.get(fieldName));
+                if (sourceField.isObject() && testCase.get(fieldName).isObject()) {
+                    mergeFlowNodeWithTestCaseNode(sourceField, (ObjectNode) testCase.get(fieldName));
                 }
             } else {
                 // Otherwise, add the field from source to target
-                TestCase.set(fieldName, sourceField);
+                testCase.set(fieldName, sourceField);
             }
         });
-        return TestCase;
+        return testCase;
     }
 
     /**

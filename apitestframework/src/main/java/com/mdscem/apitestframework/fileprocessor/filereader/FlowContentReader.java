@@ -2,8 +2,8 @@ package com.mdscem.apitestframework.fileprocessor.filereader;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.mdscem.apitestframework.constants.Constant;
+import com.mdscem.apitestframework.constants.DirectoryPaths;
 import com.mdscem.apitestframework.fileprocessor.TestCaseProcessor;
 import com.mdscem.apitestframework.fileprocessor.filereader.model.TestCase;
 import com.mdscem.apitestframework.fileprocessor.validator.SchemaValidation;
@@ -16,9 +16,6 @@ import java.io.IOException;
 import java.nio.file.*;
 import java.util.ArrayList;
 import java.util.List;
-import static com.mdscem.apitestframework.constants.Constant.FLOW_VALIDATION_PATH;
-import static com.mdscem.apitestframework.constants.Constant.VALIDATION_FILE_PATH;
-
 
 @Component
 public class FlowContentReader {
@@ -30,27 +27,24 @@ public class FlowContentReader {
     private SchemaValidation schemaValidation;
     @Autowired
     private TestCaseProcessor testCaseProcessor;
-    private final ObjectMapper yamlMapper = new ObjectMapper(new YAMLFactory());
+    @Autowired
+    private ObjectMapper yamlMapper;
 
 
     // Get all flow files from the directory
     public List<Path> getFlowFilesFromDirectory(Path flowPath) {
-        logger.info("Flow Path"+flowPath);
         List<Path> flowFiles = new ArrayList<>();
 
         if (Files.isDirectory(flowPath)) {
-            try (DirectoryStream<Path> stream = Files.newDirectoryStream(flowPath, "*.yaml")) {
+            try (DirectoryStream<Path> stream = Files.newDirectoryStream(flowPath, "*"+ Constant.YAML_EXTENTION)) {
                 for (Path file : stream) {
                     flowFiles.add(file);
                 }
             } catch (IOException e) {
                 logger.error("Error processing directory " + flowPath + ": " + e.getMessage());
-
-//                throw e;
             }
         } else {
             logger.error("Invalid path. not a directory.");
-//            throw new IOException("Invalid path. not a directory.");
         }
         return flowFiles;
     }
@@ -58,10 +52,9 @@ public class FlowContentReader {
     public List<JsonNode> getFlowContentAsJsonNodes(Path flowPath) throws IOException {
         List<JsonNode> flowContentsList = new ArrayList<>();
         JsonNode flowsNode = yamlMapper.readTree(flowPath.toFile());
-        JsonNode validateFlowNode = schemaValidation.validateTestcase(flowsNode, FLOW_VALIDATION_PATH);
+        JsonNode validateFlowNode = schemaValidation.validateTestcase(flowsNode, DirectoryPaths.FLOW_VALIDATION_PATH);
 
         for (JsonNode singleFlow : validateFlowNode) {
-
             flowContentsList.add(singleFlow);
         }
         return flowContentsList;
@@ -74,7 +67,7 @@ public class FlowContentReader {
         List<JsonNode> includeNodes = testCasesReader.loadFilesFromDirectory();
         JsonNode combinedValuesNode = testCaseProcessor.combineNodes(includeNodes);
 
-        String testCaseFilePath = Constant.TEST_CASES_DIRECTORY + "/" + testCaseName + ".yaml";
+        String testCaseFilePath = DirectoryPaths.TEST_CASES_DIRECTORY + "/" + testCaseName + Constant.YAML_EXTENTION;
 
         //Read the testcases
         JsonNode testCaseNode = testCasesReader.readFile(testCaseFilePath);
@@ -83,7 +76,7 @@ public class FlowContentReader {
         JsonNode replaceJsonNode = TestCaseReplacer.replacePlaceholder(testCaseNode, combinedValuesNode);
 
         //Validate TestCase against the testcase schema
-        JsonNode schemaValidate = schemaValidation.validateTestcase(replaceJsonNode, VALIDATION_FILE_PATH);
+        JsonNode schemaValidate = schemaValidation.validateTestcase(replaceJsonNode, DirectoryPaths.VALIDATION_FILE_PATH);
 
         return testCaseProcessor.jsonNodeToTestCase(schemaValidate);
     }

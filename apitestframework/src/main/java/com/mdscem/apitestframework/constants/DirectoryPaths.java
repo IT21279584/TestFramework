@@ -16,10 +16,8 @@ import org.slf4j.LoggerFactory;
 public class DirectoryPaths {
 
     private static final Logger logger = LoggerFactory.getLogger(DirectoryPaths.class);
-
     @Autowired
     private ResourceLoader resourceLoader;
-
     @Autowired
     private Environment environment;
 

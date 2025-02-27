@@ -10,6 +10,10 @@ public class Request {
     private String method;
     private String path;
     private Map<String, String> headers;
+    private Map<String, String> pathParam;
+    private Map<String, String> queryParam;
+    private Map<String, Object> body;
+    private String log;
 
     public String getMethod() {
         return method;
@@ -66,9 +70,4 @@ public class Request {
     public void setLog(String log) {
         this.log = log;
     }
-
-    private Map<String, String> pathParam;
-    private Map<String, String> queryParam;
-    private Map<String, Object> body;
-    private String log;
 }

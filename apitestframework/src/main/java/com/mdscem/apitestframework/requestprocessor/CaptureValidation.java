@@ -23,9 +23,8 @@ public class CaptureValidation {
             if (capture == null || capture.isEmpty()) {
                 return;
             }
-            logger.info("Test case name: " + testCaseName);
-            logger.info("Capture map: " + capture);
-
+            logger.debug("Test case name: " + testCaseName);
+            logger.debug("Capture map: " + capture);
 
             // Store the captures in the context map using the test case name
             captureContext.addCapturesForTestCase(testCaseName, capture);

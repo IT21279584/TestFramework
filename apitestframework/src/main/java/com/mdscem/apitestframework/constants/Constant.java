@@ -1,32 +1,31 @@
 package com.mdscem.apitestframework.constants;
 
 public interface Constant {
-    String TEST_CASES_DIRECTORY = DirectoryPaths.TEST_CASES_DIRECTORY;
-    String INCLUDES_DIRECTORY = DirectoryPaths.INCLUDES_DIRECTORY;
-    String FLOWS_DIRECTORY = DirectoryPaths.FLOWS_DIRECTORY;
-    String VALIDATION_FILE_PATH = DirectoryPaths.VALIDATION_FILE_PATH;
-    String FLOW_VALIDATION_PATH = DirectoryPaths.FLOW_VALIDATION_PATH;
-    String CORE_FRAMEWORK_PATH = DirectoryPaths.CORE_FRAMEWORK_PATH;
-    String REPORT_PATH = DirectoryPaths.REPORT_DIRECTORY;
-    String LOG_DIRECTORY = DirectoryPaths.LOG_DIRECTORY;
 
-    // Other static constants
-    String PATH_PARAM = "pathParam";
-    String QUERY_PARAM = "queryParam";
-    String DELAY = "delay";
-    String RESPONSE = "response";
-    String TESTCASE_NAME = "name";
-    String REQUEST = "request";
-    String CAPTURE = "capture";
-    String FRAMEWORK = "framework";
-    String REPORT_NAME = "API Test Report";
-    String CHECK = "check";
-    String TYPE = "type";
-    String ALL = "ALL";
-    String TESTCASE = "testCase";
-    String RESTASSURED = "restassured";
-    String TOKEN = "token";
-    String BASIC = "Basic";
-    String USERNAME = "username";
-    String PASSWORD = "password";
+    public static final String PATH_PARAM = "pathParam";
+    public static final String QUERY_PARAM = "queryParam";
+    public static final String DELAY = "delay";
+    public static final String RESPONSE = "response";
+    public static final String TESTCASE_NAME = "name";
+    public static final String REQUEST = "request";
+    public static final String CAPTURE = "capture";
+    public static final String FRAMEWORK = "framework";
+    public static final String REPORT_NAME = "API Test Report";
+    public static final String CHECK = "check";
+    public static final String TYPE = "type";
+    public static final String ALL = "ALL";
+    public static final String TESTCASE = "testCase";
+    public static final  String RESTASSURED = "restassured";
+    public static final String TOKEN = "token";
+    public static final String BASIC = "Basic";
+    public static final String USERNAME = "username";
+    public static final String PASSWORD = "password";
+    public static final String JSON_EXTENTION =".json";
+    public static final String YAML_EXTENTION = ".yaml";
+    public static final String YML_EXTENTION = ".yml";
+    public static final String INCLUDE_KEYWORD = "{{include ";
+    public static final String END_CURLY_BRACKET = "}}";
+    public static final String START_CURLY_BRACKET = "{{";
+    public static final String PARAM_PATTERN = "\\{\\{param (\\w+)\\}}";
+
 }

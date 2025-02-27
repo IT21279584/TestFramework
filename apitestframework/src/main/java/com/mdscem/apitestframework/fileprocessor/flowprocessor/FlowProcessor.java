@@ -3,6 +3,7 @@ package com.mdscem.apitestframework.fileprocessor.flowprocessor;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mdscem.apitestframework.constants.Constant;
+import com.mdscem.apitestframework.constants.DirectoryPaths;
 import com.mdscem.apitestframework.context.*;
 import com.mdscem.apitestframework.fileprocessor.filereader.FlowContentReader;
 import com.mdscem.apitestframework.fileprocessor.filereader.model.TestCase;
@@ -16,8 +17,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 
-import static com.mdscem.apitestframework.constants.Constant.TESTCASE;
-import static com.mdscem.apitestframework.constants.Constant.TESTCASE_NAME;
 
 /**
  * Component responsible for processing flow definitions,
@@ -26,7 +25,6 @@ import static com.mdscem.apitestframework.constants.Constant.TESTCASE_NAME;
 @Component
 public class FlowProcessor {
     private static final Logger logger = LogManager.getLogger(FlowProcessor.class);
-
     @Autowired
     private FlowContentReader flowContentReader;
     @Autowired
@@ -37,8 +35,8 @@ public class FlowProcessor {
     private TestCaseRepository flowRepository;
     @Autowired
     private TestCaseRepository testCaseRepository;
-
-    private static final ObjectMapper objectMapper = new ObjectMapper(); // Jackson ObjectMapper
+    @Autowired
+    private ObjectMapper objectMapper;
 
     /**
      * Processes flow files from the specified directory and generates complete test cases.
@@ -49,7 +47,7 @@ public class FlowProcessor {
 
     public FlowContext flowProcess() throws IOException {
         // Directory containing flow definitions
-        Path flowPathDir = Paths.get(Constant.FLOWS_DIRECTORY);
+        Path flowPathDir = Paths.get(DirectoryPaths.FLOWS_DIRECTORY);
         // Retrieve a list of flow file paths
         List<Path> flowPaths = flowContentReader.getFlowFilesFromDirectory(flowPathDir);
 
@@ -60,7 +58,6 @@ public class FlowProcessor {
                 ArrayList<TestCase> flowContentTestCaseList = new ArrayList<>();
                 Set<String> uniqueTestCaseNames = new HashSet<>();
 
-
                 // Get the file name of the current flow file
                 flowFileName = String.valueOf(flowPath.getFileName());
                 // Read the flow content into a list of JsonNodes
@@ -69,7 +66,7 @@ public class FlowProcessor {
                 for (JsonNode flowTestCase : flowContentList) {
 
                     // Extract the test case name
-                    String testCaseName = flowTestCase.get(TESTCASE).get(TESTCASE_NAME).asText();
+                    String testCaseName = flowTestCase.get(Constant.TESTCASE).get(Constant.TESTCASE_NAME).asText();
                     // Check for duplicate test case names
                     if (!uniqueTestCaseNames.add(testCaseName)) {
                         throw new IllegalArgumentException("Duplicate test case name '" + testCaseName
@@ -80,7 +77,6 @@ public class FlowProcessor {
                     testCaseRepository.save(testCaseName, testCase);
                     TestCase completeTestCase = testCaseReplacer.replaceTestCaseWithFlowData(testCase, flowTestCase);
                     flowContentTestCaseList.add(completeTestCase);
-
                 }
 
                 // Update the flow object with content and test cases
@@ -98,9 +94,8 @@ public class FlowProcessor {
 
         // Log the resulting data for debugging and validation
         logger.debug("{}", logger.isDebugEnabled() ? processFlows() : "");
-        System.out.println("My flow " + flowContext.getFlowMap().get("flow1.yaml").getTestCaseArrayList().get(0));
-        logger.info("FlowObjectMap data: {}", objectMapper.writeValueAsString(flowContext.getFlowMap()));
-        logger.info("TestCaseMap data: {}", objectMapper.writeValueAsString(flowContext.getTestCaseMap()));
+        logger.debug("FlowObjectMap data: {}", objectMapper.writeValueAsString(flowContext.getFlowMap()));
+        logger.debug("TestCaseMap data: {}", objectMapper.writeValueAsString(flowContext.getTestCaseMap()));
         return flowContext;
     }
 
