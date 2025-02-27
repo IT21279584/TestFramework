@@ -10,7 +10,6 @@ import java.util.List;
 
 @Component
 public class TestCaseProcessor {
-
     @Autowired
     private ObjectMapper objectMapper;
 

@@ -22,7 +22,6 @@ import java.util.Set;
 @Component
 public class SchemaValidation {
     private static final Logger logger = LogManager.getLogger(SchemaValidation.class);
-
     @Autowired
     private ObjectMapper objectMapper;
 

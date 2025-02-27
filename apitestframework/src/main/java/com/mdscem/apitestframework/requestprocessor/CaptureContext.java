@@ -10,13 +10,10 @@ import java.util.Map;
 @Component
 public class CaptureContext {
     private static final Logger logger = LogManager.getLogger(CaptureReplacer.class);
-
     private  static Map<String, Map<String, Object>> captureMap;
-
     public CaptureContext() {
       this.captureMap = new HashMap<>();
     }
-
     public Map<String, Map<String, Object>> getCaptureMap() {
         return captureMap;
     }

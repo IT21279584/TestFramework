@@ -5,7 +5,6 @@ import io.restassured.specification.RequestSpecification;
 
 import java.util.Map;
 
-
 public class BasicAuthenticationHandler implements AuthenticationHandler {
     @Override
     public void applyAuthentication(RequestSpecification requestSpec, Map<String, String> authData) {

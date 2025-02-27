@@ -27,7 +27,6 @@ import java.util.Map;
 @Component
 public class TestExecutor {
     private static final Logger logger = LogManager.getLogger(TestExecutor.class);
-
     @Autowired
     private FlowProcessor flowProcessor;
     @Autowired

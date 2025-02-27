@@ -25,7 +25,6 @@ import java.util.regex.Pattern;
  */
 @Component
 public class TestCaseReplacer {
-
     private static final Logger logger = LogManager.getLogger(FlowProcessor.class);
     @Autowired
     private TestCaseProcessor testCaseProcessor;

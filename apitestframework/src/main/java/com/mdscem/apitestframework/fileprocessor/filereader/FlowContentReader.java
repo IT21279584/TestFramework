@@ -20,7 +20,6 @@ import java.util.List;
 @Component
 public class FlowContentReader {
     private static final Logger logger = LogManager.getLogger(FlowContentReader.class);
-
     @Autowired
     private TestCasesReader testCasesReader;
     @Autowired

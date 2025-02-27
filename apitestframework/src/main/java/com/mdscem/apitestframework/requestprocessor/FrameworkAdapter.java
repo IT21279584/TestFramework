@@ -8,7 +8,6 @@ import com.mdscem.apitestframework.constants.DirectoryPaths;
 import java.io.File;
 import java.io.IOException;
 
-
 public class FrameworkAdapter {
 
     public static String loadFrameworkTypeFromConfig() throws IOException {
