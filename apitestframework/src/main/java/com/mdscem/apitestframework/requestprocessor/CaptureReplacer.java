@@ -55,7 +55,6 @@ public class CaptureReplacer {
 
     public TestCase replaceParameterPlaceholders(TestCase testCase) {
         try {
-            ObjectMapper objectMapper = new ObjectMapper();
             String testCaseJson = objectMapper.writeValueAsString(testCase);
 
             // Regex pattern to find placeholders

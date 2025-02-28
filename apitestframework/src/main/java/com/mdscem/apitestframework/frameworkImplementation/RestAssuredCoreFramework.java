@@ -29,7 +29,7 @@ public class RestAssuredCoreFramework implements CoreFramework {
     private ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
-    public String createFrameworkTypeTestFileAndExecute(TestCase testCase) throws JsonProcessingException {
+    public String createFrameworkTypeTestFileAndExecute(TestCase testCase) {
         RequestSpecification requestSpec = buildRequestSpecification(testCase);
 
         Response response = executeHttpMethod(
@@ -94,7 +94,7 @@ public class RestAssuredCoreFramework implements CoreFramework {
         }
     }
 
-    private void validateResponse(TestCase testCase, Response response) throws JsonProcessingException {
+    private void validateResponse(TestCase testCase, Response response) {
         // Validate the response status code
         Assertions.assertThat(response.getStatusCode())
                 .as("Status code mismatch")
@@ -157,7 +157,7 @@ public class RestAssuredCoreFramework implements CoreFramework {
                     try {
                         validateWithAssertJ(actualFieldValueNode, methodChain);
                     } catch (Exception e) {
-                        throw new RuntimeException("Validation failed for field: " + fieldName, e);
+                        throw new AssertionError("Validation failed for field: " + fieldName, e);
                     }
                 } else {
                     // Regular field validation
