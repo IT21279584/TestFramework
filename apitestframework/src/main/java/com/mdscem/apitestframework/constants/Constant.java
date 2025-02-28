@@ -26,6 +26,7 @@ public interface Constant {
     public static final String INCLUDE_KEYWORD = "{{include ";
     public static final String END_DOUBLE_CURLY_BRACKET = "}}";
     public static final String START_DOUBLE_CURLY_BRACKET = "{{";
+    public static final String END_CURLY_BRACKET = "}";
     public static final String PARAM_PATTERN = "\\{\\{param (\\w+)\\}}";
     public final static String CAPTURE_PATTERN = "\\{\\{use (\\w+)\\.(\\w+)}}";
     public static final String SPLITTER = "\\.";

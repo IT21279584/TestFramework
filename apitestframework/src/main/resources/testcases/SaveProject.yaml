@@ -20,9 +20,7 @@ response:
     Content-Type: "application/json"
   cookie: { }
   body:
-    projectID: 168
     projectName: "Project KPM"
-    projectCode: "17555555555555555555555555555"
     users:
       id: 3
       firstName: "Kavinda"

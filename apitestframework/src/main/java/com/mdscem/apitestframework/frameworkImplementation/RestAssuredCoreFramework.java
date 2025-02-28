@@ -152,7 +152,7 @@ public class RestAssuredCoreFramework implements CoreFramework {
                 if (expectedValue.isTextual() && expectedValue.asText().startsWith(Constant.START_DOUBLE_CURLY_BRACKET + Constant.CHECK)) {
                     // Extract the method chain for AssertJ
                     String assertJExpression = expectedValue.asText();
-                    String methodChain = assertJExpression.substring(assertJExpression.indexOf(Constant.CHECK) + 5, assertJExpression.lastIndexOf("}")).trim();
+                    String methodChain = assertJExpression.substring(assertJExpression.indexOf(Constant.CHECK) + 5, assertJExpression.lastIndexOf(Constant.END_CURLY_BRACKET)).trim();
 
                     // Prepare the object to assert
                     JsonNode actualFieldValueNode = actualJsonNode.get(fieldName);
