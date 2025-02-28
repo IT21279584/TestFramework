@@ -1,6 +1,5 @@
 package com.mdscem.apitestframework.frameworkImplementation;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mdscem.apitestframework.constants.Constant;
@@ -16,6 +15,7 @@ import io.restassured.specification.RequestSpecification;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.assertj.core.api.Assertions;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
 import java.util.ArrayList;
@@ -26,7 +26,8 @@ import java.util.Map;
 @Component
 public class RestAssuredCoreFramework implements CoreFramework {
     private static final Logger logger = LogManager.getLogger(RestAssuredCoreFramework.class);
-    private ObjectMapper objectMapper = new ObjectMapper();
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @Override
     public String createFrameworkTypeTestFileAndExecute(TestCase testCase) {
@@ -75,7 +76,6 @@ public class RestAssuredCoreFramework implements CoreFramework {
         }
         return requestSpec;
     }
-
 
     private Response executeHttpMethod(HttpMethod method, RequestSpecification requestSpec, String url) {
         switch (method) {

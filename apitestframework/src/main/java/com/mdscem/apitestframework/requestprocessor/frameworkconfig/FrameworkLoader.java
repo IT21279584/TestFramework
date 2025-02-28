@@ -16,6 +16,8 @@ public class FrameworkLoader {
     private static final Logger logger = LogManager.getLogger(FrameworkLoader.class);
     @Autowired
     private FrameworkAdapter frameworkAdapter;
+    @Autowired
+    private RestAssuredCoreFramework restAssuredCoreFramework;
 
     public CoreFramework loadFrameworkFromConfig() throws IOException {
         String frameworkType = frameworkAdapter.loadFrameworkTypeFromConfig();
@@ -23,7 +25,7 @@ public class FrameworkLoader {
 
         switch (frameworkType.toLowerCase()) {
             case RESTASSURED:
-                return new RestAssuredCoreFramework();
+                return restAssuredCoreFramework;
             default:
                 throw new IllegalArgumentException("Unsupported framework type: " + frameworkType);
         }
