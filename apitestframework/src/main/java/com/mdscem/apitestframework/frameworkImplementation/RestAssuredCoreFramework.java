@@ -27,6 +27,8 @@ import java.util.Map;
 public class RestAssuredCoreFramework implements CoreFramework {
     private static final Logger logger = LogManager.getLogger(RestAssuredCoreFramework.class);
     @Autowired
+    private AssertJValidation assertJValidation;
+    @Autowired
     private ObjectMapper objectMapper;
 
     @Override
@@ -174,23 +176,23 @@ public class RestAssuredCoreFramework implements CoreFramework {
     private void validateWithAssertJ(JsonNode actualFieldValueNode, String methodChain) throws Exception {
         if (actualFieldValueNode.isInt()) {
             Integer actualValue = actualFieldValueNode.asInt();
-            AssertJValidation.executeAssertions(Assertions.assertThat(actualValue), methodChain.split("\\."));
+            assertJValidation.executeAssertions(Assertions.assertThat(actualValue), methodChain.split(Constant.SPLITTER));
         } else if (actualFieldValueNode.isLong()) {
             Long actualValue = actualFieldValueNode.asLong();
-            AssertJValidation.executeAssertions(Assertions.assertThat(actualValue), methodChain.split("\\."));
+            assertJValidation.executeAssertions(Assertions.assertThat(actualValue), methodChain.split(Constant.SPLITTER));
         } else if (actualFieldValueNode.isTextual()) {
             String actualValue = actualFieldValueNode.asText();
-            AssertJValidation.executeAssertions(Assertions.assertThat(actualValue), methodChain.split("\\."));
+            assertJValidation.executeAssertions(Assertions.assertThat(actualValue), methodChain.split(Constant.SPLITTER));
         } else if (actualFieldValueNode.isBoolean()) {
             Boolean actualValue = actualFieldValueNode.asBoolean();
-            AssertJValidation.executeAssertions(Assertions.assertThat(actualValue), methodChain.split("\\."));
+            assertJValidation.executeAssertions(Assertions.assertThat(actualValue), methodChain.split(Constant.SPLITTER));
         } else if (actualFieldValueNode.isDouble()) {
             Double actualValue = actualFieldValueNode.asDouble();
-            AssertJValidation.executeAssertions(Assertions.assertThat(actualValue), methodChain.split("\\."));
+            assertJValidation.executeAssertions(Assertions.assertThat(actualValue), methodChain.split(Constant.SPLITTER));
         } else if (actualFieldValueNode.isArray()) {
             List<JsonNode> actualValue = new ArrayList<>();
             actualFieldValueNode.forEach(actualValue::add);
-            AssertJValidation.executeAssertions(Assertions.assertThat(actualValue), methodChain.split("\\."));
+            assertJValidation.executeAssertions(Assertions.assertThat(actualValue), methodChain.split(Constant.SPLITTER));
         } else {
             throw new IllegalArgumentException("Unsupported type for dynamic validation.");
         }

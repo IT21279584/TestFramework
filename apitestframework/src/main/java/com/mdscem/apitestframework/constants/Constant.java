@@ -28,5 +28,19 @@ public interface Constant {
     public static final String START_CURLY_BRACKET = "{{";
     public static final String PARAM_PATTERN = "\\{\\{param (\\w+)\\}}";
     public final static String CAPTURE_PATTERN = "\\{\\{use (\\w+)\\.(\\w+)}}";
+    public static final String SPLITTER = "\\.";
+    public static final String START_ROUND_BRACKET = "(";
+    public static final String END_ROUND_BRACKET = ")";
+    public static final String TRUE = "true";
+    public static final String FALSE = "false";
+    public static final String START_SQUARE_BRACKET = "[";
+    public static final String END_SQUARE_BRACKET = "]";
+    public static final String COMMA = ",";
+    public static final String DOT = ".";
+    public static final String CLASS = ".class";
+    public static final String CLASS_LANG = "java.lang.";
+    public static final String BACKSLASH = "\"";
+    public static final String DIGITS = "\\d+";
+    public static final String ONE_OR_MORE_DIGITS = "\\d+\\.\\d+";
 
 }

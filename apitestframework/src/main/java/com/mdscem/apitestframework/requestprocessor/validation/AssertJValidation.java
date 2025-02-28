@@ -1,14 +1,18 @@
 package com.mdscem.apitestframework.requestprocessor.validation;
 
+import com.mdscem.apitestframework.constants.Constant;
 import org.assertj.core.api.AbstractAssert;
+import org.springframework.stereotype.Component;
+
 import java.lang.reflect.Array;
 import java.lang.reflect.Method;
 import java.util.*;
 
+@Component
 public class AssertJValidation {
 
     //Dynamically executes a chain of assertion methods on an AssertJ assertion object.
-    public static <A extends AbstractAssert<?, ?>> void executeAssertions(
+    public <A extends AbstractAssert<?, ?>> void executeAssertions(
             A assertObject, String... methodChain) throws Exception {
         for (String methodCall : methodChain) {
             String methodName = extractMethodName(methodCall);
@@ -24,26 +28,26 @@ public class AssertJValidation {
     }
 
     //Extracts the method name from a method call string.
-    private static String extractMethodName(String methodCall) {
-        return methodCall.contains("(")
-                ? methodCall.substring(0, methodCall.indexOf("("))
+    private String extractMethodName(String methodCall) {
+        return methodCall.contains(Constant.START_ROUND_BRACKET)
+                ? methodCall.substring(0, methodCall.indexOf(Constant.START_ROUND_BRACKET))
                 : methodCall;
     }
 
     //Extracts method arguments from a method call string.
-    private static Object[] extractMethodArguments(String methodCall) {
-        if (!methodCall.contains("(")) {
+    private Object[] extractMethodArguments(String methodCall) {
+        if (!methodCall.contains(Constant.START_ROUND_BRACKET)) {
             return new Object[0];
         }
-        String argsString = methodCall.substring(methodCall.indexOf("(") + 1, methodCall.indexOf(")"));
+        String argsString = methodCall.substring(methodCall.indexOf(Constant.START_ROUND_BRACKET) + 1, methodCall.indexOf(Constant.END_ROUND_BRACKET));
         if (argsString.isEmpty()) {
             return new Object[0];
         }
-        return parseArguments(argsString.split(","));
+        return parseArguments(argsString.split(Constant.COMMA));
     }
 
     //Converts a list of argument strings into actual Java objects.
-    private static Object[] parseArguments(String[] args) {
+    private Object[] parseArguments(String[] args) {
         List<Object> parsedArgs = new ArrayList<>();
         for (String arg : args) {
             parsedArgs.add(parseArgument(arg.trim()));
@@ -52,33 +56,33 @@ public class AssertJValidation {
     }
 
     //Converts a single argument string into an appropriate Java object.
-    private static Object parseArgument(String arg) {
+    private Object parseArgument(String arg) {
         try {
-            if (arg.startsWith("[") && arg.endsWith("]")) {
+            if (arg.startsWith(Constant.START_SQUARE_BRACKET) && arg.endsWith(Constant.END_SQUARE_BRACKET)) {
                 // Parse arrays or lists
-                String[] elements = arg.substring(1, arg.length() - 1).split(",");
+                String[] elements = arg.substring(1, arg.length() - 1).split(Constant.COMMA);
                 return Arrays.asList(parseArguments(elements));
-            } else if (arg.endsWith(".class")) {
+            } else if (arg.endsWith(Constant.CLASS)) {
                 // Parse class arguments
-                String className = arg.substring(0, arg.lastIndexOf(".class"));
-                return Class.forName("java.lang." + className);
-            } else if (arg.startsWith("\"") && arg.endsWith("\"")) {
+                String className = arg.substring(0, arg.lastIndexOf(Constant.CLASS));
+                return Class.forName(Constant.CLASS_LANG + className);
+            } else if (arg.startsWith(Constant.BACKSLASH) && arg.endsWith(Constant.BACKSLASH)) {
                 // Parse strings
                 return arg.substring(1, arg.length() - 1);
-            } else if (arg.matches("\\d+")) {
+            } else if (arg.matches(Constant.DIGITS)) {
                 // Parse integers
                 return Integer.valueOf(arg);
-            } else if (arg.matches("\\d+\\.\\d+")) {
+            } else if (arg.matches(Constant.ONE_OR_MORE_DIGITS)) {
                 // Parse doubles
                 return Double.valueOf(arg);
-            } else if ("true".equalsIgnoreCase(arg) || "false".equalsIgnoreCase(arg)) {
+            } else if (Constant.TRUE.equalsIgnoreCase(arg) || Constant.FALSE.equalsIgnoreCase(arg)) {
                 // Parse booleans
                 return Boolean.valueOf(arg);
-            } else if (arg.contains(".")) {
+            } else if (arg.contains(Constant.DOT)) {
                 // Parse enums (ClassName.EnumName)
-                String[] parts = arg.split("\\.");
+                String[] parts = arg.split(Constant.SPLITTER);
                 if (parts.length >= 2) {
-                    String className = String.join(".", Arrays.copyOf(parts, parts.length - 1));
+                    String className = String.join(Constant.DOT, Arrays.copyOf(parts, parts.length - 1));
                     String enumName = parts[parts.length - 1];
                     Class<?> enumClass = Class.forName(className);
                     if (enumClass.isEnum()) {
@@ -95,7 +99,7 @@ public class AssertJValidation {
     /** responsible for locating the correct method in the AssertJ class (or its subclasses)
      * that matches the name and arguments extracted from the assertion chain.
      */
-    private static Method findCompatibleMethod(Class<?> clazz, String methodName, Object[] args) throws NoSuchMethodException {
+    private Method findCompatibleMethod(Class<?> clazz, String methodName, Object[] args) throws NoSuchMethodException {
         for (Method method : clazz.getMethods()) {
             if (method.getName().equals(methodName)) {
 
@@ -138,7 +142,7 @@ public class AssertJValidation {
 
 
     //Checks if a method is compatible with the given arguments.
-    private static boolean isCompatibleMethod(Method method, Object[] args) {
+    private boolean isCompatibleMethod(Method method, Object[] args) {
         Class<?>[] paramTypes = method.getParameterTypes();
         for (int i = 0; i < args.length; i++) {
             if (!isCompatibleType(paramTypes[i], args[i])) {
@@ -148,7 +152,7 @@ public class AssertJValidation {
         return true;
     }
 
-    private static boolean isCompatibleType(Class<?> paramType, Object arg) {
+    private boolean isCompatibleType(Class<?> paramType, Object arg) {
         if (arg == null) {
             return !paramType.isPrimitive(); // Null can be assigned to non-primitive types
         }
@@ -170,7 +174,7 @@ public class AssertJValidation {
     }
 
     //Prepares arguments for method invocation.
-    private static Object[] prepareArguments(Method method, Object[] args) {
+    private Object[] prepareArguments(Method method, Object[] args) {
         if (method.isVarArgs()) {
             // If the method expects varargs, ensure we create an array for the varargs
             int paramCount = method.getParameterCount();
