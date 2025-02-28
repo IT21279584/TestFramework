@@ -104,7 +104,7 @@ public class TestExecutor {
         captureValidation.processCaptures(testCase);
         TestCase replacedTestCase = captureReplacer.replaceParameterPlaceholders(testCase);
         String res = coreFramework.createFrameworkTypeTestFileAndExecute(replacedTestCase);
-        captureReplacer.updateCapturesFromResponse(res);
+        captureReplacer.updateCapturesFromResponse(res, replacedTestCase);
     }
 
     public void createNewCaptureContext(String flowName) {

@@ -132,7 +132,7 @@ public class RestAssuredCoreFramework implements CoreFramework {
     }
 
     // Helper method to validate the response body
-    private void validateResponseBody(TestCase testCase, Response response) throws JsonProcessingException {
+    private void validateResponseBody(TestCase testCase, Response response) {
         try {
             // Convert expected response body to JSON string
             String expectedBody = objectMapper.writeValueAsString(testCase.getResponse().getBody());

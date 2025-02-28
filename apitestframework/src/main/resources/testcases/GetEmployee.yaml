@@ -18,8 +18,8 @@ response:
   log: "all"
   body:
     id: 6
-    name: "morpheus"
-    address: "123 Main Street, Colombo"
+    name: "Kavinda Medagoda"
+    address: "123 Main Street, Pannipitiya"
     gender: "Male"
     dateOfBirth: "2001-05-15T00:00:00.000+00:00"
     age: {{check isBetween(20,30).isEqualTo(22)}}
