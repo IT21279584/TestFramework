@@ -16,7 +16,6 @@ import io.restassured.specification.RequestSpecification;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.assertj.core.api.Assertions;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
 import java.util.ArrayList;
@@ -27,13 +26,11 @@ import java.util.Map;
 @Component
 public class RestAssuredCoreFramework implements CoreFramework {
     private static final Logger logger = LogManager.getLogger(RestAssuredCoreFramework.class);
-    @Autowired
-    private ObjectMapper objectMapper;
+    private ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
     public String createFrameworkTypeTestFileAndExecute(TestCase testCase) throws JsonProcessingException {
         RequestSpecification requestSpec = buildRequestSpecification(testCase);
-        logger.info("URL " + testCase.getBaseUri() + testCase.getRequest().getPath());
 
         Response response = executeHttpMethod(
                 HttpMethod.valueOf(testCase.getRequest().getMethod().toUpperCase()),
@@ -43,12 +40,7 @@ public class RestAssuredCoreFramework implements CoreFramework {
 
         logger.info("Response : " + response.prettyPrint());
         // Validate the response, but do not stop execution on failure
-        try {
-            validateResponse(testCase, response);
-        } catch (Exception e) {
-            logger.error("Test case failed: " + testCase.getTestCaseName(), e);
-        }
-
+        validateResponse(testCase, response);
         return response.asString();
     }
 
@@ -81,7 +73,6 @@ public class RestAssuredCoreFramework implements CoreFramework {
         if (Constant.ALL.equalsIgnoreCase(request.getLog())) {
             requestSpec.log().all();
         }
-
         return requestSpec;
     }
 

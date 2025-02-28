@@ -49,6 +49,7 @@ public class TestExecutor {
             ExtentSparkReporter spark = new ExtentSparkReporter(DirectoryPaths.REPORT_DIRECTORY);
             spark.config().setReportName(Constant.REPORT_NAME);
             extent.attachReporter(spark);
+
             logger.info("Extent report initialized.");
         } catch (Exception e) {
             logger.error("❌ Error initializing Report : " + e.getMessage(), e);
@@ -59,6 +60,7 @@ public class TestExecutor {
     public void executeTests() {
         logger.info("Starting test execution...");
         try {
+            coreFramework = frameworkLoader.loadFrameworkFromConfig();
             FlowContext flowContext = flowProcessor.flowProcess();
 
             for (Map.Entry<String, Flow> flowEntry : flowContext.getFlowMap().entrySet()) {
@@ -80,6 +82,7 @@ public class TestExecutor {
 
     private void executeTestCase(TestCase testCase, String flowName) throws IOException {
         try {
+            logger.info("Test Case : " + testCase.getTestCaseName());
             test = extent.createTest(flowName + " -> " + testCase.getTestCaseName());
             test.log(Status.INFO, "Request Method: " + testCase.getRequest().getMethod());
             test.log(Status.INFO, "Request URL: " + testCase.getBaseUri() + testCase.getRequest().getPath());
@@ -97,8 +100,7 @@ public class TestExecutor {
         }
     }
 
-    public void executeCoreFramework(TestCase testCase) throws IOException {
-        coreFramework = frameworkLoader.loadFrameworkFromConfig();
+    public void executeCoreFramework(TestCase testCase) throws Exception {
         captureValidation.processCaptures(testCase);
         TestCase replacedTestCase = captureReplacer.replaceParameterPlaceholders(testCase);
         String res = coreFramework.createFrameworkTypeTestFileAndExecute(replacedTestCase);
