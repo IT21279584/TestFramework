@@ -3,7 +3,7 @@ package com.mdscem.apitestframework.frameworkImplementation;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mdscem.apitestframework.constants.Constant;
-import com.mdscem.apitestframework.requestprocessor.validation.AssertJValidation;
+import com.mdscem.apitestframework.requestprocessor.validation.AssertJExecutor;
 import com.mdscem.apitestframework.fileprocessor.filereader.model.TestCase;
 import com.mdscem.apitestframework.fileprocessor.filereader.model.Request;
 import com.mdscem.apitestframework.requestprocessor.CoreFramework;
@@ -27,7 +27,7 @@ import java.util.Map;
 public class RestAssuredCoreFramework implements CoreFramework {
     private static final Logger logger = LogManager.getLogger(RestAssuredCoreFramework.class);
     @Autowired
-    private AssertJValidation assertJValidation;
+    private AssertJExecutor assertJValidation;
     @Autowired
     private ObjectMapper objectMapper;
 
@@ -148,8 +148,8 @@ public class RestAssuredCoreFramework implements CoreFramework {
                 String fieldName = entry.getKey();
                 JsonNode expectedValue = entry.getValue();
 
-                // Handle `assertJ` keyword for dynamic validation
-                if (expectedValue.isTextual() && expectedValue.asText().startsWith(Constant.START_CURLY_BRACKET + Constant.CHECK)) {
+                // Handle `check` keyword for dynamic validation
+                if (expectedValue.isTextual() && expectedValue.asText().startsWith(Constant.START_DOUBLE_CURLY_BRACKET + Constant.CHECK)) {
                     // Extract the method chain for AssertJ
                     String assertJExpression = expectedValue.asText();
                     String methodChain = assertJExpression.substring(assertJExpression.indexOf(Constant.CHECK) + 5, assertJExpression.lastIndexOf("}")).trim();

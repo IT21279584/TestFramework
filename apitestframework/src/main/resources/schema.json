@@ -9,17 +9,24 @@
       "type": "string"
     },
     "auth": {
-      "oneOf": [
-        { "type": "object" },
-        { "type": "string" }
-      ]
+      "type": "object",
+      "properties": {
+        "type": {
+          "enum": [
+            "BEARER_TOKEN",
+            "BASIC_AUTH"
+          ]
+        }
+      }
     },
     "request": {
       "type": "object",
       "properties": {
         "log": {
           "type": "string",
-          "enum": ["all"]
+          "enum": [
+            "all"
+          ]
         }
       }
     },
@@ -28,7 +35,9 @@
       "properties": {
         "log": {
           "type": "string",
-          "enum": ["all"]
+          "enum": [
+            "all"
+          ]
         }
       }
     }

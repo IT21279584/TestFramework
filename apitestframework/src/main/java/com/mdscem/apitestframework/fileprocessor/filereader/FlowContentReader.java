@@ -28,6 +28,8 @@ public class FlowContentReader {
     @Autowired
     private TestCaseProcessor testCaseProcessor;
     @Autowired
+    private TestCaseReplacer testCaseReplacer;
+    @Autowired
     @Qualifier("yamlMapper")
     private ObjectMapper yamlMapper;
 
@@ -70,11 +72,11 @@ public class FlowContentReader {
 
         String testCaseFilePath = DirectoryPaths.TEST_CASES_DIRECTORY + "/" + testCaseName + Constant.YAML_EXTENTION;
 
-        //Read the testcases
+        //Read the testcase file
         JsonNode testCaseNode = testCasesReader.readFile(testCaseFilePath);
 
         // Call to method that replaces placeholders
-        JsonNode replaceJsonNode = TestCaseReplacer.replacePlaceholder(testCaseNode, combinedValuesNode);
+        JsonNode replaceJsonNode = testCaseReplacer.replacePlaceholder(testCaseNode, combinedValuesNode);
 
         //Validate TestCase against the testcase schema
         JsonNode schemaValidate = schemaValidation.validateTestcase(replaceJsonNode, DirectoryPaths.VALIDATION_FILE_PATH);

@@ -9,7 +9,7 @@ import java.lang.reflect.Method;
 import java.util.*;
 
 @Component
-public class AssertJValidation {
+public class AssertJExecutor {
 
     //Dynamically executes a chain of assertion methods on an AssertJ assertion object.
     public <A extends AbstractAssert<?, ?>> void executeAssertions(

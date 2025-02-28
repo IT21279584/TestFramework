@@ -1,5 +1,5 @@
 auth_info_basic:
-  type: "Basic"
+  type: "BASIC_AUTH"
   username: "postman"
   password: "password"
 content_type: "application/json"

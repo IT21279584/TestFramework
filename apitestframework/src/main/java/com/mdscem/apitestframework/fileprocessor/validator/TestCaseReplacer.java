@@ -40,7 +40,7 @@ public class TestCaseReplacer {
      * @return Updated JsonNode with placeholders replaced.
      * @throws IOException if there is an issue during processing.
      */
-    public static JsonNode replacePlaceholder(JsonNode testCaseNode, JsonNode valuesNode) throws IOException {
+    public JsonNode replacePlaceholder(JsonNode testCaseNode, JsonNode valuesNode) throws IOException {
         if (testCaseNode.isArray()) {
             // Process each element in the array
             for (int i = 0; i < testCaseNode.size(); i++) {
@@ -63,7 +63,7 @@ public class TestCaseReplacer {
      * @param valuesNode   JsonNode containing replacement values.
      * @return Updated JsonNode with placeholders replaced.
      */
-    public static JsonNode replacePlaceholders(JsonNode testCaseNode, JsonNode valuesNode) {
+    private JsonNode replacePlaceholders(JsonNode testCaseNode, JsonNode valuesNode) {
         Iterator<Map.Entry<String, JsonNode>> fields = testCaseNode.fields();
 
         while (fields.hasNext()) {
@@ -71,7 +71,7 @@ public class TestCaseReplacer {
             JsonNode valueNode = field.getValue();
 
             // Check for textual placeholders matching "{{include ...}}"
-            if (valueNode.isTextual() && valueNode.asText().startsWith(Constant.INCLUDE_KEYWORD) && valueNode.asText().endsWith(Constant.END_CURLY_BRACKET)) {
+            if (valueNode.isTextual() && valueNode.asText().startsWith(Constant.INCLUDE_KEYWORD) && valueNode.asText().endsWith(Constant.END_DOUBLE_CURLY_BRACKET)) {
                 // Extracts the key inside a placeholder like "{{includes key}}"
                 // 1. valueNode.asText() -> "{{includes key}}"
                 // 2. .substring(10, valueNode.asText().length() - 2)
@@ -113,7 +113,7 @@ public class TestCaseReplacer {
      *
      * @param node JsonNode to validate.
      */
-    private static void validateNoPlaceholdersRemaining(JsonNode node) {
+    private void validateNoPlaceholdersRemaining(JsonNode node) {
         if (node.isTextual() && node.asText().matches("\\{\\{.*\\}\\}")) {
             String errorMessage = "Unresolved placeholder found: " + node.asText();
             throw new IllegalArgumentException(errorMessage);
