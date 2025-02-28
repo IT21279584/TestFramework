@@ -7,6 +7,7 @@ import com.mdscem.apitestframework.context.TestCaseRepository;
 import com.mdscem.apitestframework.context.TestCaseRepositoryImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 
 @Configuration
 public class TestCaseConfig {
@@ -18,9 +19,14 @@ public class TestCaseConfig {
     public TestCaseRepository flowRepository() {
         return new FlowRepositoryImpl();
     }
-    @Bean
+    @Bean(name = "yamlMapper")
     public ObjectMapper yamlMapper() {
         return new ObjectMapper(new YAMLFactory());
+    }
+    @Bean
+    @Primary
+    public ObjectMapper objectMapper() {
+        return new ObjectMapper();
     }
 
 }

@@ -2,6 +2,7 @@ package com.mdscem.apitestframework.requestprocessor;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mdscem.apitestframework.constants.Constant;
 import com.mdscem.apitestframework.fileprocessor.filereader.model.TestCase;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -45,8 +46,7 @@ public class CaptureReplacer {
             String testCaseJson = objectMapper.writeValueAsString(testCase);
 
             // Regex pattern to find placeholders
-            Pattern pattern = Pattern.compile("\\{\\{use (\\w+)\\.(\\w+)}}");
-            Matcher matcher = pattern.matcher(testCaseJson);
+            Matcher matcher = Pattern.compile(Constant.CAPTURE_PATTERN).matcher(testCaseJson);
 
             // Replace placeholders
             while (matcher.find()) {

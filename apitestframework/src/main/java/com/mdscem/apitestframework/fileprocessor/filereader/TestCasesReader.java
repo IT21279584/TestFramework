@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mdscem.apitestframework.constants.Constant;
 import com.mdscem.apitestframework.constants.DirectoryPaths;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.nio.file.DirectoryStream;
@@ -19,6 +20,7 @@ public class TestCasesReader {
     @Autowired
     private ObjectMapper jsonMapper;
     @Autowired
+    @Qualifier("yamlMapper")
     private ObjectMapper yamlMapper;
 
     // Read the file

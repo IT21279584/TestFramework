@@ -12,7 +12,7 @@ import com.mdscem.apitestframework.fileprocessor.filereader.model.TestCase;
 import com.mdscem.apitestframework.fileprocessor.flowprocessor.FlowProcessor;
 import com.mdscem.apitestframework.requestprocessor.CaptureContext;
 import com.mdscem.apitestframework.requestprocessor.CaptureReplacer;
-import com.mdscem.apitestframework.requestprocessor.CaptureValidation;
+import com.mdscem.apitestframework.requestprocessor.CaptureProcessor;
 import com.mdscem.apitestframework.requestprocessor.CoreFramework;
 import com.mdscem.apitestframework.requestprocessor.frameworkconfig.FrameworkLoader;
 import org.apache.logging.log4j.LogManager;
@@ -34,16 +34,16 @@ public class TestExecutor {
     @Autowired
     private FrameworkLoader frameworkLoader;
     @Autowired
-    private CaptureValidation captureValidation;
+    private CaptureProcessor captureValidation;
     @Autowired
     private CaptureReplacer captureReplacer;
     @Autowired
     private CoreFramework coreFramework;
 
-    private static ExtentReports extent;
-    private static ExtentTest test;
+    private ExtentReports extent;
+    private ExtentTest test;
 
-    public static void initializeReports() {
+    public void initializeReports() {
         try {
             extent = new ExtentReports();
             ExtentSparkReporter spark = new ExtentSparkReporter(DirectoryPaths.REPORT_DIRECTORY);
@@ -117,7 +117,7 @@ public class TestExecutor {
         }
     }
 
-    public static void finalizeReports() {
+    public void finalizeReports() {
         if (extent != null) {
             extent.flush();
             logger.info("Test execution completed.");

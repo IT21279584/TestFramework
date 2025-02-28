@@ -9,8 +9,8 @@ import org.springframework.stereotype.Component;
 import java.util.Map;
 
 @Component
-public class CaptureValidation {
-    private static final Logger logger = LogManager.getLogger(CaptureValidation.class);
+public class CaptureProcessor {
+    private static final Logger logger = LogManager.getLogger(CaptureProcessor.class);
     @Autowired
     private CaptureContext captureContext;
 
@@ -28,21 +28,21 @@ public class CaptureValidation {
 
             // Store the captures in the context map using the test case name
             captureContext.addCapturesForTestCase(testCaseName, capture);
-            logger.debug("{}", logger.isDebugEnabled() ? printAllCaptures() : "");
+            if(logger.isDebugEnabled()){
+                printAllCaptures();
+            }
         }catch (Exception e){
             e.printStackTrace();
         }
     }
 
     // Print all captures for all test cases
-    public Object printAllCaptures() {
-
+    public void printAllCaptures() {
         captureContext.getCaptureMap().forEach((testCaseName, captures) -> {
             logger.info("Test Case: " + testCaseName);
             captures.forEach((key, value) -> {
                 logger.info("  Key: " + key + ", Value: " + value);
             });
         });
-        return null;
     }
 }
