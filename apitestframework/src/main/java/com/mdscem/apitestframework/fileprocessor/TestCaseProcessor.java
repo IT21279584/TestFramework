@@ -67,7 +67,6 @@ public class TestCaseProcessor {
 
     //Convert Testcase to the JsoNode
     public JsonNode convertToJsonNode(TestCase testCase) {
-        ObjectMapper objectMapper = new ObjectMapper();
         try {
             return objectMapper.valueToTree(testCase);
         } catch (Exception e) {

@@ -3,7 +3,7 @@ package com.mdscem.apitestframework.frameworkImplementation;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mdscem.apitestframework.constants.Constant;
-import com.mdscem.apitestframework.requestprocessor.validation.AssertJExecutor;
+import com.mdscem.apitestframework.requestprocessor.assertion.AssertJExecutor;
 import com.mdscem.apitestframework.fileprocessor.filereader.model.TestCase;
 import com.mdscem.apitestframework.fileprocessor.filereader.model.Request;
 import com.mdscem.apitestframework.requestprocessor.CoreFramework;

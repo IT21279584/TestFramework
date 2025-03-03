@@ -10,10 +10,9 @@ import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import java.io.IOException;
 @SpringBootApplication(exclude = {DataSourceAutoConfiguration.class})
 public class ApiTestMain implements CommandLineRunner {
-
+    private static final Logger logger = LogManager.getLogger(ApiTestMain.class);
     @Autowired
     private TestExecutor executor;
-    private static final Logger logger = LogManager.getLogger(ApiTestMain.class);
 
     @Override
     public void run(String... args) throws IOException {

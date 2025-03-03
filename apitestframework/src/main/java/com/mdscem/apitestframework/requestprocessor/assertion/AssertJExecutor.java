@@ -1,4 +1,4 @@
-package com.mdscem.apitestframework.requestprocessor.validation;
+package com.mdscem.apitestframework.requestprocessor.assertion;
 
 import com.mdscem.apitestframework.constants.Constant;
 import org.assertj.core.api.AbstractAssert;
