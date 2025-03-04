@@ -39,11 +39,10 @@ public class TestExecutor {
     private CaptureReplacer captureReplacer;
     @Autowired
     private CoreFramework coreFramework;
-
     private ExtentReports extent;
     private ExtentTest test;
 
-    public void initializeReports() {
+    private void initializeReports() {
         try {
             extent = new ExtentReports();
             ExtentSparkReporter spark = new ExtentSparkReporter(DirectoryPaths.REPORT_DIRECTORY);
@@ -57,7 +56,7 @@ public class TestExecutor {
         }
     }
 
-    public void executeTests() {
+    private void executeTests() {
         logger.info("Starting test execution...");
         try {
             coreFramework = frameworkLoader.loadFrameworkFromConfig();
@@ -100,14 +99,14 @@ public class TestExecutor {
         }
     }
 
-    public void executeCoreFramework(TestCase testCase) throws Exception {
+    private void executeCoreFramework(TestCase testCase) throws Exception {
         captureValidation.processCaptures(testCase);
         TestCase replacedTestCase = captureReplacer.replaceParameterPlaceholders(testCase);
         String res = coreFramework.createFrameworkTypeTestFileAndExecute(replacedTestCase);
         captureReplacer.updateCapturesFromResponse(res, replacedTestCase);
     }
 
-    public void createNewCaptureContext(String flowName) {
+    private void createNewCaptureContext(String flowName) {
         try {
             captureContext.setCaptureMap(new HashMap<>());
             logger.info("Capture context created for flow: " + flowName);
@@ -117,7 +116,7 @@ public class TestExecutor {
         }
     }
 
-    public void finalizeReports() {
+    private void finalizeReports() {
         if (extent != null) {
             extent.flush();
             logger.info("Test execution completed.");
@@ -125,5 +124,11 @@ public class TestExecutor {
         } else {
             logger.error("Report is not initialized.");
         }
+    }
+    public void execute(){
+        logger.info("...Initializing API Test Executor...");
+        initializeReports();
+        executeTests();
+        finalizeReports();
     }
 }

@@ -37,7 +37,7 @@ public class CaptureProcessor {
     }
 
     // Print all captures for all test cases
-    public void printAllCaptures() {
+    private void printAllCaptures() {
         captureContext.getCaptureMap().forEach((testCaseName, captures) -> {
             logger.info("Test Case: " + testCaseName);
             captures.forEach((key, value) -> {

@@ -30,6 +30,8 @@ public class RestAssuredCoreFramework implements CoreFramework {
     @Autowired
     private AssertJExecutor assertJValidation;
     @Autowired
+    private AuthenticationHandlerFactory authenticationHandlerFactory;
+    @Autowired
     private ObjectMapper objectMapper;
 
     @Override
@@ -63,7 +65,7 @@ public class RestAssuredCoreFramework implements CoreFramework {
         // Apply authentication using the handler
         if (testCase.getAuth() != null && !testCase.getAuth().isEmpty()) {
             String type = testCase.getAuth().get(Constant.TYPE);
-            AuthenticationHandler authHandler = AuthenticationHandlerFactory.getAuthenticationHandler(type);
+            AuthenticationHandler authHandler = authenticationHandlerFactory.getAuthenticationHandler(type);
             authHandler.applyAuthentication(requestSpec, testCase.getAuth());
         }
 
