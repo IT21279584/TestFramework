@@ -3,7 +3,7 @@
     <Properties>
         <Property name="LOG_DIR">${sys:log.path:-./logs}</Property>
         <Property name="LOG_FILE_NAME">application-${date:yyyy-MM-dd-HH-mm-ss}.log</Property>
-        <Property name="LOG_FILE_PATH">${LOG_DIR}/${date:yyyy/MM/dd}/${LOG_FILE_NAME}</Property>
+        <Property name="LOG_FILE_PATH">${LOG_DIR}/logs/${date:yyyy/MM/dd}/${LOG_FILE_NAME}</Property>
     </Properties>
 
     <Appenders>
