@@ -21,6 +21,7 @@ dependencies {
 	// Spring Boot and Web
 	implementation 'org.springframework.boot:spring-boot-starter'
 	implementation 'org.springframework:spring-web:5.3.30'
+	implementation 'org.springframework.boot:spring-boot-starter-logging'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 
 

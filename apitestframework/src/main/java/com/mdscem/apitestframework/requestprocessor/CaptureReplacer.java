@@ -17,7 +17,6 @@ public class CaptureReplacer {
     private static final Logger logger = LogManager.getLogger(CaptureReplacer.class);
     @Autowired
     private ObjectMapper objectMapper;
-
     @Autowired
     private CaptureContext captureContext;
 
@@ -51,7 +50,6 @@ public class CaptureReplacer {
             throw new RuntimeException("Failed to parse response or update captures", e);
         }
     }
-
 
     public TestCase replaceParameterPlaceholders(TestCase testCase) {
         try {

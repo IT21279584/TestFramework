@@ -14,6 +14,7 @@ import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.assertj.core.api.AbstractAssert;
 import org.assertj.core.api.Assertions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
@@ -174,27 +175,25 @@ public class RestAssuredCoreFramework implements CoreFramework {
     }
 
     private void validateWithAssertJ(JsonNode actualFieldValueNode, String methodChain) throws Exception {
+        AbstractAssert<?, ?> assertion;
+
         if (actualFieldValueNode.isInt()) {
-            Integer actualValue = actualFieldValueNode.asInt();
-            assertJValidation.executeAssertions(Assertions.assertThat(actualValue), methodChain.split(Constant.SPLITTER));
+            assertion = Assertions.assertThat(actualFieldValueNode.asInt());
         } else if (actualFieldValueNode.isLong()) {
-            Long actualValue = actualFieldValueNode.asLong();
-            assertJValidation.executeAssertions(Assertions.assertThat(actualValue), methodChain.split(Constant.SPLITTER));
+            assertion = Assertions.assertThat(actualFieldValueNode.asLong());
         } else if (actualFieldValueNode.isTextual()) {
-            String actualValue = actualFieldValueNode.asText();
-            assertJValidation.executeAssertions(Assertions.assertThat(actualValue), methodChain.split(Constant.SPLITTER));
+            assertion = Assertions.assertThat(actualFieldValueNode.asText());
         } else if (actualFieldValueNode.isBoolean()) {
-            Boolean actualValue = actualFieldValueNode.asBoolean();
-            assertJValidation.executeAssertions(Assertions.assertThat(actualValue), methodChain.split(Constant.SPLITTER));
+            assertion = Assertions.assertThat(actualFieldValueNode.asBoolean());
         } else if (actualFieldValueNode.isDouble()) {
-            Double actualValue = actualFieldValueNode.asDouble();
-            assertJValidation.executeAssertions(Assertions.assertThat(actualValue), methodChain.split(Constant.SPLITTER));
+            assertion = Assertions.assertThat(actualFieldValueNode.asDouble());
         } else if (actualFieldValueNode.isArray()) {
-            List<JsonNode> actualValue = new ArrayList<>();
-            actualFieldValueNode.forEach(actualValue::add);
-            assertJValidation.executeAssertions(Assertions.assertThat(actualValue), methodChain.split(Constant.SPLITTER));
+            List<JsonNode> actualValueList = new ArrayList<>();
+            actualFieldValueNode.forEach(actualValueList::add);
+            assertion = Assertions.assertThat(actualValueList);
         } else {
             throw new IllegalArgumentException("Unsupported type for dynamic validation.");
         }
+        assertJValidation.executeAssertions(assertion, methodChain.split(Constant.SPLITTER));
     }
 }

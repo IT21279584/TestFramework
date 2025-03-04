@@ -44,5 +44,5 @@ public interface Constant {
     public static final String BACKSLASH = "\"";
     public static final String DIGITS = "\\d+";
     public static final String ONE_OR_MORE_DIGITS = "\\d+\\.\\d+";
-
+    public static final String PLACEHOLDER_VALIDATOR = "\\{\\{.*\\}\\}";
 }

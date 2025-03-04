@@ -114,7 +114,7 @@ public class TestCaseReplacer {
      * @param node JsonNode to validate.
      */
     private void validateNoPlaceholdersRemaining(JsonNode node) {
-        if (node.isTextual() && node.asText().matches("\\{\\{.*\\}\\}")) {
+        if (node.isTextual() && node.asText().matches(Constant.PLACEHOLDER_VALIDATOR)) {
             String errorMessage = "Unresolved placeholder found: " + node.asText();
             throw new IllegalArgumentException(errorMessage);
         }
