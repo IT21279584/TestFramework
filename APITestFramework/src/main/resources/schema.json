@@ -1,0 +1,52 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "testCaseName": {
+      "type": "string"
+    },
+    "baseUri": {
+      "type": "string"
+    },
+    "auth": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "enum": [
+            "BEARER_TOKEN",
+            "BASIC_AUTH"
+          ]
+        }
+      }
+    },
+    "request": {
+      "type": "object",
+      "properties": {
+        "log": {
+          "type": "string",
+          "enum": [
+            "all"
+          ]
+        }
+      }
+    },
+    "response": {
+      "type": "object",
+      "properties": {
+        "log": {
+          "type": "string",
+          "enum": [
+            "all"
+          ]
+        }
+      }
+    }
+  },
+  "required": [
+    "testCaseName",
+    "baseUri",
+    "request",
+    "response"
+  ],
+  "additionalProperties": false
+}

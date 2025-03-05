@@ -1,0 +1,20 @@
+
+- testCase:
+    name: PatchUser
+    pathParam:
+      userId: 2
+
+- testCase:
+    name: GetResource
+    pathParam:
+      resourceId: 2
+
+- testCase:
+    name: DeleteUser
+    pathParam:
+      userId: 2
+
+- testCase:
+    name: PatchEmployee
+    pathParam:
+      employeeId: 6

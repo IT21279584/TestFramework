@@ -1,0 +1,17 @@
+testCaseName: "DeleteUser"
+baseUri: {{include baseUri_new}}
+auth: {{include auth_info_1_new}}
+
+request:
+  headers:
+    Content-Type: "application/json"
+  log: "all"
+  method: "DELETE"
+  path: "api/users/{{param userId}}"
+  body: {}
+
+response:
+  statusCode: 204
+  headers: {}
+  cookie: {}
+  body: null

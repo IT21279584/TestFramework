@@ -1,0 +1,38 @@
+- testCase:
+    name: LoginUser
+    capture: token
+
+- testCase:
+    name: SaveProject
+
+- testCase:
+    name: CreateEmployee
+
+- testCase:
+    name: GetUser
+    pathParam:
+      userId: 2
+
+- testCase:
+    name: UpdateUser
+    pathParam:
+      userId: 2
+
+- testCase:
+    name: GetPhone
+    pathParam:
+      phoneId: 7
+
+- testCase:
+    name: BasicAuth
+
+- testCase:
+    name: GetEmployee
+    pathParam:
+      employeeId: 6
+    capture: [name, address]
+
+#- testCase:
+#    name: GetUser
+#    pathParam:
+#      userId: 2

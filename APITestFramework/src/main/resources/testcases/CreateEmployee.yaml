@@ -1,0 +1,29 @@
+testCaseName: "CreateEmployee"
+baseUri: {{include baseUri_testing}}
+auth: {}
+
+request:
+  headers:
+    Content-Type: "application/json"
+  log: "all"
+  method: "POST"
+  path: "/employee"
+  body:
+    address: "123 Main Street, Pannipitiya"
+    dateOfBirth: "2001-05-15T00:00:00.000+00:00"
+    gender: "Male"
+    name: "Kavinda Medagoda"
+    age: 22
+
+response:
+  statusCode: 200
+  headers:
+    Content-Type: "application/json"
+  cookie: {}
+  body:
+    address: "123 Main Street, Pannipitiya"
+    dateOfBirth: "2001-05-15T00:00:00.000+00:00"
+    gender: "Male"
+    name: "Kavinda Medagoda"
+    age: {{check isGreaterThan(20).isNotNull()}}
+

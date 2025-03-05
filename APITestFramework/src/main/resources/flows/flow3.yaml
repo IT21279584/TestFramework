@@ -1,0 +1,12 @@
+- testCase:
+    name: GetResource
+    pathParam:
+      resourceId: 2
+
+- testCase:
+    name: BasicAuth
+
+- testCase:
+    name: DeleteUser
+    pathParam:
+      userId: 2

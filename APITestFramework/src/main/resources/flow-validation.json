@@ -1,0 +1,43 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "properties": {
+      "testCase": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "pathParam": {
+            "type": "object",
+            "additionalProperties": {
+              "type":  ["integer", "string"]
+            }
+          },
+          "queryParam": {
+            "type": "object",
+            "additionalProperties": {
+              "type":  ["integer", "string", "array"]
+            }
+          },
+          "delay": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "capture": {
+            "type": ["string", "array"],
+            "items": {
+              "type":  ["integer", "string"]
+            }
+          }
+        },
+        "required": ["name"],
+        "additionalProperties": false
+      }
+    },
+    "required": ["testCase"],
+    "additionalProperties": false
+  }
+}
